@@ -1,85 +1,85 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Figma Plugin</title>
-  <style>
-    #wrapper {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-    }
-    .resize-handle-right {
-      position: absolute;
-      width: 10px;
-      height: 100%;
-      background: transparent;
-      right: 0;
-      top: 0;
-      cursor: ew-resize;
-    }
-    .resize-handle-bottom {
-      position: absolute;
-      width: 100%;
-      height: 10px;
-      background: transparent;
-      bottom: 0;
-      left: 0;
-      cursor: ns-resize;
-    }
-    .no-select {
-      user-select: none;
-    }
-  </style>
-</head>
-<body>
-  <div id="wrapper" class="no-select">
-    <div id="react-page"></div>
-    <div class="resize-handle-right" id="resize-handle-right"></div>
-    <div class="resize-handle-bottom" id="resize-handle-bottom"></div>
-  </div>
-  <script>
-    const resizeHandleRight = document.getElementById('resize-handle-right');
-    const resizeHandleBottom = document.getElementById('resize-handle-bottom');
-    const wrapper = document.getElementById('wrapper');
-    let isResizing = false;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ImagePro Export - Figma Plugin</title>
+    <style>
+      #wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+      .resize-handle-right {
+        position: absolute;
+        width: 10px;
+        height: 100%;
+        background: transparent;
+        right: 0;
+        top: 0;
+        cursor: ew-resize;
+      }
+      .resize-handle-bottom {
+        position: absolute;
+        width: 100%;
+        height: 10px;
+        background: transparent;
+        bottom: 0;
+        left: 0;
+        cursor: ns-resize;
+      }
+      .no-select {
+        user-select: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wrapper" class="no-select">
+      <div id="react-page"></div>
+      <div class="resize-handle-right" id="resize-handle-right"></div>
+      <div class="resize-handle-bottom" id="resize-handle-bottom"></div>
+    </div>
+    <script>
+      const resizeHandleRight = document.getElementById('resize-handle-right');
+      const resizeHandleBottom = document.getElementById('resize-handle-bottom');
+      const wrapper = document.getElementById('wrapper');
+      let isResizing = false;
 
-    resizeHandleRight.addEventListener('mousedown', (e) => {
-      isResizing = true;
-      wrapper.classList.add('no-select');
-      document.addEventListener('mousemove', onMouseMoveRight);
-      document.addEventListener('mouseup', onMouseUp);
-    });
+      resizeHandleRight.addEventListener('mousedown', (e) => {
+        isResizing = true;
+        wrapper.classList.add('no-select');
+        document.addEventListener('mousemove', onMouseMoveRight);
+        document.addEventListener('mouseup', onMouseUp);
+      });
 
-    resizeHandleBottom.addEventListener('mousedown', (e) => {
-      isResizing = true;
-      wrapper.classList.add('no-select');
-      document.addEventListener('mousemove', onMouseMoveBottom);
-      document.addEventListener('mouseup', onMouseUp);
-    });
+      resizeHandleBottom.addEventListener('mousedown', (e) => {
+        isResizing = true;
+        wrapper.classList.add('no-select');
+        document.addEventListener('mousemove', onMouseMoveBottom);
+        document.addEventListener('mouseup', onMouseUp);
+      });
 
-    function onMouseMoveRight(e) {
-      if (!isResizing) return;
-      const width = Math.max(640, Math.min(1000, e.clientX));
-      parent.postMessage({ pluginMessage: { type: 'resize', width, height: wrapper.clientHeight } }, '*');
-    }
+      function onMouseMoveRight(e) {
+        if (!isResizing) return;
+        const width = Math.max(640, Math.min(1000, e.clientX));
+        parent.postMessage({ pluginMessage: { type: 'resize', width, height: wrapper.clientHeight } }, '*');
+      }
 
-    function onMouseMoveBottom(e) {
-      if (!isResizing) return;
-      const height = Math.max(160, Math.min(1000, e.clientY));
-      parent.postMessage({ pluginMessage: { type: 'resize', width: wrapper.clientWidth, height } }, '*');
-    }
+      function onMouseMoveBottom(e) {
+        if (!isResizing) return;
+        const height = Math.max(160, Math.min(1000, e.clientY));
+        parent.postMessage({ pluginMessage: { type: 'resize', width: wrapper.clientWidth, height } }, '*');
+      }
 
-    function onMouseUp() {
-      isResizing = false;
-      wrapper.classList.remove('no-select');
-      document.removeEventListener('mousemove', onMouseMoveRight);
-      document.removeEventListener('mousemove', onMouseMoveBottom);
-      document.removeEventListener('mouseup', onMouseUp);
-    }
-  </script>
-</body>
+      function onMouseUp() {
+        isResizing = false;
+        wrapper.classList.remove('no-select');
+        document.removeEventListener('mousemove', onMouseMoveRight);
+        document.removeEventListener('mousemove', onMouseMoveBottom);
+        document.removeEventListener('mouseup', onMouseUp);
+      }
+    </script>
+  </body>
 </html>
