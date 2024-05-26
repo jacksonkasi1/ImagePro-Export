@@ -8,7 +8,7 @@ import { emit, on } from "@create-figma-plugin/utilities";
 import { render, useWindowResize } from "@create-figma-plugin/ui";
 
 // ** import css
-import "!./output.css";
+import "!./styles/out/output.css";
 
 // ** import types
 import { ResizeWindowHandler } from "@/types/events";

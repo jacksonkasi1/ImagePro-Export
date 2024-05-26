@@ -23,11 +23,11 @@
   },
   "scripts": {
     "build": "bun run build:css && bun run build:js",
-    "build:css": "tailwindcss --input ./src/input.css --output ./src/output.css",
+    "build:css": "tailwindcss --input ./src/styles/main.css --output ./src/styles/out/output.css",
     "build:js": "build-figma-plugin --typecheck --minify",
     "watch": "bun run build:css && concurrently bun:watch:css bun:watch:js",
     "dev": "bun run build:css && concurrently bun:watch:css bun:watch:js",
-    "watch:css": "tailwindcss --input ./src/input.css --output ./src/output.css --watch",
+    "watch:css": "tailwindcss --input ./src/styles/main.css --output ./src/styles/out/output.css --watch",
     "watch:js": "build-figma-plugin --typecheck --watch"
   },
   "figma-plugin": {
