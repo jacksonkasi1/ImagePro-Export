@@ -1,7 +1,5 @@
-.DS_Store
-*.log
-*.css.d.ts
-/build/
-/manifest.json
-node_modules/
-bun.lockb
+node_modules
+dist
+settings.json
+yarn-error.log
+.vscode
