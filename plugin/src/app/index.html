@@ -63,13 +63,13 @@
 
     function onMouseMoveRight(e) {
       if (!isResizing) return;
-      const width = Math.max(300, Math.min(600, e.clientX));
+      const width = Math.max(640, Math.min(1000, e.clientX));
       parent.postMessage({ pluginMessage: { type: 'resize', width, height: wrapper.clientHeight } }, '*');
     }
 
     function onMouseMoveBottom(e) {
       if (!isResizing) return;
-      const height = Math.max(200, Math.min(500, e.clientY));
+      const height = Math.max(160, Math.min(1000, e.clientY));
       parent.postMessage({ pluginMessage: { type: 'resize', width: wrapper.clientWidth, height } }, '*');
     }
 
