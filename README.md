@@ -18,15 +18,15 @@ ImagePro Export is a versatile plugin designed to enhance your image export expe
     ```
 2. Navigate to the project directory:
     ```bash
-    cd imagepro-export
+    cd plugin
     ```
 3. Install the dependencies:
     ```bash
-    pnpm install
+    bun install
     ```
 4. Run the application:
     ```bash
-    pnpm start
+    bun dev
     ```
 
 ## Usage

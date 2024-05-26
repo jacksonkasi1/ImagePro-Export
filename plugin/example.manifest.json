@@ -1,0 +1,10 @@
+{
+  "api": "1.0.0",
+  "editorType": [
+    "figma"
+  ],
+  "id": "imagepro-export",
+  "name": "ImagePro Export",
+  "main": "build/main.js",
+  "ui": "build/ui.js"
+}
