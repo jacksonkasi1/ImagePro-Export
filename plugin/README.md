@@ -1,23 +1,52 @@
-# Figma Plugin React Template
+# ImagePro Export
 
-![62862431-71537f00-bd0e-11e9-85db-d97c0fb729a4](https://user-images.githubusercontent.com/16322616/62862692-46b5f600-bd0f-11e9-93b0-75955d1de8f3.png)
+ImagePro Export is a versatile plugin designed to enhance your image export experience. It provides various export options, filter settings, scaling features, and convenient renaming capabilities, making it an invaluable tool for developers and designers.
 
-This template contains the react example as shown on [Figma Docs](https://www.figma.com/plugin-docs/intro/), with some structural changes and extra tooling.
+## Features
 
-## Quickstart
+1. **Export Options**: Access export options conveniently located at the top left side of the interface.
+2. **Filter Options**: Utilize filter options found at the bottom left side, allowing you to filter by vector, image, etc.
+3. **Scale Options**: Easily scale your images using the options available at the top of the interface.
+4. **Rename Images**: Quickly rename your images with ease.
+5. **File Name Case Option**: Use the file name case option dropdown to rename all images to a selected format, making it more efficient for developers.
 
-- Run `yarn` to install dependencies.
-- Run `yarn build:watch` to start webpack in watch mode.
-- Open `Figma` -> `Plugins` -> `Development` -> `Import plugin from manifest...` and choose `manifest.json` file from this repo.
+## Installation
 
-⭐ To change the UI of your plugin (the react code), start editing [App.tsx](./src/app/components/App.tsx).  
-⭐ To interact with the Figma API edit [controller.ts](./src/plugin/controller.ts).  
-⭐ Read more on the [Figma API Overview](https://www.figma.com/plugin-docs/api/api-overview/).
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/yourusername/imagepro-export.git
+    ```
+2. Navigate to the project directory:
+    ```bash
+    cd plugin
+    ```
+3. Install the dependencies:
+    ```bash
+    bun install
+    ```
+4. Run the application:
+    ```bash
+    bun dev
+    ```
 
-## Toolings
+## Usage
 
-This repo is using:
+1. Open the plugin interface.
+2. Use the export options on the top left to export your images.
+3. Apply filters using the options on the bottom left.
+4. Scale your images as needed with the top scaling options.
+5. Rename images individually or use the file name case option dropdown to apply a format to all images.
 
-- React + Webpack
-- TypeScript
-- Prettier precommit hook
+## Contributing
+
+We welcome contributions! Please fork the repository and submit pull requests for any enhancements or bug fixes.
+
+## Donate
+
+If you like my work and would like to support my dream of buying a Mac laptop, please consider donating via [Ko-fi](https://ko-fi.com/jacksonkasi). Your support is greatly appreciated!
+
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/jacksonkasi)
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
