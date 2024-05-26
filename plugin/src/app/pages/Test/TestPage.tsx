@@ -1,11 +1,17 @@
 import React from 'react';
 
-import { useImageExportStore } from '@/store/useImageExportStore';
-
-import { ExportOption, ExportScaleOption, CaseOption } from '@/types/enums';
+// ** import ui components
 import { Button } from '@/components/ui/button';
-import { Sidebar } from "@/components/sidebar";
-import { ScaleBar } from "@/components/scale-bar";
+
+// ** import components
+import { Sidebar } from '@/components/sidebar';
+import { ScaleBar } from '@/components/scale-bar';
+
+// ** import types
+import { ExportOption, ExportScaleOption, CaseOption } from '@/types/enums';
+
+// ** import store
+import { useImageExportStore } from '@/store/useImageExportStore';
 
 const TestPage: React.FC = () => {
   const {

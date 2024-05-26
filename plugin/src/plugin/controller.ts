@@ -1,6 +1,7 @@
 // ** import helpers
 import { getImageNodes } from '@/helpers/fetch-image';
 
+// ** import types
 import { NodeData } from '@/types/node';
 
 figma.showUI(__html__, { width: 800, height: 600 });

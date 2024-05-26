@@ -1,5 +1,6 @@
 import React from 'react';
 
+// ** import components
 import { Typography } from '@/components/typography';
 
 const TypographyDemo: React.FC = () => {
