@@ -26,7 +26,6 @@ figma.on('selectionchange', () => {
 
   const allImageNodes: NodeData[] = [];
   selectedNodes.forEach((node) => getImageNodes(node, allImageNodes));
-  console.log(allImageNodes.length);
 
   // Send data to the UI
   figma.ui.postMessage({ type: 'FETCH_IMAGE_NODES', data: allImageNodes });
