@@ -11,7 +11,7 @@ import { useImageExportStore } from '@/store/useImageExportStore';
 import { NodeData } from '@/types/node';
 
 // ** import test pages
-import TypographyDemo from './Test/TypographyDemo';
+import TestPage from './Test/TestPage';
 
 function Page() {
   const { setAllNodes, setSelectedNodes, setAllNodesCount, setSelectedNodesCount } = useImageExportStore();
@@ -40,7 +40,7 @@ function Page() {
     <ThemeProvider defaultTheme="system">
       <div className="flex items-center justify-center h-screen gap-4">
         <ModeToggle />
-        <TypographyDemo />
+        <TestPage />
       </div>
     </ThemeProvider>
   );
