@@ -20,7 +20,6 @@ function Page() {
     let { type, data } = event.data.pluginMessage;
     if (type === 'FETCH_IMAGE_NODES') {
       data = data as NodeData[];
-      console.log({ length: data.length });
       setAllNodes(data);
       setSelectedNodes(data);
       setAllNodesCount(data.length);

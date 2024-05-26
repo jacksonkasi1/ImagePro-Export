@@ -13,19 +13,16 @@ figma.ui.onmessage = (msg) => {
   }
 };
 
-
-
 /**
  * Trigger Auto select by selectionchange
  */
 figma.on('selectionchange', () => {
-  console.log('selectionchange event triggered');
   const selectedNodes = figma.currentPage.selection;
 
-  selectedNodes.forEach((node) => {
-    const parentName = node.parent ? node.parent.name : 'None';
-    console.log(`Node ID: ${node.id}, Node Type: ${node.type}, Parent Name: ${parentName}`);
-  });
+  // selectedNodes.forEach((node) => {
+  //   const parentName = node.parent ? node.parent.name : 'None';
+  //   console.log(`Node ID: ${node.id}, Node Type: ${node.type}, Parent Name: ${parentName}`);
+  // });
 
   const allImageNodes: NodeData[] = [];
   selectedNodes.forEach((node) => getImageNodes(node, allImageNodes));
