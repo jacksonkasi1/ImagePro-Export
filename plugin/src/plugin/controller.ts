@@ -1,3 +1,8 @@
+// ** import helpers
+import { getImageNodes } from '@/helpers/fetch-image';
+
+import { NodeData } from '@/types/node';
+
 figma.showUI(__html__, { width: 800, height: 600 });
 
 figma.ui.onmessage = (msg) => {
@@ -7,3 +12,25 @@ figma.ui.onmessage = (msg) => {
     figma.ui.resize(width, height);
   }
 };
+
+
+
+/**
+ * Trigger Auto select by selectionchange
+ */
+figma.on('selectionchange', () => {
+  console.log('selectionchange event triggered');
+  const selectedNodes = figma.currentPage.selection;
+
+  selectedNodes.forEach((node) => {
+    const parentName = node.parent ? node.parent.name : 'None';
+    console.log(`Node ID: ${node.id}, Node Type: ${node.type}, Parent Name: ${parentName}`);
+  });
+
+  const allImageNodes: NodeData[] = [];
+  selectedNodes.forEach((node) => getImageNodes(node, allImageNodes));
+  console.log(allImageNodes.length);
+
+  // Send data to the UI
+  figma.ui.postMessage({ type: 'FETCH_IMAGE_NODES', data: allImageNodes });
+});
