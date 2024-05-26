@@ -1,26 +1,9 @@
-figma.showUI(__html__);
+figma.showUI(__html__, { width: 400, height: 300 });
 
 figma.ui.onmessage = (msg) => {
-  if (msg.type === 'create-rectangles') {
-    const nodes = [];
-
-    for (let i = 0; i < msg.count; i++) {
-      const rect = figma.createRectangle();
-      rect.x = i * 150;
-      rect.fills = [{ type: 'SOLID', color: { r: 1, g: 0.5, b: 0 } }];
-      figma.currentPage.appendChild(rect);
-      nodes.push(rect);
-    }
-
-    figma.currentPage.selection = nodes;
-    figma.viewport.scrollAndZoomIntoView(nodes);
-
-    // This is how figma responds back to the ui
-    figma.ui.postMessage({
-      type: 'create-rectangles',
-      message: `Created ${msg.count} Rectangles`,
-    });
+  if (msg.type === 'resize') {
+    const width = Math.max(300, Math.min(600, msg.width));
+    const height = Math.max(200, Math.min(500, msg.height));
+    figma.ui.resize(width, height);
   }
-
-  figma.closePlugin();
 };
