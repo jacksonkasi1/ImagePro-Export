@@ -7,6 +7,7 @@ import { useImageExportStore } from "@/store";
 import { ExportOption, ExportScaleOption, CaseOption } from "@/types/enums";
 import { Button } from "@/components/ui/button";
 import { Sidebar } from "@/components/sidebar";
+import { ScaleBar } from "@/components/scalebar";
 
 const TestView = () => {
   const {
@@ -76,6 +77,7 @@ const TestView = () => {
       <p>Selected Nodes: {selectedNodesCount}</p>
 
       <Button>Hello</Button>
+      <ScaleBar />
       <Sidebar/>
     </div>
   );

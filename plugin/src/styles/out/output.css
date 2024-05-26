@@ -723,6 +723,14 @@ body{
   width: max-content;
 }
 
+.w-10{
+  width: 2.5rem;
+}
+
+.w-16{
+  width: 4rem;
+}
+
 .max-w-11{
   max-width: 2.75rem;
 }
@@ -795,6 +803,12 @@ body{
   --tw-space-x-reverse: 0;
   margin-right: calc(1rem * var(--tw-space-x-reverse));
   margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.space-x-2 > :not([hidden]) ~ :not([hidden]){
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .overflow-hidden{
