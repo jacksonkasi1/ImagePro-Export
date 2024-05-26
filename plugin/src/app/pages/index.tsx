@@ -36,7 +36,7 @@ function Page() {
   }, []);
 
   return (
-    // leave this 'system' as default, to adopt the system theme automatically
+    // Leave this 'system' as default to adopt the system theme automatically.
     <ThemeProvider defaultTheme="system">
       <div className="flex items-center justify-center h-screen gap-4">
         <ModeToggle />
