@@ -6,6 +6,7 @@ export enum ExportOption {
 
 export enum ExportScaleOption {
   ONE_X = "1x",
+  ONE_POINT_FIVE_X = "1.5x",
   TWO_X = "2x",
   THREE_X = "3x",
   FOUR_X = "4x",
