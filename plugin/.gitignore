@@ -3,3 +3,4 @@ dist
 settings.json
 yarn-error.log
 .vscode
+manifest.json
