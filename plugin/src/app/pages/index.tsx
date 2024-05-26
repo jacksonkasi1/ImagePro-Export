@@ -1,8 +1,5 @@
 import React, { useEffect } from 'react';
 
-// ** import ui
-import { Button } from '@/components/ui/button';
-
 // ** import components
 import { ThemeProvider } from '@/components/theme-provider';
 import { ModeToggle } from '@/components/mode-toggle';
@@ -12,7 +9,10 @@ import { useImageExportStore } from '@/store/useImageExportStore';
 
 // ** import types
 import { NodeData } from '@/types/node';
-import TestPage from './TestPage';
+
+// ** import test pages
+import TestPage from './Test/TestPage';
+import TypographyDemo from './Test/TypographyDemo';
 
 function Page() {
   const { setAllNodes, setSelectedNodes, setAllNodesCount, setSelectedNodesCount } = useImageExportStore();
@@ -42,7 +42,7 @@ function Page() {
     <ThemeProvider defaultTheme="system">
       <div className="flex items-center justify-center h-screen gap-4">
         <ModeToggle />
-        <TestPage />
+        <TypographyDemo />
       </div>
     </ThemeProvider>
   );
