@@ -40,16 +40,20 @@ export interface ButtonProps
   extends Omit<JSX.IntrinsicElements["button"], "size">,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  isAnimate?: boolean; // New prop to toggle animation
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  (
+    { className, variant, size, asChild = false, isAnimate = true, ...props },
+    ref,
+  ) => {
     const Comp = asChild ? Slot : "button";
     return (
       <Comp
         className={cn(
           buttonVariants({ variant, size, className }),
-          "click-animation",
+          { "transition-transform transform active:scale-95": isAnimate }, // Add animation class based on isAnimate prop
         )}
         ref={ref as any}
         {...props}
