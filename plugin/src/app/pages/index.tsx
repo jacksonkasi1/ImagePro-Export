@@ -11,7 +11,6 @@ import { useImageExportStore } from '@/store/useImageExportStore';
 import { NodeData } from '@/types/node';
 
 // ** import test pages
-import TestPage from './Test/TestPage';
 import TypographyDemo from './Test/TypographyDemo';
 
 function Page() {

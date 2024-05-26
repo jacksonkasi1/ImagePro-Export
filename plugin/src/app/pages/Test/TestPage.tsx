@@ -13,12 +13,8 @@ const TestPage: React.FC = () => {
     setExportOption,
     exportScaleOption,
     setExportScaleOption,
-    selectedNodes,
-    setSelectedNodes,
     allNodesCount,
-    setAllNodesCount,
     selectedNodesCount,
-    setSelectedNodesCount,
     caseOption,
     setCaseOption,
   } = useImageExportStore();
