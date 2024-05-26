@@ -13,6 +13,9 @@ export const useImageExportStore = create<ImageExportState>((set) => ({
   setExportScaleOption: (option: ExportScaleOption) =>
     set({ exportScaleOption: option }),
 
+  allNodes: [],
+  setAllNodes: (nodes: NodeData[]) => set({ allNodes: nodes }),
+
   selectedNodes: [],
   setSelectedNodes: (nodes: NodeData[]) => set({ selectedNodes: nodes }),
 

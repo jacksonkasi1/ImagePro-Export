@@ -32,4 +32,5 @@ export interface NodeData {
   id: string;
   name: string;
   type: NodeType;
+  imageData?: string; // Added imageData
 }

@@ -1,5 +1,6 @@
-import { ExportOption, ExportScaleOption, CaseOption } from './enums';
-import { NodeData } from './node';
+// ** import types
+import { NodeData } from "./node";
+import { ExportOption, ExportScaleOption, CaseOption } from "./enums";
 
 export interface ImageExportState {
   exportOption: ExportOption;
@@ -7,6 +8,9 @@ export interface ImageExportState {
 
   exportScaleOption: ExportScaleOption;
   setExportScaleOption: (option: ExportScaleOption) => void;
+
+  allNodes: NodeData[];
+  setAllNodes: (nodes: NodeData[]) => void;
 
   selectedNodes: NodeData[];
   setSelectedNodes: (nodes: NodeData[]) => void;
