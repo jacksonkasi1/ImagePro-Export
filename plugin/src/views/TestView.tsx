@@ -5,6 +5,7 @@ import { useImageExportStore } from "@/store";
 
 // ** import types
 import { ExportOption, ExportScaleOption, CaseOption } from "@/types/enums";
+import { Button } from "@/components/ui/button";
 
 const TestView = () => {
   const {
@@ -72,6 +73,10 @@ const TestView = () => {
       <h2>Nodes</h2>
       <p>All Nodes: {allNodesCount}</p>
       <p>Selected Nodes: {selectedNodesCount}</p>
+
+      <Button>
+        Hello
+        </Button>
     </div>
   );
 };
