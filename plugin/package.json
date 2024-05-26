@@ -2,7 +2,8 @@
   "dependencies": {
     "@create-figma-plugin/ui": "^3.2.0",
     "@create-figma-plugin/utilities": "^3.2.0",
-    "preact": ">=10"
+    "preact": ">=10",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@create-figma-plugin/build": "^3.2.0",
