@@ -1,8 +1,15 @@
 import React, { useEffect } from 'react';
 
-// ** import components
+// ** import theme provider
 import { ThemeProvider } from '@/components/theme-provider';
 import { ModeToggle } from '@/components/mode-toggle';
+
+// ** import components
+import { Sidebar } from '@/components/sidebar';
+import { ScaleBar } from '@/components/scale-bar';
+
+// ** import ui
+import { Separator } from '@/components/ui/separator';
 
 // ** import store
 import { useImageExportStore } from '@/store/useImageExportStore';
@@ -10,8 +17,6 @@ import { useImageExportStore } from '@/store/useImageExportStore';
 // ** import types
 import { NodeData } from '@/types/node';
 
-// ** import test pages
-import TestPage from './Test/TestPage';
 
 function Page() {
   const { setAllNodes, setSelectedNodes, setAllNodesCount, setSelectedNodesCount } = useImageExportStore();
@@ -38,9 +43,17 @@ function Page() {
   return (
     // Leave this 'system' as default to adopt the system theme automatically.
     <ThemeProvider defaultTheme="system">
-      <div className="flex items-center justify-center h-screen gap-4">
-        <ModeToggle />
-        <TestPage />
+      <div className="flex h-screen gap-4">
+        <div className='flex justify-start'>
+          <div className='flex flex-col px-3 space-y-4'>
+            <Sidebar />
+            <ModeToggle />
+          </div>
+          <Separator orientation='vertical' />
+          <div className='flex flex-col px-3'>
+            <ScaleBar />
+          </div>
+        </div>
       </div>
     </ThemeProvider>
   );

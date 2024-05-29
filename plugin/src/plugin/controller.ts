@@ -4,7 +4,7 @@ import { getImageNodes } from '@/helpers/fetch-image';
 // ** import types
 import { NodeData } from '@/types/node';
 
-figma.showUI(__html__, { width: 800, height: 600 });
+figma.showUI(__html__, { width: 640, height: 540 });
 
 figma.ui.onmessage = (msg) => {
   if (msg.type === 'resize') {
