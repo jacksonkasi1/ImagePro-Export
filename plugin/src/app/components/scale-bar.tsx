@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 // ** import ui components
 import { Button } from '@/components/ui/button';
 
+// ** import components
+import { Typography } from './typography';
+
 // ** import lib
 import { cn } from '@/lib/utils';
 
@@ -12,7 +15,7 @@ import { ExportScaleOption } from '@/types/enums';
 // ** import store
 import { useImageExportStore } from '@/store/useImageExportStore';
 
-interface ScaleBarProps extends React.HTMLAttributes<HTMLDivElement> { }
+interface ScaleBarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export const ScaleBar: React.FC<ScaleBarProps> = ({ className, ...props }) => {
   const [activeScale, setActiveScale] = useState<ExportScaleOption>(ExportScaleOption.ONE_X);
@@ -24,21 +27,23 @@ export const ScaleBar: React.FC<ScaleBarProps> = ({ className, ...props }) => {
   };
 
   return (
-    <div className={cn('py-2',className)} {...props}>
-        <h2 className="mb-2 text-lg font-semibold tracking-tight">Scaling Options</h2>
-        <div className='flex space-x-2'>
-          {Object.values(ExportScaleOption).map((scale) => (
-            <Button
-              key={scale}
-              variant={activeScale === scale ? 'secondary' : 'ghost'}
-              className="w-16"
-              size="sm"
-              onClick={() => handleScaleClick(scale)}
-            >
-              {scale}
-            </Button>
-          ))}
-        </div>
+    <div className={cn('py-2', className)} {...props}>
+      <Typography variant="large" className="mb-2 ">
+        Scaling Options
+      </Typography>
+      <div className="flex space-x-2">
+        {Object.values(ExportScaleOption).map((scale) => (
+          <Button
+            key={scale}
+            variant={activeScale === scale ? 'secondary' : 'ghost'}
+            className="w-16"
+            size="sm"
+            onClick={() => handleScaleClick(scale)}
+          >
+            {scale}
+          </Button>
+        ))}
+      </div>
     </div>
   );
 };

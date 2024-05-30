@@ -6,6 +6,9 @@ import { Image } from 'lucide-react';
 // ** import ui components
 import { Button } from '@/components/ui/button';
 
+// ** import components
+import { Typography } from './typography';
+
 // ** import utilities
 import { cn } from '@/lib/utils';
 
@@ -14,7 +17,6 @@ import { ExportOption } from '@/types/enums';
 
 // ** import store
 import { useImageExportStore } from '@/store/useImageExportStore';
-import { Typography } from './typography';
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> { }
 
