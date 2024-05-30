@@ -28,7 +28,7 @@ export const ScaleBar: React.FC<ScaleBarProps> = ({ className, ...props }) => {
 
   return (
     <div className={cn('py-2', className)} {...props}>
-      <Typography variant="large" className="mb-2 ">
+      <Typography variant="p" className="mb-2">
         Scaling Options
       </Typography>
       <div className="flex space-x-2">

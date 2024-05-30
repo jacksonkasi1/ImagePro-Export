@@ -31,7 +31,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
 
   return (
     <div className={cn('py-2', className)}>
-      <Typography variant="large" className='mb-2'>Format</Typography>
+      <Typography variant="p" className='mb-2'>Format</Typography>
       <div className="space-y-1 max-w-28">
         {Object.values(ExportOption).map((option) => (
           <Button
