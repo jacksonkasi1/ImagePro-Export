@@ -1,9 +1,0 @@
-@import "./input.css";
-@import "./ui.css";
-
-/* Add Tailwind's base styles */
-@tailwind base;
-/* Add Tailwind's components styles */
-@tailwind components;
-/* Add Tailwind's utilities styles */
-@tailwind utilities;
