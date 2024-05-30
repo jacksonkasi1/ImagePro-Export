@@ -7,6 +7,7 @@ import { ModeToggle } from '@/components/mode-toggle';
 // ** import components
 import { Sidebar } from '@/components/sidebar';
 import { ScaleBar } from '@/components/scale-bar';
+import Footer from '@/components/footer';
 
 // ** import ui
 import { Separator } from '@/components/ui/separator';
@@ -16,7 +17,6 @@ import { useImageExportStore } from '@/store/useImageExportStore';
 
 // ** import types
 import { NodeData } from '@/types/node';
-
 
 function Page() {
   const { setAllNodes, setSelectedNodes, setAllNodesCount, setSelectedNodesCount } = useImageExportStore();
@@ -43,15 +43,25 @@ function Page() {
   return (
     // Leave this 'system' as default to adopt the system theme automatically.
     <ThemeProvider defaultTheme="system">
-      <div className="flex h-screen gap-4">
-        <div className='flex justify-start'>
-          <div className='flex flex-col px-3 space-y-4'>
-            <Sidebar />
-            <ModeToggle />
+      <div className="flex w-full h-screen gap-4">
+        <div className="flex justify-start w-full">
+          <div className="flex flex-col justify-between">
+            <Sidebar className="px-3" />
+            <div>
+              <Separator orientation="horizontal" />
+              <div className='flex items-center justify-between'>
+              <ModeToggle className="px-3 " />
+              <div className='flex-1' />
+              </div>
+            </div>
           </div>
-          <Separator orientation='vertical' />
-          <div className='flex flex-col px-3'>
-            <ScaleBar />
+          <Separator orientation="vertical" />
+          <div className="flex flex-col justify-between w-full">
+            <ScaleBar className="px-3" />
+            <div>
+              <Separator orientation="horizontal" />
+              <Footer className="px-3" />
+            </div>
           </div>
         </div>
       </div>

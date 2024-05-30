@@ -14,6 +14,7 @@ import { ExportOption } from '@/types/enums';
 
 // ** import store
 import { useImageExportStore } from '@/store/useImageExportStore';
+import { Typography } from './typography';
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> { }
 
@@ -28,17 +29,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
 
   return (
     <div className={cn('py-2', className)}>
-      <h2 className="mb-2 text-lg font-semibold tracking-tight">Export Options</h2>
+      <Typography variant="large" className='mb-2'>Format</Typography>
       <div className="space-y-1 max-w-28">
         {Object.values(ExportOption).map((option) => (
           <Button
-            // isAnimate={false}
             key={option}
             variant={activeOption === option ? 'secondary' : 'ghost'}
             className="justify-start w-full"
             onClick={() => handleOptionClick(option)}
           >
-            <Image className="w-4 h-4 mr-2" /> {option}
+            <Image className="w-4 h-4 mr-2" />
+            {option}
           </Button>
         ))}
       </div>
