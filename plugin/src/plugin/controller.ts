@@ -4,12 +4,12 @@ import { getImageNodes } from '@/helpers/fetch-image';
 // ** import types
 import { NodeData } from '@/types/node';
 
-figma.showUI(__html__, { width: 600, height: 540 });
+figma.showUI(__html__, { width: 570, height: 540 });
 
 figma.ui.onmessage = (msg) => {
   if (msg.type === 'resize') {
-    const width = Math.max(600, Math.min(1000, msg.width));
-    const height = Math.max(160, Math.min(1000, msg.height));
+    const width = Math.max(570, Math.min(1000, msg.width));
+    const height = Math.max(360, Math.min(1000, msg.height));
     figma.ui.resize(width, height);
   }
 };
