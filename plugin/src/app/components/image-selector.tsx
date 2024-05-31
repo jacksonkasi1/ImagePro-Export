@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 
 // ** import ui components
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
@@ -10,44 +10,30 @@ import { Typography } from './typography';
 // ** import lib
 import { cn } from '@/lib/utils';
 
-export interface Artwork {
-  id: number;
-  name: string;
-  link: string;
-}
-
-export const imageList: Artwork[] = [
-  {
-    id: 1,
-    name: 'Ornella Binni',
-    link: 'https://images.unsplash.com/photo-1465869185982-5a1a7522cbcb?auto=format&fit=crop&w=300&q=80',
-  },
-  {
-    id: 2,
-    name: 'Tom Byrom',
-    link: 'https://images.unsplash.com/photo-1548516173-3cabfa4607e9?auto=format&fit=crop&w=300&q=80',
-  },
-  {
-    id: 3,
-    name: 'Vladimir Malyavko',
-    link: 'https://images.unsplash.com/photo-1494337480532-3725c85fd2ab?auto=format&fit=crop&w=300&q=80',
-  }
-];
+// ** import store
+import { useImageExportStore } from '@/store/useImageExportStore';
 
 interface ImageSelectorProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
-  const [selectedImages, setSelectedImages] = useState<number[]>([]);
+  const { allNodes, allNodesCount, setSelectedNodes, selectedNodes, setAllNodesCount, setSelectedNodesCount } = useImageExportStore();
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    setAllNodesCount(allNodes.length);
+    setSelectedNodesCount(selectedImages.length);
+    setSelectedNodes(allNodes.filter(node => selectedImages.includes(node.id)));
+  }, [allNodes, selectedImages, setAllNodesCount, setSelectedNodes, setSelectedNodesCount]);
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedImages(imageList.map(image => image.id));
+      setSelectedImages(allNodes.map(image => image.id));
     } else {
       setSelectedImages([]);
     }
   };
 
-  const handleSelectImage = (id: number, checked: boolean) => {
+  const handleSelectImage = (id: string, checked: boolean) => {
     if (checked) {
       setSelectedImages(prev => [...prev, id]);
     } else {
@@ -63,10 +49,10 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
         </Typography>
         <div className='flex items-center gap-2'>
           <Typography variant="p">
-            Selected: {selectedImages.length}/{imageList.length}
+            Selected: {selectedImages.length}/{allNodesCount}
           </Typography>
           <Checkbox
-            checked={selectedImages.length === imageList.length}
+            checked={selectedImages.length === allNodes.length}
             onCheckedChange={(checked: boolean) => handleSelectAll(checked)}
           />
         </div>
@@ -74,9 +60,9 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
 
       <ScrollArea className={cn('w-full h-full whitespace-nowrap', className)}>
         <div className="flex flex-col w-full py-2 space-y-4">
-          {imageList.map((image) => (
+          {allNodes.map((image) => (
             <div
-              key={image.name}
+              key={image.id}
               className="flex flex-row items-center gap-4"
             >
               <div className="flex flex-row items-center flex-1 gap-2">
@@ -87,7 +73,7 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
                   }}
                 >
                   <img
-                    src={image.link}
+                    src={image.imageData}
                     alt={`Photo by ${image.name}`}
                     className="aspect-[16/9] w-full min-w-28 max-w-[140px] h-auto object-cover rounded-sm"
                     width={140}
