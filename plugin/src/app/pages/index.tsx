@@ -5,9 +5,10 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { ModeToggle } from '@/components/mode-toggle';
 
 // ** import components
-import { Sidebar } from '@/components/sidebar';
-import { ScaleBar } from '@/components/scale-bar';
+import Sidebar  from '@/components/sidebar';
+import ScaleBar from '@/components/scale-bar';
 import Footer from '@/components/footer';
+import ImageSelector from '@/components/image-selector';
 
 // ** import ui
 import { Separator } from '@/components/ui/separator';
@@ -49,15 +50,16 @@ function Page() {
             <Sidebar className="px-3" />
             <div>
               <Separator orientation="horizontal" />
-              <div className='flex items-center justify-between'>
-              <ModeToggle className="px-3 " />
-              <div className='flex-1' />
+              <div className="flex items-center justify-between">
+                <ModeToggle className="px-3 " />
+                <div className="flex-1" />
               </div>
             </div>
           </div>
           <Separator orientation="vertical" />
           <div className="flex flex-col justify-between w-full">
             <ScaleBar className="px-3" />
+            <ImageSelector className='px-3' />
             <div>
               <Separator orientation="horizontal" />
               <Footer className="px-3" />

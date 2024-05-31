@@ -17,7 +17,7 @@ import { useImageExportStore } from '@/store/useImageExportStore';
 
 interface ScaleBarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export const ScaleBar: React.FC<ScaleBarProps> = ({ className, ...props }) => {
+const ScaleBar: React.FC<ScaleBarProps> = ({ className, ...props }) => {
   const [activeScale, setActiveScale] = useState<ExportScaleOption>(ExportScaleOption.ONE_X);
   const { setExportScaleOption } = useImageExportStore();
 
@@ -47,3 +47,5 @@ export const ScaleBar: React.FC<ScaleBarProps> = ({ className, ...props }) => {
     </div>
   );
 };
+
+export default ScaleBar;
