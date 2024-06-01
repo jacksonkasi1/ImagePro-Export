@@ -17,17 +17,14 @@ figma.ui.onmessage = (msg) => {
 /**
  * Trigger Auto select by selectionchange
  */
-figma.on('selectionchange', () => {
+
+figma.on('selectionchange', async () => {
   const selectedNodes = figma.currentPage.selection;
-
-  // selectedNodes.forEach((node) => {
-  //   const parentName = node.parent ? node.parent.name : 'None';
-  //   console.log(`Node ID: ${node.id}, Node Type: ${node.type}, Parent Name: ${parentName}`);
-  // });
-
   const allImageNodes: NodeData[] = [];
-  selectedNodes.forEach((node) => getImageNodes(node, allImageNodes));
 
-  // Send data to the UI
+  for (const node of selectedNodes) {
+    await getImageNodes(node, allImageNodes);
+  }
+
   figma.ui.postMessage({ type: 'FETCH_IMAGE_NODES', data: allImageNodes });
 });

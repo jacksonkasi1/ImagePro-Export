@@ -1,9 +1,9 @@
 import create from "zustand";
 
 // ** import types
+import { NodeData } from "@/types/node";
 import { ImageExportState } from "@/types/state";
 import { ExportOption, ExportScaleOption, CaseOption } from "@/types/enums";
-import { NodeData } from "@/types/node";
 
 export const useImageExportStore = create<ImageExportState>((set) => ({
   exportOption: ExportOption.PNG,
@@ -16,8 +16,8 @@ export const useImageExportStore = create<ImageExportState>((set) => ({
   allNodes: [],
   setAllNodes: (nodes: NodeData[]) => set({ allNodes: nodes }),
 
-  selectedNodes: [],
-  setSelectedNodes: (nodes: NodeData[]) => set({ selectedNodes: nodes }),
+  selectedNodeIds: [],
+  setSelectedNodeIds: (ids: string[]) => set({ selectedNodeIds: ids }),
 
   allNodesCount: 0,
   setAllNodesCount: (count: number) => set({ allNodesCount: count }),

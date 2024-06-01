@@ -1,4 +1,3 @@
-// ** import types
 import { NodeData } from "./node";
 import { ExportOption, ExportScaleOption, CaseOption } from "./enums";
 
@@ -12,8 +11,8 @@ export interface ImageExportState {
   allNodes: NodeData[];
   setAllNodes: (nodes: NodeData[]) => void;
 
-  selectedNodes: NodeData[];
-  setSelectedNodes: (nodes: NodeData[]) => void;
+  selectedNodeIds: string[];
+  setSelectedNodeIds: (ids: string[]) => void;
 
   allNodesCount: number;
   setAllNodesCount: (count: number) => void;

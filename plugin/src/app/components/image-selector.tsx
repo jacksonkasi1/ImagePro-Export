@@ -16,14 +16,13 @@ import { useImageExportStore } from '@/store/useImageExportStore';
 interface ImageSelectorProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
-  const { allNodes, allNodesCount, setSelectedNodes, selectedNodes, setAllNodesCount, setSelectedNodesCount } = useImageExportStore();
+  const { allNodes, allNodesCount, setSelectedNodeIds, setSelectedNodesCount } = useImageExportStore();
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
 
   useEffect(() => {
-    setAllNodesCount(allNodes.length);
     setSelectedNodesCount(selectedImages.length);
-    setSelectedNodes(allNodes.filter(node => selectedImages.includes(node.id)));
-  }, [allNodes, selectedImages, setAllNodesCount, setSelectedNodes, setSelectedNodesCount]);
+    setSelectedNodeIds(selectedImages);
+  }, [allNodes, selectedImages, setSelectedNodeIds, setSelectedNodesCount]);
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
@@ -39,6 +38,16 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
     } else {
       setSelectedImages(prev => prev.filter(imageId => imageId !== id));
     }
+  };
+
+  const arrayBufferToBase64 = (buffer: Uint8Array): string => {
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
   };
 
   return (
@@ -73,8 +82,8 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
                   }}
                 >
                   <img
-                    src={image.imageData}
-                    alt={`Photo by ${image.name}`}
+                    src={`data:image/png;base64,${arrayBufferToBase64(image.imageData)}`}
+                    alt={`${image.name}`}
                     className="aspect-[16/9] w-full min-w-28 max-w-[140px] h-auto object-cover rounded-sm"
                     width={140}
                     height={78}

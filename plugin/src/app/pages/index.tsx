@@ -20,14 +20,13 @@ import { useImageExportStore } from '@/store/useImageExportStore';
 import { NodeData } from '@/types/node';
 
 function Page() {
-  const { setAllNodes, setSelectedNodes, setAllNodesCount, setSelectedNodesCount } = useImageExportStore();
+  const { setAllNodes,  setAllNodesCount, setSelectedNodesCount } = useImageExportStore();
 
   const handleMessage = (event: MessageEvent) => {
     let { type, data } = event.data.pluginMessage;
     if (type === 'FETCH_IMAGE_NODES') {
       data = data as NodeData[];
       setAllNodes(data);
-      setSelectedNodes(data);
       setAllNodesCount(data.length);
       setSelectedNodesCount(data.length);
     }
