@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 
 // ** import ui components
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { Checkbox } from "@/components/ui/checkbox"
+import { Checkbox } from '@/components/ui/checkbox';
 
 // ** import components
 import { Typography } from './typography';
@@ -18,17 +18,8 @@ import { useImageExportStore } from '@/store/useImageExportStore';
 
 interface ImageSelectorProps extends React.HTMLAttributes<HTMLDivElement> { }
 
-
-
-
 const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
-  const {
-    allNodes,
-    allNodesCount,
-    selectedNodeIds,
-    setSelectedNodeIds,
-    setSelectedNodesCount,
-  } = useImageExportStore();
+  const { allNodes, allNodesCount, selectedNodeIds, setSelectedNodeIds, setSelectedNodesCount } = useImageExportStore();
   const [base64Images, setBase64Images] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
