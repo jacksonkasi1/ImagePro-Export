@@ -20,7 +20,7 @@ import { useImageExportStore } from '@/store/useImageExportStore';
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> { }
 
-export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
+const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   const [activeOption, setActiveOption] = useState<ExportOption>(ExportOption.JPG);
   const { setExportOption } = useImageExportStore();
 
@@ -48,3 +48,5 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     </div>
   );
 };
+
+export default Sidebar; 

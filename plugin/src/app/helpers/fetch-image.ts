@@ -1,8 +1,17 @@
-// ** import types
 import { NodeData, NodeType } from '@/types/node';
 
-export function getImageNodes(node: SceneNode, allNodes: NodeData[]) {
-  // Node types that can potentially have image fills
+// Define the export size settings
+const exportSize = (type: 'SCALE' | 'HEIGHT', value: number): ExportSettings => {
+  return {
+    format: 'JPG',
+    constraint: {
+      type,
+      value,
+    },
+  };
+};
+
+export async function getImageNodes(node: SceneNode, allNodes: NodeData[]) {
   const typesWithFills = [
     'RECTANGLE',
     'ELLIPSE',
@@ -16,22 +25,28 @@ export function getImageNodes(node: SceneNode, allNodes: NodeData[]) {
     'SHAPE_WITH_TEXT',
   ];
 
-  // Check if the node is one of the types that can have fills and has image fills
   if (typesWithFills.includes(node.type) && 'fills' in node && Array.isArray(node.fills)) {
     const fills = node.fills as ReadonlyArray<Paint>;
     const imageFill = fills.find((fill) => fill.type === 'IMAGE');
     if (imageFill) {
-      allNodes.push({
-        id: node.id,
-        name: node.name,
-        type: 'IMAGE' as NodeType,
-        imageData: (imageFill as ImagePaint).imageHash as string, // Added imageData
-      });
+      const imageHash = (imageFill as ImagePaint).imageHash as string;
+      if (imageHash) {
+        const imageUrl = await node.exportAsync(exportSize('HEIGHT', 150));
+        if (imageUrl) {
+          allNodes.push({
+            id: node.id,
+            name: node.name,
+            type: 'IMAGE' as NodeType,
+            imageData: imageUrl,
+          });
+        }
+      }
     }
   }
 
-  // Recursively check children nodes
   if ('children' in node) {
-    node.children.forEach((child) => getImageNodes(child, allNodes));
+    for (const child of node.children) {
+      await getImageNodes(child, allNodes);
+    }
   }
 }
