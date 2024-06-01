@@ -5,6 +5,7 @@ import { saveAs } from 'file-saver';
 // ** import helpers
 import { arrayBufferToBase64, renameFile } from '@/helpers/file-operation';
 
+
 export const handleExportComplete = async (event: MessageEvent) => {
   if (!event?.data?.pluginMessage) return;
   const { type, data } = event.data.pluginMessage;
@@ -19,13 +20,13 @@ export const handleExportComplete = async (event: MessageEvent) => {
 
     const base64Promises = data.map(async (image) => {
       const { nodeName, scale, imageData, exportOption, caseOption } = image;
-      const base64Image = await arrayBufferToBase64(new Uint8Array(imageData));
+      const base64Image = await arrayBufferToBase64(new Uint8Array(imageData), exportOption);
       return { nodeName, scale, base64Image, exportOption, caseOption };
     });
 
     const base64Images = await Promise.all(base64Promises);
 
-    base64Images.forEach((image, index) => {
+    base64Images.forEach((image) => {
       const { nodeName, scale, base64Image, exportOption, caseOption } = image;
 
       const scaleFolder = `${scale}x/`;
@@ -35,7 +36,6 @@ export const handleExportComplete = async (event: MessageEvent) => {
 
       let fileName = renameFile(nodeName, scale, exportOption, caseOption, fileNames[scaleFolder].size);
 
-      // Ensure the file name is unique
       while (fileNames[scaleFolder].has(fileName)) {
         fileName = renameFile(nodeName, scale, exportOption, caseOption, fileNames[scaleFolder].size + 1);
       }

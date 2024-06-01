@@ -1,5 +1,5 @@
-// ** import helpers
-import { getScaleValues } from "@/helpers/common";
+import { getScaleValues } from '@/helpers/common';
+import { ExportSettingsImage, ExportSettingsPDF, ExportSettingsSVG } from '@/types/export-settings';
 
 export const handleExportRequest = async (data) => {
   const { selectedNodeIds, exportOption, exportScaleOption, caseOption } = data;
@@ -10,15 +10,31 @@ export const handleExportRequest = async (data) => {
     const node = figma.getNodeById(nodeId) as SceneNode;
     if (node) {
       for (const scale of scales) {
-        const exportSettings: ExportSettings = {
-          format: exportOption,
-          constraint: { type: "SCALE", value: scale },
-        };
+        let exportSettings: ExportSettings;
+
+        switch (exportOption) {
+          case 'PDF':
+            exportSettings = { format: 'PDF' } as ExportSettingsPDF;
+            break;
+          case 'SVG':
+            exportSettings = { format: 'SVG' } as ExportSettingsSVG;
+            break;
+          case 'PNG':
+          case 'JPG':
+            exportSettings = {
+              format: exportOption,
+              constraint: { type: 'SCALE', value: scale },
+            } as ExportSettingsImage;
+            break;
+          default:
+            continue; // Skip unsupported formats like WEBP
+        }
+
         const imageData = await node.exportAsync(exportSettings);
         images.push({
           nodeName: node.name,
           scale,
-          imageData: Array.from(imageData), // Convert Uint8Array to Array for safe transfer
+          imageData: Array.from(imageData),
           exportOption,
           caseOption,
         });
@@ -26,5 +42,5 @@ export const handleExportRequest = async (data) => {
     }
   }
 
-  figma.ui.postMessage({ type: "EXPORT_COMPLETE", data: images });
+  figma.ui.postMessage({ type: 'EXPORT_COMPLETE', data: images });
 };
