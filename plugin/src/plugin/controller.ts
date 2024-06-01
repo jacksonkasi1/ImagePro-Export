@@ -1,5 +1,6 @@
 // ** import helpers
 import { getImageNodes } from "@/helpers/fetch-image";
+import { getScaleValues } from "@/helpers/common";
 
 // ** import types
 import { NodeData } from "@/types/node";
@@ -36,10 +37,6 @@ const handleExportRequest = async (data) => {
   const scales = getScaleValues(exportScaleOption);
   const images = [];
 
-  console.log({selectedNodeIds, exportOption, exportScaleOption, caseOption});
-  console.log({length: selectedNodeIds.length});
-  
-
   for (const nodeId of selectedNodeIds) {
     const node = figma.getNodeById(nodeId) as SceneNode;
     if (node) {
@@ -61,23 +58,4 @@ const handleExportRequest = async (data) => {
   }
 
   figma.ui.postMessage({ type: "EXPORT_COMPLETE", data: images });
-};
-
-const getScaleValues = (option) => {
-  switch (option) {
-    case "1x":
-      return [1];
-    case "1.5x":
-      return [1.5];
-    case "2x":
-      return [2];
-    case "3x":
-      return [3];
-    case "4x":
-      return [4];
-    case "ALL":
-      return [1, 1.5, 2, 3, 4];
-    default:
-      return [1];
-  }
 };
