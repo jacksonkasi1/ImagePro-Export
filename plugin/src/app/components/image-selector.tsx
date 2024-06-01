@@ -98,7 +98,7 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
                     <div className="aspect-[16/9] w-full min-w-28 max-w-[140px] h-auto object-cover rounded-sm bg-gray-200" />
                   )}
                 </div>
-                <Typography variant="small" className="w-[70%] truncate">
+                <Typography variant="small" className="truncate w-28">
                   {image.name}
                 </Typography>
               </div>
