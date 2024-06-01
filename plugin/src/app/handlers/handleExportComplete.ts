@@ -1,6 +1,6 @@
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
-import { arrayBufferToBase64, renameFile } from '@/helpers/file-opration';
+import { arrayBufferToBase64, renameFile } from '@/helpers/file-operation';
 
 export const handleExportComplete = async (event: MessageEvent) => {
   if (!event?.data?.pluginMessage) return;

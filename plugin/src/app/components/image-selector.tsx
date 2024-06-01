@@ -11,7 +11,7 @@ import { Typography } from './typography';
 import { cn } from '@/lib/utils';
 
 // ** import helpers
-import { arrayBufferToBase64 } from '@/helpers/image';
+import { arrayBufferToBase64 } from '@/helpers/file-operation';
 
 // ** import store
 import { useImageExportStore } from '@/store/useImageExportStore';
