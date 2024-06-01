@@ -1,6 +1,8 @@
 export enum ExportOption {
   JPG = "JPG",
   PNG = "PNG",
+  PDF = "PDF",
+  SVG = "SVG",
   WEBP = "WEBP",
 }
 
@@ -19,4 +21,3 @@ export enum CaseOption {
   KEBAB_CASE = "kebab-case",
   PASCAL_CASE = "PascalCase",
 }
-

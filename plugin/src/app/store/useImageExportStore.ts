@@ -7,7 +7,7 @@ import { ExportOption, ExportScaleOption, CaseOption } from "@/types/enums";
 
 
 export const useImageExportStore = create<ImageExportState>((set) => ({
-  exportOption: ExportOption.PNG,
+  exportOption: ExportOption.JPG,
   setExportOption: (option: ExportOption) => set({ exportOption: option }),
 
   exportScaleOption: ExportScaleOption.ONE_X,

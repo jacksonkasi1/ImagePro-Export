@@ -1,16 +1,18 @@
 // ** import helpers
-import { getImageNodes } from '@/helpers/fetch-image';
+import { getImageNodes } from "@/helpers/fetch-image";
 
 // ** import types
-import { NodeData } from '@/types/node';
+import { NodeData } from "@/types/node";
 
 figma.showUI(__html__, { width: 570, height: 540 });
 
 figma.ui.onmessage = (msg) => {
-  if (msg.type === 'resize') {
+  if (msg.type === "resize") {
     const width = Math.max(570, Math.min(1000, msg.width));
     const height = Math.max(360, Math.min(1000, msg.height));
     figma.ui.resize(width, height);
+  } else if (msg.type === "EXPORT_IMAGES") {
+    handleExportRequest(msg.data);
   }
 };
 
@@ -18,7 +20,7 @@ figma.ui.onmessage = (msg) => {
  * Trigger Auto select by selectionchange
  */
 
-figma.on('selectionchange', async () => {
+figma.on("selectionchange", async () => {
   const selectedNodes = figma.currentPage.selection;
   const allImageNodes: NodeData[] = [];
 
@@ -26,5 +28,56 @@ figma.on('selectionchange', async () => {
     await getImageNodes(node, allImageNodes);
   }
 
-  figma.ui.postMessage({ type: 'FETCH_IMAGE_NODES', data: allImageNodes });
+  figma.ui.postMessage({ type: "FETCH_IMAGE_NODES", data: allImageNodes });
 });
+
+const handleExportRequest = async (data) => {
+  const { selectedNodeIds, exportOption, exportScaleOption, caseOption } = data;
+  const scales = getScaleValues(exportScaleOption);
+  const images = [];
+
+  console.log({selectedNodeIds, exportOption, exportScaleOption, caseOption});
+  console.log({length: selectedNodeIds.length});
+  
+
+  for (const nodeId of selectedNodeIds) {
+    const node = figma.getNodeById(nodeId) as SceneNode;
+    if (node) {
+      for (const scale of scales) {
+        const exportSettings: ExportSettings = {
+          format: exportOption,
+          constraint: { type: "SCALE", value: scale },
+        };
+        const imageData = await node.exportAsync(exportSettings);
+        images.push({
+          nodeName: node.name,
+          scale,
+          imageData: Array.from(imageData), // Convert Uint8Array to Array for safe transfer
+          exportOption,
+          caseOption,
+        });
+      }
+    }
+  }
+
+  figma.ui.postMessage({ type: "EXPORT_COMPLETE", data: images });
+};
+
+const getScaleValues = (option) => {
+  switch (option) {
+    case "1x":
+      return [1];
+    case "1.5x":
+      return [1.5];
+    case "2x":
+      return [2];
+    case "3x":
+      return [3];
+    case "4x":
+      return [4];
+    case "ALL":
+      return [1, 1.5, 2, 3, 4];
+    default:
+      return [1];
+  }
+};
