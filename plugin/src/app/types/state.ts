@@ -12,7 +12,7 @@ export interface ImageExportState {
   setAllNodes: (nodes: NodeData[]) => void;
 
   selectedNodeIds: string[];
-  setSelectedNodeIds: (ids: string[]) => void;
+  setSelectedNodeIds: (ids: string[] | ((prev: string[]) => string[])) => void;
 
   allNodesCount: number;
   setAllNodesCount: (count: number) => void;

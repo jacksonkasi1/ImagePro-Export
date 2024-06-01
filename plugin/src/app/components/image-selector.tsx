@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 
 // ** import ui components
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
@@ -19,9 +19,16 @@ import { useImageExportStore } from '@/store/useImageExportStore';
 interface ImageSelectorProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 
+
+
 const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
-  const { allNodes, allNodesCount, setSelectedNodeIds, setSelectedNodesCount } = useImageExportStore();
-  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const {
+    allNodes,
+    allNodesCount,
+    selectedNodeIds,
+    setSelectedNodeIds,
+    setSelectedNodesCount,
+  } = useImageExportStore();
   const [base64Images, setBase64Images] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
@@ -38,24 +45,25 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
   }, [allNodes]);
 
   useEffect(() => {
-    setSelectedNodesCount(selectedImages.length);
-    setSelectedNodeIds(selectedImages);
-  }, [selectedImages, setSelectedNodeIds, setSelectedNodesCount]);
+    setSelectedNodesCount(selectedNodeIds.length);
+  }, [selectedNodeIds, setSelectedNodesCount]);
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedImages(allNodes.map(image => image.id));
+      setSelectedNodeIds(allNodes.map((image) => image.id));
     } else {
-      setSelectedImages([]);
+      setSelectedNodeIds([]);
     }
   };
 
   const handleSelectImage = (id: string, checked: boolean) => {
-    if (checked) {
-      setSelectedImages(prev => [...prev, id]);
-    } else {
-      setSelectedImages(prev => prev.filter(imageId => imageId !== id));
-    }
+    setSelectedNodeIds((prev: string[]) => {
+      if (checked) {
+        return [...prev, id];
+      } else {
+        return prev.filter((imageId) => imageId !== id);
+      }
+    });
   };
 
   return (
@@ -64,12 +72,12 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
         <Typography variant="p" className="flex-1">
           Select images
         </Typography>
-        <div className='flex items-center gap-2'>
+        <div className="flex items-center gap-2">
           <Typography variant="p">
-            Selected: {selectedImages.length}/{allNodesCount}
+            Selected: {selectedNodeIds.length}/{allNodesCount}
           </Typography>
           <Checkbox
-            checked={selectedImages.length === allNodes.length}
+            checked={selectedNodeIds.length === allNodes.length}
             onCheckedChange={(checked: boolean) => handleSelectAll(checked)}
           />
         </div>
@@ -80,10 +88,11 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
           {allNodes.map((image) => (
             <div key={image.id} className="flex flex-row items-center gap-4">
               <div className="flex flex-row items-center flex-1 gap-2">
-                <div className="overflow-hidden rounded-md cursor-pointer"
+                <div
+                  className="overflow-hidden rounded-md cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleSelectImage(image.id, !selectedImages.includes(image.id));
+                    handleSelectImage(image.id, !selectedNodeIds.includes(image.id));
                   }}
                 >
                   {base64Images[image.id] ? (
@@ -103,10 +112,10 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
                 </Typography>
               </div>
               <Checkbox
-                checked={selectedImages.includes(image.id)}
+                checked={selectedNodeIds.includes(image.id)}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleSelectImage(image.id, !selectedImages.includes(image.id));
+                  handleSelectImage(image.id, !selectedNodeIds.includes(image.id));
                 }}
               />
             </div>

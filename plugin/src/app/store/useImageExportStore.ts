@@ -5,6 +5,7 @@ import { NodeData } from "@/types/node";
 import { ImageExportState } from "@/types/state";
 import { ExportOption, ExportScaleOption, CaseOption } from "@/types/enums";
 
+
 export const useImageExportStore = create<ImageExportState>((set) => ({
   exportOption: ExportOption.PNG,
   setExportOption: (option: ExportOption) => set({ exportOption: option }),
@@ -17,7 +18,10 @@ export const useImageExportStore = create<ImageExportState>((set) => ({
   setAllNodes: (nodes: NodeData[]) => set({ allNodes: nodes }),
 
   selectedNodeIds: [],
-  setSelectedNodeIds: (ids: string[]) => set({ selectedNodeIds: ids }),
+  setSelectedNodeIds: (ids: string[] | ((prev: string[]) => string[])) =>
+    set((state) => ({
+      selectedNodeIds: typeof ids === 'function' ? ids(state.selectedNodeIds) : ids,
+    })),
 
   allNodesCount: 0,
   setAllNodesCount: (count: number) => set({ allNodesCount: count }),

@@ -20,7 +20,7 @@ import { useImageExportStore } from '@/store/useImageExportStore';
 import { NodeData } from '@/types/node';
 
 function Page() {
-  const { setAllNodes,  setAllNodesCount, setSelectedNodesCount } = useImageExportStore();
+  const { setAllNodes,  setAllNodesCount } = useImageExportStore();
 
   const handleMessage = (event: MessageEvent) => {
     let { type, data } = event.data.pluginMessage;
@@ -28,7 +28,6 @@ function Page() {
       data = data as NodeData[];
       setAllNodes(data);
       setAllNodesCount(data.length);
-      setSelectedNodesCount(data.length);
     }
   };
 
