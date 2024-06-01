@@ -1,9 +1,10 @@
-export const arrayBufferToBase64 = (buffer: Uint8Array): string => {
-    let binary = '';
-    const bytes = new Uint8Array(buffer);
-    const len = bytes.byteLength;
-    for (let i = 0; i < len; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return window.btoa(binary);
-  };
+export const arrayBufferToBase64 = (buffer: Uint8Array): Promise<string> => {
+  const blob = new Blob([buffer]);
+  const reader = new FileReader();
+  return new Promise<string>((resolve) => {
+    reader.onloadend = () => {
+      resolve(reader.result as string);
+    };
+    reader.readAsDataURL(blob);
+  });
+};

@@ -18,14 +18,29 @@ import { useImageExportStore } from '@/store/useImageExportStore';
 
 interface ImageSelectorProps extends React.HTMLAttributes<HTMLDivElement> { }
 
+
 const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
   const { allNodes, allNodesCount, setSelectedNodeIds, setSelectedNodesCount } = useImageExportStore();
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [base64Images, setBase64Images] = useState<{ [key: string]: string }>({});
+
+  useEffect(() => {
+    const fetchBase64Images = async () => {
+      const newBase64Images: { [key: string]: string } = {};
+      for (const node of allNodes) {
+        const base64String = await arrayBufferToBase64(node.imageData);
+        newBase64Images[node.id] = base64String;
+      }
+      setBase64Images(newBase64Images);
+    };
+
+    fetchBase64Images();
+  }, [allNodes]);
 
   useEffect(() => {
     setSelectedNodesCount(selectedImages.length);
     setSelectedNodeIds(selectedImages);
-  }, [allNodes, selectedImages, setSelectedNodeIds, setSelectedNodesCount]);
+  }, [selectedImages, setSelectedNodeIds, setSelectedNodesCount]);
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
@@ -42,7 +57,6 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
       setSelectedImages(prev => prev.filter(imageId => imageId !== id));
     }
   };
-
 
   return (
     <Fragment>
@@ -64,10 +78,7 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
       <ScrollArea className={cn('w-full h-full whitespace-nowrap', className)}>
         <div className="flex flex-col w-full py-2 space-y-4">
           {allNodes.map((image) => (
-            <div
-              key={image.id}
-              className="flex flex-row items-center gap-4"
-            >
+            <div key={image.id} className="flex flex-row items-center gap-4">
               <div className="flex flex-row items-center flex-1 gap-2">
                 <div className="overflow-hidden rounded-md cursor-pointer"
                   onClick={(e) => {
@@ -75,13 +86,17 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
                     handleSelectImage(image.id, !selectedImages.includes(image.id));
                   }}
                 >
-                  <img
-                    src={`data:image/png;base64,${arrayBufferToBase64(image.imageData)}`}
-                    alt={`${image.name}`}
-                    className="aspect-[16/9] w-full min-w-28 max-w-[140px] h-auto object-cover rounded-sm"
-                    width={140}
-                    height={78}
-                  />
+                  {base64Images[image.id] ? (
+                    <img
+                      src={base64Images[image.id]}
+                      alt={`${image.name}`}
+                      className="aspect-[16/9] w-full min-w-28 max-w-[140px] h-auto object-cover rounded-sm"
+                      width={140}
+                      height={78}
+                    />
+                  ) : (
+                    <div className="aspect-[16/9] w-full min-w-28 max-w-[140px] h-auto object-cover rounded-sm bg-gray-200" />
+                  )}
                 </div>
                 <Typography variant="small" className="w-[70%] truncate">
                   {image.name}
