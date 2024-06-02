@@ -22,6 +22,7 @@ import { NodeData } from '@/types/node';
 
 // ** import handlers
 import { handleExportComplete } from '@/handlers/handleExportComplete';
+import SearchInput from '@/components/search-input';
 
 function Page() {
   const { setAllNodes, setAllNodesCount, setSelectedNodeIds, setSelectedNodesCount } = useImageExportStore();
@@ -63,7 +64,10 @@ function Page() {
           </div>
           <Separator orientation="vertical" />
           <div className="flex flex-col justify-between w-full">
-            <ScaleBar className="px-3" />
+            <div className="flex items-center gap-2">
+              <SearchInput className="flex-1 px-3" />
+              <ScaleBar className="px-3" />
+            </div>
             <ImageSelector className="px-3" />
             <div>
               <Separator orientation="horizontal" />
