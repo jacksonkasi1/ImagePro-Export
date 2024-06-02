@@ -72,11 +72,11 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
 
       <ScrollArea className={cn('w-full h-full whitespace-nowrap', className)}>
         <div className="flex flex-col w-full pb-2 space-y-4">
-          {allNodes.map((image) => (
-            <div key={image.id} className="flex flex-row items-center gap-4">
+          {allNodes.map((image, index) => (
+            <div key={`${image.id}_${index}`} className="flex flex-row items-center gap-4">
               <div className="flex flex-row items-center flex-1 gap-2">
                 <div
-                  className="overflow-hidden rounded-md cursor-pointer"
+                  className="overflow-hidden border rounded-md cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSelectImage(image.id, !selectedNodeIds.includes(image.id));
@@ -84,14 +84,15 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
                 >
                   {base64Images[image.id] ? (
                     <img
+                      key={`${image.id}_${index}`}
                       src={base64Images[image.id]}
                       alt={`${image.name}`}
-                      className="aspect-[16/9] min-w-28 w-[140px] max-w-[140px] h-auto object-cover rounded-sm"
+                      className="aspect-[16/9] min-w-28 w-[140px] max-w-[140px] h-auto object-contain rounded-sm"
                       width={140}
                       height={78}
                     />
                   ) : (
-                    <div className="aspect-[16/9] w-full min-w-28 max-w-[140px] h-auto object-cover rounded-sm bg-gray-200" />
+                    <div key={`${image.id}_${index}`} className="aspect-[16/9] w-full min-w-28 max-w-[140px] h-auto object-cover rounded-sm bg-gray-200" />
                   )}
                 </div>
                 <Label className="truncate w-28">{image.name}</Label>
