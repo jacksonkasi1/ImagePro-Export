@@ -11,7 +11,7 @@ figma.showUI(__html__, { width: 570, height: 540 });
 
 figma.ui.onmessage = (msg) => {
   if (msg.type === "resize") {
-    const width = Math.max(570, Math.min(1000, msg.width));
+    const width = Math.max(470, Math.min(1000, msg.width));
     const height = Math.max(360, Math.min(1000, msg.height));
     figma.ui.resize(width, height);
   } else if (msg.type === "EXPORT_IMAGES") {

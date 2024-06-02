@@ -5,16 +5,11 @@ import { saveAs } from 'file-saver';
 // ** import helpers
 import { arrayBufferToBase64, renameFile } from '@/helpers/file-operation';
 
-
 export const handleExportComplete = async (event: MessageEvent, setIsLoading: (isLoading: boolean) => void) => {
   if (!event?.data?.pluginMessage) return;
   const {  data } = event.data.pluginMessage;
 
   try {
-      console.log('Export Complete Event Received:::');
-      console.log({ data });
-      console.log({ data_length: data.length });
-
       const zip = new JSZip();
       const fileNames = {};
 
@@ -45,7 +40,6 @@ export const handleExportComplete = async (event: MessageEvent, setIsLoading: (i
       });
 
       const content = await zip.generateAsync({ type: 'blob' });
-      console.log('ZIP file generated 😃');
       saveAs(content, 'exported_images.zip');
   } catch (error) {
     console.error(error);
