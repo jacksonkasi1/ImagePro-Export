@@ -63,7 +63,7 @@
 
       function onMouseMoveRight(e) {
         if (!isResizing) return;
-        const width = Math.max(570, Math.min(1000, e.clientX));
+        const width = Math.max(470, Math.min(1000, e.clientX));
         parent.postMessage({ pluginMessage: { type: 'resize', width, height: wrapper.clientHeight } }, '*');
       }
 

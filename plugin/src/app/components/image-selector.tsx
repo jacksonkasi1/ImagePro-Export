@@ -71,7 +71,7 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
       </div>
 
       <ScrollArea className={cn('w-full h-full whitespace-nowrap', className)}>
-        <div className="flex flex-col w-full py-2 space-y-4">
+        <div className="flex flex-col w-full pb-2 space-y-4">
           {allNodes.map((image) => (
             <div key={image.id} className="flex flex-row items-center gap-4">
               <div className="flex flex-row items-center flex-1 gap-2">
