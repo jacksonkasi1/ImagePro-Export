@@ -28,7 +28,7 @@ const CaseSelector = () => {
         setCaseOption(value as CaseOption);
       }}
     >
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-[130px]">
         <SelectValue placeholder="Select a fruit" />
       </SelectTrigger>
       <SelectContent>
