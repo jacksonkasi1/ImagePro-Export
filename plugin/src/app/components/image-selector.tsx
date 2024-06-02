@@ -90,7 +90,7 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
                     <img
                       src={base64Images[image.id]}
                       alt={`${image.name}`}
-                      className="aspect-[16/9] w-full min-w-28 max-w-[140px] h-auto object-cover rounded-sm"
+                      className="aspect-[16/9] min-w-28 w-[140px] max-w-[140px] h-auto object-cover rounded-sm"
                       width={140}
                       height={78}
                     />
