@@ -1,8 +1,14 @@
 import React from 'react';
+
+// ** import ui components
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+
+// ** import lib
 import { cn } from '@/lib/utils';
+
+// ** import store
 import { useUtilsStore } from '@/store/useUtilsStore';
-import { Label } from './ui/label';
 
 interface SearchInputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 
