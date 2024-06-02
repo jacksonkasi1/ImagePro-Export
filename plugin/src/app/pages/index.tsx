@@ -15,6 +15,7 @@ import { Separator } from '@/components/ui/separator';
 
 // ** import store
 import { useImageExportStore } from '@/store/useImageExportStore';
+import { useUtilsStore } from '@/store/useUtilsStore';
 
 // ** import types
 import { NodeData } from '@/types/node';
@@ -24,9 +25,10 @@ import { handleExportComplete } from '@/handlers/handleExportComplete';
 
 function Page() {
   const { setAllNodes, setAllNodesCount, setSelectedNodeIds, setSelectedNodesCount } = useImageExportStore();
+  const { setIsLoading } = useUtilsStore();
 
   const handleMessage = (event: MessageEvent) => {
-    if(!event?.data?.pluginMessage) return;
+    if (!event?.data?.pluginMessage) return;
     let { type, data } = event?.data?.pluginMessage;
     if (type === 'FETCH_IMAGE_NODES') {
       data = data as NodeData[];
@@ -35,18 +37,14 @@ function Page() {
       setSelectedNodeIds([]);
       setSelectedNodesCount(0);
     }
+    if (type === 'EXPORT_COMPLETE') {
+      handleExportComplete(event, setIsLoading);
+    }
   };
 
   useEffect(() => {
-    // Listen for IMAGE nodes data
     window.addEventListener('message', handleMessage);
-    window.addEventListener('message', handleExportComplete);
-
-    // Cleanup function
-    return () => {
-      window.removeEventListener('message', handleMessage);
-      window.removeEventListener('message', handleExportComplete);
-    };
+    return () => window.removeEventListener('message', handleMessage);
   }, []);
 
   return (
