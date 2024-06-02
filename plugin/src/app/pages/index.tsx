@@ -20,11 +20,16 @@ import { useUtilsStore } from '@/store/useUtilsStore';
 // ** import types
 import { NodeData } from '@/types/node';
 
+// ** import hooks
+import { useResizable } from '@/hooks/useResizable';
+
 // ** import handlers
 import { handleExportComplete } from '@/handlers/handleExportComplete';
 import SearchInput from '@/components/search-input';
 
 function Page() {
+  useResizable({ minWidth: 470, maxWidth: 1000, minHeight: 360, maxHeight: 1000 });
+
   const { setAllNodes, setAllNodesCount, setSelectedNodeIds, setSelectedNodesCount } = useImageExportStore();
   const { setIsLoading } = useUtilsStore();
 

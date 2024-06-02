@@ -41,45 +41,5 @@
       <div class="resize-handle-right" id="resize-handle-right"></div>
       <div class="resize-handle-bottom" id="resize-handle-bottom"></div>
     </div>
-    <script>
-      const resizeHandleRight = document.getElementById('resize-handle-right');
-      const resizeHandleBottom = document.getElementById('resize-handle-bottom');
-      const wrapper = document.getElementById('wrapper');
-      let isResizing = false;
-
-      resizeHandleRight.addEventListener('mousedown', (e) => {
-        isResizing = true;
-        wrapper.classList.add('no-select');
-        document.addEventListener('mousemove', onMouseMoveRight);
-        document.addEventListener('mouseup', onMouseUp);
-      });
-
-      resizeHandleBottom.addEventListener('mousedown', (e) => {
-        isResizing = true;
-        wrapper.classList.add('no-select');
-        document.addEventListener('mousemove', onMouseMoveBottom);
-        document.addEventListener('mouseup', onMouseUp);
-      });
-
-      function onMouseMoveRight(e) {
-        if (!isResizing) return;
-        const width = Math.max(470, Math.min(1000, e.clientX));
-        parent.postMessage({ pluginMessage: { type: 'resize', width, height: wrapper.clientHeight } }, '*');
-      }
-
-      function onMouseMoveBottom(e) {
-        if (!isResizing) return;
-        const height = Math.max(360, Math.min(1000, e.clientY));
-        parent.postMessage({ pluginMessage: { type: 'resize', width: wrapper.clientWidth, height } }, '*');
-      }
-
-      function onMouseUp() {
-        isResizing = false;
-        wrapper.classList.remove('no-select');
-        document.removeEventListener('mousemove', onMouseMoveRight);
-        document.removeEventListener('mousemove', onMouseMoveBottom);
-        document.removeEventListener('mouseup', onMouseUp);
-      }
-    </script>
   </body>
 </html>
