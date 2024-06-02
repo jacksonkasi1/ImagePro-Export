@@ -7,7 +7,7 @@ interface UseResizableOptions {
   maxHeight: number;
 }
 
-export const useResizable = ({ minWidth, maxWidth, minHeight, maxHeight }: UseResizableOptions) => {
+const useResizable = ({ minWidth, maxWidth, minHeight, maxHeight }: UseResizableOptions) => {
   useEffect(() => {
     const resizeHandleRight = document.getElementById('resize-handle-right');
     const resizeHandleBottom = document.getElementById('resize-handle-bottom');
@@ -16,14 +16,14 @@ export const useResizable = ({ minWidth, maxWidth, minHeight, maxHeight }: UseRe
 
     const onMouseMoveRight = (e) => {
       if (!isResizing) return;
-      const width = Math.max(minWidth, Math.min(maxWidth, e.clientX));
-      parent.postMessage({ pluginMessage: { type: 'resize', width, height: wrapper.clientHeight } }, '*');
+      const newWidth = Math.max(minWidth, Math.min(maxWidth, e.clientX));
+      parent.postMessage({ pluginMessage: { type: 'resize', width: newWidth, height: wrapper.clientHeight } }, '*');
     };
 
     const onMouseMoveBottom = (e) => {
       if (!isResizing) return;
-      const height = Math.max(minHeight, Math.min(maxHeight, e.clientY));
-      parent.postMessage({ pluginMessage: { type: 'resize', width: wrapper.clientWidth, height } }, '*');
+      const newHeight = Math.max(minHeight, Math.min(maxHeight, e.clientY));
+      parent.postMessage({ pluginMessage: { type: 'resize', width: wrapper.clientWidth, height: newHeight } }, '*');
     };
 
     const onMouseUp = () => {
@@ -34,29 +34,24 @@ export const useResizable = ({ minWidth, maxWidth, minHeight, maxHeight }: UseRe
       document.removeEventListener('mouseup', onMouseUp);
     };
 
-    const onMouseDownRight = () => {
-      isResizing = true;
-      wrapper.classList.add('no-select');
-      document.addEventListener('mousemove', onMouseMoveRight);
-      document.addEventListener('mouseup', onMouseUp);
+    const initResize = (handle, direction) => {
+      handle.addEventListener('mousedown', () => {
+        isResizing = true;
+        wrapper.classList.add('no-select');
+        document.addEventListener('mousemove', direction === 'right' ? onMouseMoveRight : onMouseMoveBottom);
+        document.addEventListener('mouseup', onMouseUp);
+      });
     };
 
-    const onMouseDownBottom = () => {
-      isResizing = true;
-      wrapper.classList.add('no-select');
-      document.addEventListener('mousemove', onMouseMoveBottom);
-      document.addEventListener('mouseup', onMouseUp);
-    };
-
-    resizeHandleRight.addEventListener('mousedown', onMouseDownRight);
-    resizeHandleBottom.addEventListener('mousedown', onMouseDownBottom);
+    initResize(resizeHandleRight, 'right');
+    initResize(resizeHandleBottom, 'bottom');
 
     return () => {
-      resizeHandleRight.removeEventListener('mousedown', onMouseDownRight);
-      resizeHandleBottom.removeEventListener('mousedown', onMouseDownBottom);
       document.removeEventListener('mousemove', onMouseMoveRight);
       document.removeEventListener('mousemove', onMouseMoveBottom);
       document.removeEventListener('mouseup', onMouseUp);
     };
   }, [minWidth, maxWidth, minHeight, maxHeight]);
 };
+
+export default useResizable;
