@@ -48,7 +48,7 @@ const SearchInput: React.FC<SearchInputProps> = ({ className, ...props }) => {
         <div className="relative">
           <Input
             type="text"
-            placeholder="Search Image"
+            placeholder="Search image prefix"
             value={inputValue}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
