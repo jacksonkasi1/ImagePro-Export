@@ -64,9 +64,9 @@ function Page() {
           </div>
           <Separator orientation="vertical" />
           <div className="flex flex-col justify-between w-full">
-            <div className="flex items-center gap-2">
-              <SearchInput className="flex-1 px-3" />
-              <ScaleBar className="px-3" />
+            <div className="flex items-center gap-3 px-3">
+              <SearchInput className="flex-1" />
+              <ScaleBar />
             </div>
             <ImageSelector className="px-3" />
             <div>

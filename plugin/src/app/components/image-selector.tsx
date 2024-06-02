@@ -3,9 +3,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 // ** import ui components
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
-
-// ** import components
-import { Typography } from './typography';
+import { Label } from '@/components/ui/label';
 
 // ** import lib
 import { cn } from '@/lib/utils';
@@ -16,7 +14,7 @@ import { arrayBufferToBase64 } from '@/helpers/file-operation';
 // ** import store
 import { useImageExportStore } from '@/store/useImageExportStore';
 
-interface ImageSelectorProps extends React.HTMLAttributes<HTMLDivElement> { }
+interface ImageSelectorProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
   const { allNodes, allNodesCount, selectedNodeIds, setSelectedNodeIds, setSelectedNodesCount } = useImageExportStore();
@@ -60,13 +58,11 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
   return (
     <Fragment>
       <div className={cn('py-2 flex items-center justify-between', className)}>
-        <Typography variant="p" className="flex-1">
-          Select images
-        </Typography>
+        <Label>Search image</Label>
         <div className="flex items-center gap-2">
-          <Typography variant="p">
+          <Label>
             Selected: {selectedNodeIds.length}/{allNodesCount}
-          </Typography>
+          </Label>
           <Checkbox
             checked={selectedNodeIds.length === allNodes.length}
             onCheckedChange={(checked: boolean) => handleSelectAll(checked)}
@@ -98,9 +94,7 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
                     <div className="aspect-[16/9] w-full min-w-28 max-w-[140px] h-auto object-cover rounded-sm bg-gray-200" />
                   )}
                 </div>
-                <Typography variant="small" className="truncate w-28">
-                  {image.name}
-                </Typography>
+                <Label className="truncate w-28">{image.name}</Label>
               </div>
               <Checkbox
                 checked={selectedNodeIds.includes(image.id)}

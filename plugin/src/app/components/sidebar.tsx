@@ -5,9 +5,7 @@ import { Image } from 'lucide-react';
 
 // ** import ui components
 import { Button } from '@/components/ui/button';
-
-// ** import components
-import { Typography } from './typography';
+import { Label } from '@/components/ui/label';
 
 // ** import utilities
 import { cn } from '@/lib/utils';
@@ -18,7 +16,7 @@ import { ExportOption } from '@/types/enums';
 // ** import store
 import { useImageExportStore } from '@/store/useImageExportStore';
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> { }
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   const [activeOption, setActiveOption] = useState<ExportOption>(ExportOption.JPG);
@@ -30,8 +28,8 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   };
 
   return (
-    <div className={cn('py-2', className)}>
-      <Typography variant="p" className='mb-2'>Format</Typography>
+    <div className={cn('py-2 flex flex-col gap-1.5', className)}>
+      <Label>Format</Label>
       <div className="space-y-1 max-w-28">
         {Object.values(ExportOption).map((option) => (
           <Button
@@ -49,4 +47,4 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   );
 };
 
-export default Sidebar; 
+export default Sidebar;

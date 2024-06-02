@@ -10,15 +10,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 
 // ** import store
 import { useImageExportStore } from '@/store/useImageExportStore';
 
 // ** import types
 import { ExportScaleOption } from '@/types/enums';
-
-// ** import components
-import { Typography } from './typography';
 
 // ** import lib
 import { cn } from '@/lib/utils';
@@ -29,10 +27,8 @@ const ScaleBar: React.FC<ScaleBarProps> = ({ className, ...props }) => {
   const { exportScaleOption, setExportScaleOption } = useImageExportStore();
 
   return (
-    <div className={cn('py-2', className)} {...props}>
-      <Typography variant="p" className="mb-2">
-        Scaling Options
-      </Typography>
+    <div className={cn('py-2 flex flex-col gap-1.5', className)} {...props}>
+      <Label>Scaling Options</Label>
       <Select
         defaultValue={exportScaleOption}
         onValueChange={(value) => {
@@ -40,7 +36,7 @@ const ScaleBar: React.FC<ScaleBarProps> = ({ className, ...props }) => {
           setExportScaleOption(value as ExportScaleOption);
         }}
       >
-        <SelectTrigger className="w-[120px]">
+        <SelectTrigger className="w-[100px]">
           <SelectValue placeholder="Select scale" />
         </SelectTrigger>
         <SelectContent>
