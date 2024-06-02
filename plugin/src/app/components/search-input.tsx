@@ -15,7 +15,7 @@ const SearchInput: React.FC<SearchInputProps> = ({ className, ...props }) => {
 
   return (
     <div className={cn('py-2 flex flex-col gap-1.5', className)} {...props}>
-      <Label htmlFor="email">Search image</Label>
+      <Label htmlFor="text">Search image</Label>
       <Input type="text" placeholder="Search Image" value={searchQuery} onChange={handleChange} />
     </div>
   );
