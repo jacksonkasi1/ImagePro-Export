@@ -6,12 +6,23 @@ import { handleExportRequest } from './handlers/exportHandler';
 import { getImageNodes } from './handlers/fetchImagesHandlers';
 import { searchNodes } from './handlers/searchNodesHandler';
 
+/**
+ * Initializes the Figma plugin, setting the UI dimensions and fetching initial nodes if any are selected.
+ */
 const initializePlugin = async () => {
   const storedWidth = await figma.clientStorage.getAsync('pluginWidth');
   const storedHeight = await figma.clientStorage.getAsync('pluginHeight');
   const width = storedWidth ? storedWidth : 570;
   const height = storedHeight ? storedHeight : 540;
   figma.showUI(__html__, { width, height });
+
+  const selectedNodes = figma.currentPage.selection;
+  const allImageNodes: NodeData[] = [];
+
+  for (const node of selectedNodes) {
+    await getImageNodes(node, allImageNodes);
+  }
+  figma.ui.postMessage({ type: 'FETCH_IMAGE_NODES', data: allImageNodes });
 
   figma.ui.postMessage({ type: 'INITIAL_DIMENSIONS', data: { width, height } });
 };
@@ -34,7 +45,7 @@ figma.ui.onmessage = async (msg) => {
 };
 
 /**
- * Trigger Auto select by selectionchange
+ * Triggered when the node selection changes in Figma. Fetches image nodes for the selected nodes.
  */
 figma.on('selectionchange', async () => {
   const selectedNodes = figma.currentPage.selection;
