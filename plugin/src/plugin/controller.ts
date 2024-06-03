@@ -6,9 +6,6 @@ import { handleExportRequest } from './handlers/exportHandler';
 import { getImageNodes } from './handlers/fetchImagesHandlers';
 import { searchNodes } from './handlers/searchNodesHandler';
 
-// figma.showUI(__html__, { width: 570, height: 540 });
-
-
 const initializePlugin = async () => {
   const storedWidth = await figma.clientStorage.getAsync('pluginWidth');
   const storedHeight = await figma.clientStorage.getAsync('pluginHeight');
