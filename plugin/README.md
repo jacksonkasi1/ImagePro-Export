@@ -4,30 +4,45 @@ ImagePro Export is a versatile plugin designed to enhance your image export expe
 
 ## Features
 
-1. **Export Options**: Access export options conveniently located at the top left side of the interface.
-2. **Filter Options**: Utilize filter options found at the bottom left side, allowing you to filter by vector, image, etc.
-3. **Scale Options**: Easily scale your images using the options available at the top of the interface.
-4. **Rename Images**: Quickly rename your images with ease.
-5. **File Name Case Option**: Use the file name case option dropdown to rename all images to a selected format, making it more efficient for developers.
+- 🌟 **Export Options:** Export images in PNG, JPG, SVG, and PDF formats. Choose your preferred file format for export.
+- 🖋️ **Case Change Options:** Customize the case format of your exported file names. Available options include camelCase, snake_case, kebab-case, and PascalCase.
+- 🔍 **Search Functionality:** Easily filter images by their prefix using the search input. Quickly find and export specific images from your Figma file.
+- 📏 **Scale Options:** Export images at different scales: 1x, 2x, 2.5x, 3x, 4x, and All. Perfect for creating assets at various resolutions.
+- 🌗 **Light & Dark Mode Support:** Enjoy a seamless experience with both light and dark mode support.
+- ⚙️ **Customizable Plugin Options:** Resize the plugin window to suit your workflow. Adjust plugin settings to match your preferences.
+- 📁 **Organized Downloads:** Download images as a ZIP file, organized by scale option. Keep your exported assets neatly structured for easy access.
+
+### Upcoming Features
+
+- 🔜 **Share as ZIP:** Share exported images as a ZIP file with others.
+- 🔜 **Image Compression:** Optionally compress images while downloading to save space.
+- 🔜 **Your Ideas:** Have a feature in mind? Share your thoughts, and it might become a feature!
 
 ## Installation
 
 1. Clone the repository:
-    ```bash
-    git clone https://github.com/yourusername/imagepro-export.git
-    ```
+
+   ```bash
+   git clone https://github.com/yourusername/imagepro-export.git
+   ```
+
 2. Navigate to the project directory:
-    ```bash
-    cd plugin
-    ```
+
+   ```bash
+   cd plugin
+   ```
+
 3. Install the dependencies:
-    ```bash
-    bun install
-    ```
+
+   ```bash
+   bun install
+   ```
+
 4. Run the application:
-    ```bash
-    bun dev
-    ```
+
+   ```bash
+   bun dev
+   ```
 
 ## Usage
 
@@ -43,7 +58,7 @@ We welcome contributions! Please fork the repository and submit pull requests fo
 
 ## Donate
 
-If you like my work and would like to support my dream of buying a Mac laptop, please consider donating via [Ko-fi](https://ko-fi.com/jacksonkasi). Your support is greatly appreciated!
+If you like my work and would like to support me, please consider donating via [Ko-fi](https://ko-fi.com/jacksonkasi). Your support is greatly appreciated!😊
 
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/jacksonkasi)
 
