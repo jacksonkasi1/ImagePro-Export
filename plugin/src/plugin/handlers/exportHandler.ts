@@ -7,7 +7,7 @@ export const handleExportRequest = async (data) => {
   const images = [];
 
   for (const nodeId of selectedNodeIds) {
-    const node = figma.getNodeById(nodeId) as SceneNode;
+    const node = await figma.getNodeByIdAsync(nodeId) as SceneNode;
     if (node) {
       for (const scale of scales) {
         let exportSettings: ExportSettings;
