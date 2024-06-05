@@ -12,12 +12,12 @@ import { cn } from '@/lib/utils';
 import { arrayBufferToBase64 } from '@/helpers/file-operation';
 
 // ** import store
-import { useImageExportStore } from '@/store/useImageExportStore';
+import { useImageNodesStore } from '@/store/useImageNodesStore';
 
 interface ImageSelectorProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const ImageSelector: React.FC<ImageSelectorProps> = ({ className }) => {
-  const { allNodes, allNodesCount, selectedNodeIds, setSelectedNodeIds, setSelectedNodesCount } = useImageExportStore();
+  const { allNodes, allNodesCount, selectedNodeIds, setSelectedNodeIds, setSelectedNodesCount } = useImageNodesStore();
   const [base64Images, setBase64Images] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {

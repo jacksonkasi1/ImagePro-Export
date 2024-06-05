@@ -34,3 +34,18 @@ export interface NodeData {
   type: NodeType;
   imageData: Uint8Array;
 }
+
+export interface ImageNodesState {
+
+  allNodes: NodeData[];
+  setAllNodes: (nodes: NodeData[]) => void;
+
+  selectedNodeIds: string[];
+  setSelectedNodeIds: (ids: string[] | ((prev: string[]) => string[])) => void;
+
+  allNodesCount: number;
+  setAllNodesCount: (count: number) => void;
+
+  selectedNodesCount: number;
+  setSelectedNodesCount: (count: number) => void;
+}
