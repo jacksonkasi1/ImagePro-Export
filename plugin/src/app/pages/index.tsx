@@ -14,7 +14,7 @@ import ImageSelector from '@/components/image-selector';
 import { Separator } from '@/components/ui/separator';
 
 // ** import store
-import { useImageExportStore } from '@/store/useImageExportStore';
+import { useImageNodesStore } from '@/store/useImageNodesStore';
 import { useUtilsStore } from '@/store/useUtilsStore';
 
 // ** import types
@@ -35,7 +35,7 @@ function Page() {
     maxHeight: 1000
   });
 
-  const { setAllNodes, setAllNodesCount, setSelectedNodeIds, setSelectedNodesCount } = useImageExportStore();
+  const { setAllNodes, setAllNodesCount, setSelectedNodeIds, setSelectedNodesCount } = useImageNodesStore();
   const { setIsLoading } = useUtilsStore();
 
   const handleMessage = (event: MessageEvent) => {

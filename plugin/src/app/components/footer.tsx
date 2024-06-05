@@ -14,12 +14,14 @@ import { cn } from '@/lib/utils';
 
 // ** import store
 import { useImageExportStore } from '@/store/useImageExportStore';
+import { useImageNodesStore } from '@/store/useImageNodesStore';
 import { useUtilsStore } from '@/store/useUtilsStore';
 
 interface FooterProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const Footer: React.FC<FooterProps> = ({ className, ...props }) => {
-  const { exportOption, exportScaleOption, caseOption, selectedNodeIds } = useImageExportStore();
+  const { selectedNodeIds } = useImageNodesStore();
+  const { exportOption, exportScaleOption, caseOption } = useImageExportStore();
   const { isLoading, setIsLoading } = useUtilsStore();
 
   const handleExport = async () => {

@@ -4,14 +4,15 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 
 // ** import components
-import  Sidebar  from '@/components/sidebar';
-import  ScaleBar  from '@/components/scale-bar';
+import Sidebar from '@/components/sidebar';
+import ScaleBar from '@/components/scale-bar';
 
 // ** import types
 import { ExportOption, ExportScaleOption, CaseOption } from '@/types/enums';
 
 // ** import store
 import { useImageExportStore } from '@/store/useImageExportStore';
+import { useImageNodesStore } from '@/store/useImageNodesStore';
 
 const TestPage: React.FC = () => {
   const {
@@ -19,11 +20,12 @@ const TestPage: React.FC = () => {
     setExportOption,
     exportScaleOption,
     setExportScaleOption,
-    allNodesCount,
-    selectedNodesCount,
+
     caseOption,
     setCaseOption,
   } = useImageExportStore();
+
+  const { allNodesCount, selectedNodesCount } = useImageNodesStore();
 
   // Example usage
   return (
