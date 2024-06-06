@@ -1,9 +1,9 @@
 export enum ExportOption {
   JPG = "JPG",
   PNG = "PNG",
+  WEBP = "WEBP",
   PDF = "PDF",
   SVG = "SVG",
-  // WEBP = "WEBP",
 }
 
 export enum ExportScaleOption {

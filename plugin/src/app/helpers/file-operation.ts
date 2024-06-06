@@ -1,7 +1,10 @@
+import Compressor from 'compressorjs/dist/compressor';
+
 export const arrayBufferToBase64 = (buffer: Uint8Array, format?: string): Promise<string> => {
-  format = format || 'png';
-  const blob = new Blob([buffer], { type: `application/${format.toLowerCase()}` });
+  const mimeType = getMimeType(format);
+  const blob = new Blob([buffer], { type: mimeType });
   const reader = new FileReader();
+
   return new Promise<string>((resolve, reject) => {
     reader.onloadend = () => {
       if (reader.result) {
@@ -12,6 +15,24 @@ export const arrayBufferToBase64 = (buffer: Uint8Array, format?: string): Promis
     };
     reader.readAsDataURL(blob);
   });
+};
+
+export const getMimeType = (format?: string): string => {
+  switch (format?.toLowerCase()) {
+    case 'jpg':
+    case 'jpeg':
+      return 'image/jpeg';
+    case 'png':
+      return 'image/png';
+    case 'webp':
+      return 'image/webp';
+    case 'svg':
+      return 'image/svg+xml';
+    case 'pdf':
+      return 'application/pdf';
+    default:
+      return 'application/octet-stream'; // generic binary data
+  }
 };
 
 export const renameFile = (name: string, scale: number, format: string, caseOption: string, count: number): string => {
@@ -35,4 +56,19 @@ export const renameFile = (name: string, scale: number, format: string, caseOpti
   }
 
   return fileName;
+};
+
+export const compressImage = (file: Blob, format: string, quality: number): Promise<Blob> => {
+  return new Promise((resolve, reject) => {
+    new Compressor(file, {
+      quality,
+      mimeType: getMimeType(format),
+      success(result) {
+        resolve(result);
+      },
+      error(err) {
+        reject(err);
+      },
+    });
+  });
 };

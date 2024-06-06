@@ -16,12 +16,13 @@ import { cn } from '@/lib/utils';
 import { useImageExportStore } from '@/store/useImageExportStore';
 import { useImageNodesStore } from '@/store/useImageNodesStore';
 import { useUtilsStore } from '@/store/useUtilsStore';
+import PercentageInput from './PercentageInput';
 
 interface FooterProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 const Footer: React.FC<FooterProps> = ({ className, ...props }) => {
   const { selectedNodeIds } = useImageNodesStore();
-  const { exportOption, exportScaleOption, caseOption, quality } = useImageExportStore();
+  const { exportOption, exportScaleOption, caseOption } = useImageExportStore();
   const { isLoading, setIsLoading } = useUtilsStore();
 
   const handleExport = async () => {
@@ -36,7 +37,6 @@ const Footer: React.FC<FooterProps> = ({ className, ...props }) => {
               exportOption,
               exportScaleOption,
               caseOption,
-              quality,
             },
           },
         },
@@ -49,7 +49,9 @@ const Footer: React.FC<FooterProps> = ({ className, ...props }) => {
 
   return (
     <div className={cn('flex w-full py-2 gap-2', className)} {...props}>
-      <div className="flex-1"></div>
+      <div className="flex-1">
+      </div>
+        <PercentageInput className='w-fit' />
       <CaseSelector />
       <Button className="justify-start w-fit" onClick={handleExport} isLoading={isLoading}>
         <Download className="w-4 h-4 mr-2" />

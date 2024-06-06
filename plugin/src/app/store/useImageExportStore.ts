@@ -15,6 +15,6 @@ export const useImageExportStore = create<ImageExportState>((set) => ({
   caseOption: CaseOption.CAMEL_CASE,
   setCaseOption: (option: CaseOption) => set({ caseOption: option }),
 
-  quality: 0.6,
+  quality: 0.8, // default 80% quality
   setQuality: (quality: number) => set({ quality }),
 }));

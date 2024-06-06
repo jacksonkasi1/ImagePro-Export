@@ -3,44 +3,56 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
 // ** import helpers
-import { arrayBufferToBase64, renameFile } from '@/helpers/file-operation';
+import { arrayBufferToBase64, compressImage, renameFile } from '@/helpers/file-operation';
 
-export const handleExportComplete = async (event: MessageEvent, setIsLoading: (isLoading: boolean) => void) => {
+export const handleExportComplete = async (
+  event: MessageEvent,
+  setIsLoading: (isLoading: boolean) => void,
+  exportSettings: { quality: number }
+) => {
   if (!event?.data?.pluginMessage) return;
-  const {  data } = event.data.pluginMessage;
+  const { data } = event.data.pluginMessage;
 
   try {
-      const zip = new JSZip();
-      const fileNames = {};
+    const zip = new JSZip();
+    const fileNames = {};
 
-      const base64Promises = data.map(async (image) => {
-        const { nodeName, scale, imageData, exportOption, caseOption } = image;
-        const base64Image = await arrayBufferToBase64(new Uint8Array(imageData), exportOption);
-        return { nodeName, scale, base64Image, exportOption, caseOption };
-      });
+    const base64Promises = data.map(async (image) => {
+      const { nodeName, scale, imageData, exportOption, caseOption } = image;
+      const blob = new Blob([new Uint8Array(imageData)], { type: `image/${exportOption.toLowerCase()}` });
 
-      const base64Images = await Promise.all(base64Promises);
+      let processedBlob = blob;
 
-      base64Images.forEach((image) => {
-        const { nodeName, scale, base64Image, exportOption, caseOption } = image;
+      if (['JPG', 'PNG', 'WEBP'].includes(exportOption) && exportSettings.quality < 1) {
+        processedBlob = await compressImage(blob, exportOption, exportSettings.quality);
+      }
 
-        const scaleFolder = `${scale}x/`;
-        if (!fileNames[scaleFolder]) {
-          fileNames[scaleFolder] = new Set();
-        }
+      const base64Image = await arrayBufferToBase64(new Uint8Array(await processedBlob.arrayBuffer()), exportOption);
+      return { nodeName, scale, base64Image, exportOption, caseOption };
+    });
 
-        let fileName = renameFile(nodeName, scale, exportOption, caseOption, fileNames[scaleFolder].size);
+    const base64Images = await Promise.all(base64Promises);
 
-        while (fileNames[scaleFolder].has(fileName)) {
-          fileName = renameFile(nodeName, scale, exportOption, caseOption, fileNames[scaleFolder].size + 1);
-        }
-        fileNames[scaleFolder].add(fileName);
+    base64Images.forEach((image) => {
+      const { nodeName, scale, base64Image, exportOption, caseOption } = image;
 
-        zip.folder(scaleFolder).file(fileName, base64Image.split(',')[1], { base64: true });
-      });
+      const scaleFolder = `${scale}x/`;
+      if (!fileNames[scaleFolder]) {
+        fileNames[scaleFolder] = new Set();
+      }
 
-      const content = await zip.generateAsync({ type: 'blob' });
-      saveAs(content, 'exported_images.zip');
+      let fileName = renameFile(nodeName, scale, exportOption, caseOption, fileNames[scaleFolder].size);
+
+      while (fileNames[scaleFolder].has(fileName)) {
+        fileName = renameFile(nodeName, scale, exportOption, caseOption, fileNames[scaleFolder].size + 1);
+      }
+      fileNames[scaleFolder].add(fileName);
+
+      zip.folder(scaleFolder).file(fileName, base64Image.split(',')[1], { base64: true });
+    });
+
+    const content = await zip.generateAsync({ type: 'blob' });
+    saveAs(content, 'exported_images.zip');
   } catch (error) {
     console.error(error);
     setIsLoading(false);
