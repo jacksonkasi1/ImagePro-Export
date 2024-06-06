@@ -9,12 +9,14 @@ import Sidebar from '@/components/sidebar';
 import ScaleBar from '@/components/scale-bar';
 import Footer from '@/components/footer';
 import ImageSelector from '@/components/image-selector';
+import SearchInput from '@/components/search-input';
 
 // ** import ui
 import { Separator } from '@/components/ui/separator';
 
 // ** import store
 import { useImageNodesStore } from '@/store/useImageNodesStore';
+import { useImageExportStore } from '@/store/useImageExportStore';
 import { useUtilsStore } from '@/store/useUtilsStore';
 
 // ** import types
@@ -25,14 +27,13 @@ import useResizable from '@/hooks/useResizable';
 
 // ** import handlers
 import { handleExportComplete } from '@/handlers/handleExportComplete';
-import SearchInput from '@/components/search-input';
 
 function Page() {
   useResizable({
     minWidth: 470,
     maxWidth: 1000,
     minHeight: 360,
-    maxHeight: 1000
+    maxHeight: 1000,
   });
 
   const { setAllNodes, setAllNodesCount, setSelectedNodeIds, setSelectedNodesCount } = useImageNodesStore();
@@ -49,7 +50,7 @@ function Page() {
       setSelectedNodesCount(0);
     }
     if (type === 'EXPORT_COMPLETE') {
-      handleExportComplete(event, setIsLoading);
+      handleExportComplete(event, setIsLoading, { quality: useImageExportStore.getState().quality });
     }
   };
 

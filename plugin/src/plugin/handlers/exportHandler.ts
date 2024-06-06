@@ -26,8 +26,14 @@ export const handleExportRequest = async (data) => {
               constraint: { type: 'SCALE', value: scale },
             } as ExportSettingsImage;
             break;
+          case 'WEBP':
+            exportSettings = {
+              format: 'JPG', // JPG / PNG
+              constraint: { type: 'SCALE', value: scale },
+            } as ExportSettingsImage;
+            break;
           default:
-            continue; // Skip unsupported formats like WEBP
+            continue; // Skip unsupported formats
         }
 
         const imageData = await node.exportAsync(exportSettings);
