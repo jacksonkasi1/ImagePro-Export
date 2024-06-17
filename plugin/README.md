@@ -54,7 +54,6 @@ ImagePro Export is a versatile plugin designed to enhance your image export expe
    bun dev
    ```
 
-
 ## Contributing
 
 We welcome contributions! Please fork the repository and submit pull requests for any enhancements or bug fixes.
@@ -71,8 +70,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Seeking UI/UX Designer Volunteers 🤝
 
-I am seeking a UI/UX designer to help improve the plugin's user interface and user experience. If you are interested, please reach out at jacksonkasipeacock@gmail.com.
-```
+I am seeking a UI/UX designer to help improve the plugin's user interface and user experience. If you are interested, please reach out at <jacksonkasipeacock@gmail.com>
 
 ## Feature Checklist
 
