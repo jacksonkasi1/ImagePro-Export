@@ -2,7 +2,7 @@
 
 [![ImagePro Export Figma Plugin](https://img.shields.io/badge/Figma-Plugin-7D3C98?style=flat&logo=figma&logoColor=white)](https://www.figma.com/community/plugin/1379136407205425732/imagepro-export) 👈 Try this✨
 
-![Fimga Plugin Image](https://s3-figma-plugin-images-production-sig.figma.com/plugins/carousel/img/1379136407205425732/32ad56eeab9f891dec22468c8ee6a811d0e1675a?Expires=1719792000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=Eqp1-8T1tmryM210EbLQg1LNfp15PxE83B8oSJGcnUM7C2EnmbORyacHNdlo0~FkdJj-omde~Dq12ZzhtLyhnQlMz4Evlz5Uj4lMyz~XpqQfiVz1At0-J48dCO0sA6vOa4aG2EtgMcp3ToThBGU0HWgnCIDxMQJQ4lSMaxljEb~~NnCoknfV5Kh-BlkWU-FzYB1fNMGh9hAKTQ6kDNDQz30JutDApWIrPJDTc~Yz1-bFjY9p288MzaCvIGlywVOen-atMZ3DHG9X9IBWFHC83BbtGR~DZzv3qeTSUAxy3qsf1CZd9nY~dFk1bElhxRiimmXmvit3ZvZ8Y0boMY5ErQ__)
+![Fimga Plugin Image](./assets//img.png)
 
 ImagePro Export is a versatile plugin designed to enhance your image export experience. It provides various export options, filter settings, scaling features, and convenient renaming capabilities, making it an invaluable tool for developers and designers.
 
