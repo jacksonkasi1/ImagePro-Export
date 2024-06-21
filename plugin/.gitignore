@@ -5,3 +5,4 @@ yarn-error.log
 .vscode
 manifest.json
 backup.manifest.json
+resource.md
