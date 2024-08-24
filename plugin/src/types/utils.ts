@@ -5,3 +5,11 @@ export interface UtilsState {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
 }
+
+export interface ImageData {
+  nodeName: string;
+  scale: number;
+  imageData: number[];
+  exportOption: string;
+  caseOption: string;
+}
