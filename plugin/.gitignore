@@ -1,8 +1,8 @@
-node_modules
-dist
-settings.json
-yarn-error.log
-.vscode
-manifest.json
-backup.manifest.json
-resource.md
+.DS_Store
+*.log
+*.css.d.ts
+/build/
+/manifest.json
+node_modules/
+
+backup
