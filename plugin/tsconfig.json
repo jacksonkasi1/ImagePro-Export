@@ -2,7 +2,7 @@
   "extends": "@create-figma-plugin/tsconfig",
   "compilerOptions": {
     "jsx": "react",
-    "lib": ["DOM", "ES2015"],
+    "lib": ["DOM", "ESNext"],
     "typeRoots": ["node_modules/@figma", "node_modules/@types"],
     "paths": {
       "@/*": ["./src/*"],
