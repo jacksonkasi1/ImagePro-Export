@@ -45,7 +45,10 @@
     ]
   },
   "figma-plugin": {
-    "editorType": ["figma", "figjam"],
+    "editorType": [
+      "figma",
+      "figjam"
+    ],
     "id": "imagepro-export",
     "name": "ImagePro Export",
     "main": "src/main.ts",
