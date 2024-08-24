@@ -30,7 +30,7 @@
     "watch": "npm run build:css && concurrently npm:watch:css npm:watch:js",
     "watch:css": "tailwindcss --input ./src/input.css --output ./src/output.css --watch",
     "watch:js": "build-figma-plugin --typecheck --watch",
-    "prettier:format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,json}'"
+    "prettier:format": "npx prettier --write 'src/**/*.{js,jsx,ts,tsx,css,json}'"
   },
   "figma-plugin": {
     "editorType": [
