@@ -1,4 +1,4 @@
-import Compressor from 'compressorjs/dist/compressor';
+import Compressor from 'compressorjs';
 
 export const arrayBufferToBase64 = (buffer: Uint8Array, format?: string): Promise<string> => {
   const mimeType = getMimeType(format);
