@@ -1,20 +1,20 @@
-import { CaseOption, ExportOption, ExportScaleOption } from "./enums";
+import { CaseOption, ExportOption, ExportScaleOption } from './enums';
 
 export interface ExportSettings {
   format: string;
-  constraint?: { type: "SCALE"; value: number };
+  constraint?: { type: 'SCALE'; value: number };
 }
 
 export interface ExportSettingsImage extends ExportSettings {
-  format: "PNG" | "JPG";
+  format: 'PNG' | 'JPG';
 }
 
 export interface ExportSettingsPDF extends ExportSettings {
-  format: "PDF";
+  format: 'PDF';
 }
 
 export interface ExportSettingsSVG extends ExportSettings {
-  format: "SVG";
+  format: 'SVG';
 }
 
 export interface ImageExportState {

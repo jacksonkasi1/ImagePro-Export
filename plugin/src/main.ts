@@ -1,8 +1,8 @@
-import { showUI } from '@create-figma-plugin/utilities'
+import { showUI } from '@create-figma-plugin/utilities';
 
 export default function () {
   showUI({
     height: 160,
-    width: 240
-  })
+    width: 240,
+  });
 }

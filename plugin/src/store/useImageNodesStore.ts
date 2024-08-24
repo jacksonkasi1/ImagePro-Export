@@ -1,8 +1,8 @@
-import create from "zustand";
+import create from 'zustand';
 
 // ** import types
-import { NodeData } from "@/types/node";
-import { ImageNodesState } from "@/types/node";
+import { NodeData } from '@/types/node';
+import { ImageNodesState } from '@/types/node';
 
 export const useImageNodesStore = create<ImageNodesState>((set) => ({
   allNodes: [],
@@ -11,8 +11,7 @@ export const useImageNodesStore = create<ImageNodesState>((set) => ({
   selectedNodeIds: [],
   setSelectedNodeIds: (ids: string[] | ((prev: string[]) => string[])) =>
     set((state) => ({
-      selectedNodeIds:
-        typeof ids === "function" ? ids(state.selectedNodeIds) : ids,
+      selectedNodeIds: typeof ids === 'function' ? ids(state.selectedNodeIds) : ids,
     })),
 
   allNodesCount: 0,
