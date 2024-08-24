@@ -33,13 +33,12 @@
     "watch:js": "build-figma-plugin --typecheck --watch",
     "prettier:format": "prettier --write '**/*.{js,jsx,ts,tsx,css,json}' "
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,css,json}": [
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.{css,scss,md,json}": [
       "prettier --write",
       "git add"
     ]
