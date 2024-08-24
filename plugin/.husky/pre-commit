@@ -1,8 +1,0 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-echo "Running lint-staged..."
-
-# Run lint-staged to format code and check for linting errors
-npx lint-staged
-
