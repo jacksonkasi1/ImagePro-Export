@@ -1,4 +1,8 @@
 {
+  "name": "imagepro-export",
+  "version": "1.0.1",
+  "description": "ImagePro plugin, enhance your Figma image export & more.",
+  "license": "MIT",
   "dependencies": {
     "@create-figma-plugin/ui": "^3.2.0",
     "@create-figma-plugin/utilities": "^3.2.0",
@@ -14,6 +18,8 @@
     "@figma/plugin-typings": "1.90.0",
     "clsx": "^2.1.1",
     "concurrently": ">=8",
+    "husky": "^9.1.5",
+    "lint-staged": "^15.2.9",
     "tailwind-merge": "^2.5.2",
     "tailwindcss": ">=3",
     "typescript": ">=4"
@@ -24,14 +30,24 @@
     "build:js": "build-figma-plugin --typecheck --minify",
     "watch": "npm run build:css && concurrently npm:watch:css npm:watch:js",
     "watch:css": "tailwindcss --input ./src/input.css --output ./src/output.css --watch",
-    "watch:js": "build-figma-plugin --typecheck --watch"
+    "watch:js": "build-figma-plugin --typecheck --watch",
+    "prettier:format": "prettier --write '**/*.{js,jsx,ts,tsx,css,json}' "
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,css,json}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "figma-plugin": {
-    "editorType": [
-      "figma"
-    ],
-    "id": "preact-tailwindcss",
-    "name": "Preact Tailwind Css",
+    "editorType": ["figma", "figjam"],
+    "id": "imagepro-export",
+    "name": "ImagePro Export",
     "main": "src/main.ts",
     "ui": "src/ui.tsx"
   }

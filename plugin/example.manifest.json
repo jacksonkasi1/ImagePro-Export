@@ -1,0 +1,10 @@
+{
+    "name": "ImagePro Export",
+    "id": "xxxxxxx",
+    "api": "1.0.1",
+    "main": "build/main.js",
+    "ui": "build/ui.js",
+    "editorType": ["figma", "figjam"],
+    "networkAccess": { "allowedDomains": ["none"] },
+    "documentAccess": "dynamic-page"
+  }
