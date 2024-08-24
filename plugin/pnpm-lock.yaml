@@ -39,6 +39,9 @@ importers:
       '@figma/plugin-typings':
         specifier: 1.90.0
         version: 1.90.0
+      '@types/file-saver':
+        specifier: ^2.0.7
+        version: 2.0.7
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -287,6 +290,9 @@ packages:
   '@trysound/sax@0.2.0':
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
     engines: {node: '>=10.13.0'}
+
+  '@types/file-saver@2.0.7':
+    resolution: {integrity: sha512-dNKVfHd/jk0SkR/exKGj2ggkB45MAkzvWCaqLUUgkyjITkGNzH8H+yUwr+BLJUBjZOe9w8X3wgmXhZDRg1ED6A==}
 
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
@@ -1493,6 +1499,8 @@ snapshots:
       escape-string-regexp: 5.0.0
 
   '@trysound/sax@0.2.0': {}
+
+  '@types/file-saver@2.0.7': {}
 
   ansi-regex@5.0.1: {}
 
