@@ -1,7 +1,15 @@
 import { getScaleValues } from '@/helpers/common';
 import { ExportSettingsImage, ExportSettingsPDF, ExportSettingsSVG } from '@/types/export-settings';
 
-export const handleExportRequest = async (data) => {
+// Define an interface for the data parameter
+interface ExportRequestData {
+  selectedNodeIds: string[];
+  exportOption: 'PDF' | 'SVG' | 'PNG' | 'JPG' | 'WEBP';
+  exportScaleOption: string; // scale options
+  caseOption: string; // options for caseOption
+}
+
+export const handleExportRequest = async (data: ExportRequestData) => {
   const { selectedNodeIds, exportOption, exportScaleOption, caseOption } = data;
   const scales = getScaleValues(exportScaleOption);
   const images = [];
@@ -28,7 +36,7 @@ export const handleExportRequest = async (data) => {
             break;
           case 'WEBP':
             exportSettings = {
-              format: 'JPG', // JPG / PNG
+              format: 'JPG', // Use JPG as default
               constraint: { type: 'SCALE', value: scale },
             } as ExportSettingsImage;
             break;
