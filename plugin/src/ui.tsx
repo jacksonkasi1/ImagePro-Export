@@ -1,9 +1,10 @@
 import { render } from '@create-figma-plugin/ui';
 import { h } from 'preact';
 import '!./styles/output.css';
+import Root from './pages';
 
 function Plugin() {
-  return <h1 class="text-3xl font-bold underline">Hello, World!</h1>;
+  return <Root />;
 }
 
 export default render(Plugin);
