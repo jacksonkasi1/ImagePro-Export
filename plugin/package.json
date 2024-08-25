@@ -1,7 +1,7 @@
 {
-  "name": "imagepro-export",
-  "version": "1.0.1",
-  "description": "ImagePro plugin, enhance your Figma image export & more.",
+  "name": "imagepro",
+  "version": "2.0.0",
+  "description": "ImagePro plugin, enhance your figma image export & more.",
   "license": "MIT",
   "dependencies": {
     "@create-figma-plugin/ui": "^3.2.0",
