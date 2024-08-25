@@ -38,8 +38,8 @@
       "figma",
       "figjam"
     ],
-    "id": "imagepro-export",
-    "name": "ImagePro Export",
+    "id": "imagepro",
+    "name": "ImagePro",
     "main": "src/main.ts",
     "ui": "src/ui.tsx"
   }
