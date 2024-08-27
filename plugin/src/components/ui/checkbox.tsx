@@ -42,7 +42,7 @@ export const Checkbox = ({
       <span
         class={cn(
           'flex items-center justify-center w-3 h-3 border rounded-sm', // Basic size and border
-          'border-gray-400 bg-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500', // Focus styles
+          'border-gray-300 bg-primary-bg peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500', // Focus styles
           value ? 'bg-brand-bg border-brand-bg' : '', // Checked state
           disabled ? 'bg-gray-100 border-gray-300 cursor-not-allowed' : 'cursor-pointer' // Disabled state
         )}
