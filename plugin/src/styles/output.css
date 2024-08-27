@@ -627,6 +627,10 @@ video {
   display: none;
 }
 
+.aspect-\[16\/9\] {
+  aspect-ratio: 16/9;
+}
+
 .h-0 {
   height: 0px;
 }
@@ -653,6 +657,10 @@ video {
 
 .h-8 {
   height: 2rem;
+}
+
+.h-auto {
+  height: auto;
 }
 
 .w-0 {
@@ -692,6 +700,18 @@ video {
   width: 100%;
 }
 
+.w-28 {
+  width: 7rem;
+}
+
+.w-\[140px\] {
+  width: 140px;
+}
+
+.min-w-28 {
+  min-width: 7rem;
+}
+
 .max-w-1 {
   max-width: 0.25rem;
 }
@@ -707,6 +727,10 @@ video {
 
 .max-w-full {
   max-width: 100%;
+}
+
+.max-w-\[140px\] {
+  max-width: 140px;
 }
 
 .flex-1 {
@@ -747,6 +771,10 @@ video {
   justify-content: center;
 }
 
+.gap-2 {
+  gap: 0.5rem;
+}
+
 .space-x-2 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.5rem * var(--tw-space-x-reverse));
@@ -767,6 +795,12 @@ video {
 
 .overflow-hidden {
   overflow: hidden;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .rounded {
@@ -949,6 +983,16 @@ video {
   fill: currentColor;
 }
 
+.object-contain {
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
 .p-2 {
   padding: 0.5rem;
 }
@@ -1060,6 +1104,10 @@ video {
 
 .ring-primary-text {
   --tw-ring-color: var(--figma-color-text);
+}
+
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .transition-all {
