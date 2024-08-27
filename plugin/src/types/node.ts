@@ -33,6 +33,10 @@ export interface NodeData {
   name: string;
   type: NodeType;
   imageData: Uint8Array;
+  dimensions: {
+    width: number;
+    height: number;
+  };
 }
 
 export interface ImageNodesState {

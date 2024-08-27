@@ -32,6 +32,10 @@ export async function getImageNodes(node: SceneNode, allNodes: NodeData[]) {
         name: node.name,
         type: 'IMAGE' as NodeType,
         imageData: imageUrl,
+        dimensions: {
+          width: node.width,
+          height: node.height,
+        },
       });
     }
   }
