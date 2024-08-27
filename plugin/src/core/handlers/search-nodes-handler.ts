@@ -29,6 +29,10 @@ export async function searchNodes(query: string): Promise<NodeData[]> {
         name: node.name,
         type: node.type as NodeType,
         imageData: imageUrl,
+        dimensions: {
+          height: node.height,
+          width: node.width,
+        }
       });
     }
 
