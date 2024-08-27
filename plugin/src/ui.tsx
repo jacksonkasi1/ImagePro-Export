@@ -1,10 +1,16 @@
-import { render } from '@create-figma-plugin/ui';
 import { h } from 'preact';
+import { useEffect } from 'preact/hooks';
+
+// ** import figma utils & ui
+import { on } from '@create-figma-plugin/utilities';
+import { render } from '@create-figma-plugin/ui';
+
+// ** import pages & style
 import '!./styles/output.css';
 import Root from './pages';
+
+// ** import types
 import { FetchImageNodesHandler } from './types/events';
-import { on } from '@create-figma-plugin/utilities';
-import { useEffect } from 'preact/hooks';
 
 function Plugin() {
   useEffect(() => {
