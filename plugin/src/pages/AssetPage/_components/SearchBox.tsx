@@ -27,17 +27,15 @@ const SearchBox = () => {
 
   return (
     <Fragment>
-      <div className="flex-1">
-        <SearchTextbox
-          {...useInitialFocus()}
-          clearOnEscapeKeyDown
-          name="searchQuery"
-          onInput={handleSearch}
-          placeholder="Search"
-          value={searchQuery}
-          onKeyDown={handleKeyDown}
-        />
-      </div>
+      <SearchTextbox
+        {...useInitialFocus()}
+        clearOnEscapeKeyDown
+        name="searchQuery"
+        onInput={handleSearch}
+        placeholder="Search"
+        value={searchQuery}
+        onKeyDown={handleKeyDown}
+      />
     </Fragment>
   );
 };

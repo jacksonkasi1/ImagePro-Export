@@ -14,6 +14,8 @@ const TestPage = () => {
       <div className="p-4 rounded bg-active-bg text-primary-text">This is a secondary styled element.</div>
 
       <div className="p-4 rounded text-secondary-text">This is a secondary text.</div>
+
+
     </Fragment>
   );
 };
