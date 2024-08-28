@@ -6,6 +6,7 @@ export default {
       colors: {
         // Primary colors for light and dark mode
         'primary-bg': 'var(--figma-color-bg)', // Light: rgba(255, 255, 255, 1), Dark: #2c2c2c
+        'secondary-bg': 'var(--figma-color-bg-secondary)', // Light: #f5f5f5, Dark: #383838
         'active-bg': 'var(--figma-color-bg-tertiary)',
 
         'primary-text': 'var(--figma-color-text)', // Light: rgba(0, 0, 0, 0.9), Dark: rgba(255, 255, 255, 1)
