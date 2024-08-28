@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
-// ** import figma ui components
+// ** import figma ui components & icons
 import { Bold, Container, Text, VerticalSpace, IconGrid32, IconList32 } from '@create-figma-plugin/ui';
 
 // ** import custom ui components
@@ -21,6 +21,7 @@ import { cn } from '@/lib/utils';
 
 const ImageSelector = () => {
   const { allNodes, allNodesCount, selectedNodeIds, setSelectedNodeIds, setSelectedNodesCount } = useImageNodesStore();
+
   const [base64Images, setBase64Images] = useState<{ [key: string]: string }>({});
   const [viewType, setViewType] = useState<'grid' | 'list'>('grid'); // State for toggling between grid and list views
 

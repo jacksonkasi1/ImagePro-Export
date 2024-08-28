@@ -1,7 +1,16 @@
-import { h } from 'preact';
-import { Checkbox } from '@/components/ui/checkbox'; // Import custom checkbox component
-import { Text } from '@create-figma-plugin/ui'; // Import Figma UI component
-import { NodeData } from '@/types/node'; // Import NodeData type
+import { Fragment, h } from 'preact';
+
+// ** import figma ui components
+import { Columns, Text } from '@create-figma-plugin/ui';
+
+// ** import custom ui components
+import { Checkbox } from '@/components/ui/checkbox';
+
+// ** import types
+import { NodeData } from '@/types/node';
+
+// ** import utils
+import { cn, truncateText } from '@/lib/utils';
 
 interface ImageGridListViewProps {
   allNodes: NodeData[];
@@ -21,43 +30,92 @@ const ImageGridListView = ({
   const isGridView = viewType === 'grid';
 
   return (
-    <div className={isGridView ? 'grid grid-cols-2 gap-4' : 'flex flex-col'}>
+    <div className={cn('gap-2', isGridView ? 'grid grid-cols-2' : 'flex flex-col')}>
       {allNodes.map((image, index) => (
         <div
           key={`${image.id}_${index}`}
-          className={isGridView ? 'flex flex-col items-center' : 'flex items-center gap-2 mb-2'}
+          className={cn(
+            'relative rounded-lg flex flex-col items-center cursor-pointer',
+            isGridView ? 'p-2' : 'px-2',
+            selectedNodeIds.includes(image.id) ? 'bg-selected-bg' : 'bg-secondary-bg'
+          )}
+          onClick={() => onSelectImage(image.id, !selectedNodeIds.includes(image.id))}
         >
-          {/* Image Preview */}
-          <div
-            className="overflow-hidden border rounded-md cursor-pointer"
-            onClick={() => onSelectImage(image.id, !selectedNodeIds.includes(image.id))}
-          >
-            {base64Images[image.id] ? (
-              <img
-                src={base64Images[image.id]}
-                alt={`${image.name}`}
-                className={`object-contain rounded-sm ${
-                  isGridView ? 'w-full h-auto' : 'aspect-[16/9] min-w-28 w-[140px] max-w-[140px] h-auto'
-                }`}
+          {isGridView ? (
+            <Fragment>
+              {/* Grid View */}
+              {/* Checkbox */}
+              <Checkbox
+                value={selectedNodeIds.includes(image.id)}
+                onValueChange={(checked) => onSelectImage(image.id, checked)}
+                className="absolute top-3 left-3"
               />
-            ) : (
-              <div
-                className={`bg-gray-200 rounded-sm ${
-                  isGridView ? 'w-full h-auto' : 'aspect-[16/9] min-w-28 w-[140px] max-w-[140px] h-auto'
-                }`}
-              />
-            )}
-          </div>
+              {/* Image Preview */}
+              <div className={cn('overflow-hidden w-full h-fit max-h-20 flex justify-center items-center')}>
+                {base64Images[image.id] ? (
+                  <img
+                    src={base64Images[image.id]}
+                    alt={`${image.name}`}
+                    className={cn(
+                      'object-contain rounded-sm w-full h-full' // Object contain to keep the image within bounds
+                    )}
+                  />
+                ) : (
+                  <div
+                    className={cn(
+                      'rounded-sm w-full h-full' // Fixed size placeholder
+                    )}
+                  />
+                )}
+              </div>
 
-          {/* Image Name and Checkbox */}
-          <div className={isGridView ? 'flex flex-col items-center mt-2' : 'flex items-center flex-1'}>
-            <Text class="truncate w-28">{image.name}</Text>
-            <Checkbox
-              value={selectedNodeIds.includes(image.id)}
-              onValueChange={(checked) => onSelectImage(image.id, checked)}
-              className="ml-2"
-            />
-          </div>
+              {/* Image Name, Dimensions, Type */}
+              <div className={cn('flex flex-col gap-2 items-center mt-2')}>
+                <Columns space="medium">
+                  <div className="flex flex-col gap-1">
+                    <Text className={cn('truncate w-fit font-medium')}>{truncateText(image.name, 8)}</Text>
+                    <Text className="text-secondary-text">{image.type}</Text>
+                  </div>
+                  <Text className="text-secondary-text">
+                    {Math.round(image.dimensions.width)}x{Math.round(image.dimensions.height)}px
+                  </Text>
+                </Columns>
+              </div>
+            </Fragment>
+          ) : (
+            <Fragment>
+              {/* List View */}
+              <div className="flex items-center w-full gap-2">
+                {/* Checkbox */}
+                <Checkbox
+                  value={selectedNodeIds.includes(image.id)}
+                  onValueChange={(checked) => onSelectImage(image.id, checked)}
+                  className="self-center"
+                />
+                {/* Image Preview */}
+                <div className="flex items-center justify-center w-16 h-16 overflow-hidden cursor-pointer">
+                  {base64Images[image.id] ? (
+                    <img src={base64Images[image.id]} alt={`${image.name}`} className="object-contain w-full h-full" />
+                  ) : (
+                    <div className="w-full h-full bg-gray-200" />
+                  )}
+                </div>
+
+                {/* Image Details */}
+                <div className="flex flex-row items-center justify-between w-full gap-2">
+                  <div className="flex flex-col ">
+                    <Text className={cn('truncate w-full font-medium')}>{truncateText(image.name, 17)}</Text>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Text className="text-secondary-text">{image.type}</Text>
+                    <Text className="text-secondary-text">
+                      {Math.round(image.dimensions.width)}x{Math.round(image.dimensions.height)}px
+                    </Text>
+                  </div>
+                </div>
+              </div>
+            </Fragment>
+          )}
         </div>
       ))}
     </div>
