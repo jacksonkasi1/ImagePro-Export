@@ -14,6 +14,7 @@ export default {
         // Brand colors for light and dark mode
         'brand-bg': 'var(--figma-color-bg-brand)', // Light: #0d99ff, Dark: #0c8ce9
         'brand-text': 'var(--figma-color-text-brand)', // Light: #007be5, Dark: #7cc4f8
+        'selected-bg': 'var(--figma-color-bg-selected)', // Light: #bde3ff, Dark:
 
         // Additional colors
         'f-border': 'var(--figma-color-border)', // Light: #e6e6e6,  Dark: #444444
