@@ -57,9 +57,9 @@ export const SegmentedControl = ({
   );
 
   return (
-    <div className={cn('inline-flex border border-transparent border-b-f-border', className)}>
+    <div className={cn('inline-flex border h-10 w-full items-center border-transparent border-b-f-border', className)}>
       {options.map((option) => (
-        <Text>
+        <Text className='cursor-pointer'>
           <Bold>
             <label
               key={option.value}
