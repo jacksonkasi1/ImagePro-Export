@@ -22,7 +22,8 @@ export async function searchNodes(query: string): Promise<NodeData[]> {
   }
 
   async function searchNode(node: SceneNode) {
-    if (node.name.toLowerCase().startsWith(query.toLowerCase())) {
+    // Convert node name and query to lowercase for case-insensitive search
+    if (node.name.toLowerCase().includes(query.toLowerCase())) {
       const imageUrl = await node.exportAsync(exportSize('HEIGHT', 150));
       allNodes.push({
         id: node.id,
@@ -36,6 +37,7 @@ export async function searchNodes(query: string): Promise<NodeData[]> {
       });
     }
 
+    // Recursively search through children nodes if the current node has children
     if ('children' in node) {
       for (const child of node.children) {
         await searchNode(child);
