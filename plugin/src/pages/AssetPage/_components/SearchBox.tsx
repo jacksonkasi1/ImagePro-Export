@@ -1,5 +1,5 @@
 import { Fragment, h, JSX } from 'preact';
-import { useState, useEffect, useRef } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 
 // ** import figma utils
 import { emit } from '@create-figma-plugin/utilities';
@@ -15,7 +15,6 @@ import { SearchNodesHandler } from '@/types/events';
 
 const SearchBox = () => {
   const { searchQuery, setSearchQuery } = useUtilsStore();
-  const searchRef = useRef<HTMLInputElement>(null);
 
   /**
    * Handles the search input change.
@@ -38,15 +37,6 @@ const SearchBox = () => {
   };
 
   /**
-   * Emit the search event when user clicks outside of the search box.
-   */
-  const handleClickOutside = (event: MouseEvent) => {
-    if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-      emit<SearchNodesHandler>('SEARCH_NODES', searchQuery);
-    }
-  };
-
-  /**
    * Debounce the search query to emit only after 500ms of inactivity.
    */
   useEffect(() => {
@@ -59,16 +49,6 @@ const SearchBox = () => {
     };
   }, [searchQuery]);
 
-  /**
-   * Add event listener for clicks outside of the search box.
-   */
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
   return (
     <Fragment>
       <SearchTextbox
@@ -79,7 +59,6 @@ const SearchBox = () => {
         placeholder="Search"
         value={searchQuery}
         onKeyDown={handleKeyDown}
-        ref={searchRef} // Reference to detect clicks outside
       />
     </Fragment>
   );
