@@ -17,6 +17,21 @@ export default function () {
 }
 
 /**
+ * Initializes the Figma plugin, and fetching initial nodes if any are selected.
+ */
+const initializePlugin = async () => {
+  const selectedNodes = figma.currentPage.selection;
+  const allImageNodes: NodeData[] = [];
+
+  for (const node of selectedNodes) {
+    await getImageNodes(node, allImageNodes);
+  }
+  emit<FetchImageNodesHandler>('FETCH_IMAGE_NODES', allImageNodes);
+};
+
+initializePlugin();
+
+/**
  * Triggered when the node selection changes in Figma. Fetches image nodes for the selected nodes.
  */
 figma.on('selectionchange', async () => {
