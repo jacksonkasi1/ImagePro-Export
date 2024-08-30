@@ -16,8 +16,6 @@ import { FetchImageNodesHandler } from '@/types/events';
 import { useImageNodesStore } from '@/store/use-image-nodes-store';
 
 function Plugin() {
-
-
   const { setAllNodes, setAllNodesCount, setSelectedNodeIds, setSelectedNodesCount } = useImageNodesStore();
 
   useEffect(() => {
