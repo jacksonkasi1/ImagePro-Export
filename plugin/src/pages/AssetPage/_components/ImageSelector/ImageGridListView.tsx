@@ -30,7 +30,7 @@ const ImageGridListView = ({
   const isGridView = viewType === 'grid';
 
   return (
-    <div className={cn('gap-2', isGridView ? 'grid grid-cols-2' : 'flex flex-col')}>
+    <div className={cn('gap-2 h-full max-h-80 overflow-y-scroll', isGridView ? 'grid grid-cols-2' : 'flex flex-col')}>
       {allNodes.map((image, index) => (
         <div
           key={`${image.id}_${index}`}
