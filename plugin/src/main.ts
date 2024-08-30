@@ -2,7 +2,7 @@
 import { emit, on, showUI } from '@create-figma-plugin/utilities';
 
 // ** import handlers
-import { getImageNodes } from './core/handlers/fetch-images-handlers';
+import { getImageNodes } from './core/handlers/fetch-images-handler';
 import { searchNodes } from './core/handlers/search-nodes-handler';
 
 // ** import types

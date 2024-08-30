@@ -2,7 +2,7 @@
 import { NodeData, NodeType } from '@/types/node';
 
 // ** import handlers
-import { getImageNodes } from './fetch-images-handlers';
+import { getImageNodes } from './fetch-images-handler';
 
 // Define the export size settings
 const exportSize = (type: 'SCALE' | 'HEIGHT', value: number): ExportSettings => ({
