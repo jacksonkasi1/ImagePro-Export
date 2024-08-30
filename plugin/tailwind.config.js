@@ -20,12 +20,14 @@ export default {
         // Additional colors
         'f-border': 'var(--figma-color-border)', // Light: #e6e6e6,  Dark: #444444
 
+        // Additional colors for scrollbar
+        'scrollbar-thumb': 'var(--figma-color-border)',
+        'scrollbar-track': 'var(--figma-color-bg-secondary)',
+        'scrollbar-thumb-hover': 'var(--figma-color-bg-secondary)',
+
         'light-gray': '#B2B2B2',
         'secondary-gray': '#0000004d',
         'btn-bg-dark': '#505050',
-        'dark-scrollbar-track': '#2D2D2D',
-        'dark-scrollbar-thumb': '#4D4D4D',
-        'dark-scrollbar-thumb-hover': '#666666',
       },
     },
   },
