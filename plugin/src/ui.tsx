@@ -22,7 +22,6 @@ function Plugin() {
 
   useEffect(() => {
     on<FetchImageNodesHandler>('FETCH_IMAGE_NODES', (image_nodes) => {
-      console.log(image_nodes);
       setAllNodes(image_nodes);
       setAllNodesCount(image_nodes.length);
       setSelectedNodeIds([]);
