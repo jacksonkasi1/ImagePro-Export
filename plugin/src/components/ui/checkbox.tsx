@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 
 interface CheckboxProps {
   value: boolean;
-  onValueChange: (newValue: boolean) => void;
+  onValueChange: (newValue: boolean, event: JSX.TargetedEvent<HTMLInputElement>) => void;
   children?: ComponentChildren;
   disabled?: boolean;
   className?: string; // Allows for dynamic class name prop
@@ -22,7 +22,7 @@ export const Checkbox = ({
   const handleChange = useCallback(
     (event: JSX.TargetedEvent<HTMLInputElement>) => {
       if (!disabled) {
-        onValueChange(event.currentTarget.checked);
+        onValueChange(event.currentTarget.checked, event);
       }
     },
     [onValueChange, disabled]
