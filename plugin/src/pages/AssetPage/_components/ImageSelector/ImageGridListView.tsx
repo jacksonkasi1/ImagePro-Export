@@ -73,7 +73,7 @@ const ImageGridListView = ({
               <div className={cn('flex flex-col gap-2 items-center mt-2')}>
                 <Columns space="medium">
                   <div className="flex flex-col gap-1">
-                    <Text className={cn('truncate w-fit font-medium')}>{truncateText(image.name, 8)}</Text>
+                    <Text className={cn('truncate w-fit font-medium')}>{truncateText(image.name, 6)}</Text>
                     <Text className="text-secondary-text">{image.type}</Text>
                   </div>
                   <Text className="text-secondary-text">
