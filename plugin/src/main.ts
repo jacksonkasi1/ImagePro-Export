@@ -1,7 +1,13 @@
-import { emit, showUI } from '@create-figma-plugin/utilities';
-import { NodeData } from './types/node';
+// ** import figma utils
+import { emit, on, showUI } from '@create-figma-plugin/utilities';
+
+// ** import handlers
 import { getImageNodes } from './core/handlers/fetch-images-handlers';
-import { FetchImageNodesHandler } from './types/events';
+import { searchNodes } from './core/handlers/search-nodes-handler';
+
+// ** import types
+import { NodeData } from './types/node';
+import { FetchImageNodesHandler, SearchNodesHandler } from './types/events';
 
 export default function () {
   showUI({
@@ -20,6 +26,10 @@ figma.on('selectionchange', async () => {
   for (const node of selectedNodes) {
     await getImageNodes(node, allImageNodes);
   }
+  emit<FetchImageNodesHandler>('FETCH_IMAGE_NODES', allImageNodes);
+});
 
+on<SearchNodesHandler>('SEARCH_NODES', async (query) => {
+  const allImageNodes: NodeData[] = await searchNodes(query);
   emit<FetchImageNodesHandler>('FETCH_IMAGE_NODES', allImageNodes);
 });

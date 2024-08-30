@@ -1,10 +1,16 @@
 import { Fragment, h, JSX } from 'preact';
 
+// ** import figma utils
+import { emit } from '@create-figma-plugin/utilities';
+
 // ** import figma ui
 import { SearchTextbox, useInitialFocus } from '@create-figma-plugin/ui';
 
 // ** import store
 import { useUtilsStore } from '@/store/use-utils-store';
+
+// ** import types
+import { SearchNodesHandler } from '@/types/events';
 
 const SearchBox = () => {
   const { searchQuery, setSearchQuery } = useUtilsStore();
@@ -20,8 +26,7 @@ const SearchBox = () => {
 
   const handleKeyDown = (e: JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      // Do something when the user presses the Enter key
-      console.log('Enter key pressed');
+      emit<SearchNodesHandler>('SEARCH_NODES', searchQuery);
     }
   };
 
