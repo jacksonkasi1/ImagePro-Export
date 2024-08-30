@@ -15,7 +15,6 @@ import { SearchNodesHandler } from '@/types/events';
 
 const SearchBox = () => {
   const { searchQuery, setSearchQuery } = useUtilsStore();
-  const [debouncedQuery, setDebouncedQuery] = useState(searchQuery);
   const searchRef = useRef<HTMLInputElement>(null);
 
   /**
@@ -52,7 +51,6 @@ const SearchBox = () => {
    */
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedQuery(searchQuery);
       emit<SearchNodesHandler>('SEARCH_NODES', searchQuery);
     }, 500);
 
