@@ -11,6 +11,8 @@ import { NodeData } from '@/types/node';
 
 // ** import utils
 import { cn, truncateText } from '@/lib/utils';
+
+// ** import custom ui component
 import HoverScrollbar from '@/components/ui/hover-scrollbar';
 
 interface ImageGridListViewProps {
