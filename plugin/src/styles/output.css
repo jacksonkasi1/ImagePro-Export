@@ -1309,7 +1309,7 @@ video {
 }
 
 .bg-scrollbar-thumb-hover {
-  background-color: var(--figma-color-bg-selected);
+  background-color: var(--figma-color-bg-secondary);
 }
 
 .bg-secondary-bg {
@@ -1830,7 +1830,7 @@ video {
 }
 
 .hover\:bg-scrollbar-thumb-hover:hover {
-  background-color: var(--figma-color-bg-selected);
+  background-color: var(--figma-color-bg-secondary);
 }
 
 .hover\:text-primary-text:hover {
