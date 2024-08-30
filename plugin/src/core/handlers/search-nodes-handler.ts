@@ -33,7 +33,7 @@ export async function searchNodes(query: string): Promise<NodeData[]> {
         dimensions: {
           height: node.height,
           width: node.width,
-        }
+        },
       });
     }
 
@@ -49,5 +49,6 @@ export async function searchNodes(query: string): Promise<NodeData[]> {
     await searchNode(node);
   }
 
-  return allNodes;
+  // Filter out any nodes that are not handled by getImageNodes logic (including TEXT)
+  return allNodes.filter((node) => node.type !== 'TEXT');
 }
