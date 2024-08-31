@@ -39,7 +39,7 @@ const ImageGridListView = ({
           <div
             key={`${image.id}_${index}`}
             className={cn(
-              'relative rounded-lg flex flex-col items-center cursor-pointer',
+              'relative rounded-lg flex flex-col items-center cursor-pointer h-fit',
               isGridView ? 'p-2' : 'px-2',
               selectedNodeIds.includes(image.id) ? 'bg-selected-bg' : 'bg-secondary-bg'
             )}
@@ -58,7 +58,7 @@ const ImageGridListView = ({
                   className="absolute cursor-pointer top-3 left-3"
                 />
                 {/* Image Preview */}
-                <div className={cn('overflow-hidden w-full h-fit max-h-20 flex justify-center items-center cursor-pointer')}>
+                <div className={cn('overflow-hidden w-full h-20 max-h-20 flex justify-center items-center cursor-pointer')}>
                   {base64Images[image.id] ? (
                     <img
                       src={base64Images[image.id]}

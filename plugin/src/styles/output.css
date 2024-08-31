@@ -866,6 +866,14 @@ video {
   max-height: 24rem;
 }
 
+.max-h-8 {
+  max-height: 2rem;
+}
+
+.max-h-28 {
+  max-height: 7rem;
+}
+
 .\!w-fit {
   width: -moz-fit-content !important;
   width: fit-content !important;
