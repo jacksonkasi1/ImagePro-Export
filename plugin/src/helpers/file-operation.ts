@@ -35,27 +35,42 @@ export const getMimeType = (format?: string): string => {
   }
 };
 
-export const renameFile = (name: string, scale: number, format: string, caseOption: string, count: number): string => {
-  const extension = format.toLowerCase();
-  let fileName = `${name}__${count}__${scale}x.${extension}`;
+interface RenameFileParams {
+  name: string;
+  format: string;
+  caseOption: string;
+  count?: number; // Optional parameter
+}
+
+export const renameFile = ({ name, format, caseOption, count }: RenameFileParams): string => {
+  let baseName = name.trim(); // Trim any leading or trailing spaces
 
   switch (caseOption) {
-    case 'CAMEL_CASE':
-      fileName = fileName.replace(/_/g, '');
+    case 'camelCase':
+      // Remove spaces, and convert the following character to uppercase
+      baseName = baseName
+        .toLowerCase()
+        .replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => (index === 0 ? word.toLowerCase() : word.toUpperCase()))
+        .replace(/\s+/g, '');
       break;
-    case 'SNAKE_CASE':
-      fileName = fileName.replace(/-/g, '_');
+    case 'snake_case':
+      // Replace spaces or dashes with underscores
+      baseName = baseName.toLowerCase().replace(/[\s-]+/g, '_');
       break;
-    case 'KEBAB_CASE':
-      fileName = fileName.replace(/_/g, '-');
+    case 'kebab-case':
+      // Replace spaces or underscores with dashes
+      baseName = baseName.toLowerCase().replace(/[\s_]+/g, '-');
       break;
-    case 'PASCAL_CASE':
-      fileName = fileName.replace(/_/g, '');
-      fileName = fileName.charAt(0).toUpperCase() + fileName.slice(1);
+    case 'PascalCase':
+      // Remove spaces and capitalize the first letter of each word
+      baseName = baseName.replace(/(^\w|\s\w)/g, (letter) => letter.toUpperCase()).replace(/[\s_-]+/g, ''); // Remove spaces, underscores, and dashes
+      break;
+    default:
       break;
   }
 
-  return fileName;
+  const extension = format.toLowerCase();
+  return `${baseName}${count !== undefined ? `_${count}` : ''}.${extension}`;
 };
 
 export const compressImage = (file: Blob, format: string, quality: number): Promise<Blob> => {

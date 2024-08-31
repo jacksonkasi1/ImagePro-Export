@@ -20,7 +20,7 @@ import { handleExportComplete } from './helpers/handle-export-complete';
 
 function Plugin() {
   const { setIsLoading } = useUtilsStore();
-  const { quality } = useImageExportStore();
+  const { quality, exportMode } = useImageExportStore();
   const { setAllNodes, setAllNodesCount, setSelectedNodeIds, setSelectedNodesCount } = useImageNodesStore();
 
   const qualityRef = useRef(quality);
@@ -37,7 +37,7 @@ function Plugin() {
       setSelectedNodesCount(0);
     });
     on<ExportCompleteHandler>('EXPORT_COMPLETE', (data) => {
-      handleExportComplete({ data, setIsLoading, quality: qualityRef.current }); // Use ref here
+      handleExportComplete({ data, setIsLoading, quality: qualityRef.current, exportMode }); // Use ref here
     });
 
     // cleanup

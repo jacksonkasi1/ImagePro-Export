@@ -17,4 +17,7 @@ export const useImageExportStore = create<ImageExportState>((set) => ({
 
   quality: 80, // default 80% quality
   setQuality: (quality: number) => set({ quality }),
+
+  exportMode: 'ZIP', // default export mode
+  setExportMode: (mode: 'ZIP' | 'FOLDER' | 'RAW') => set({exportMode: mode}), // Setter for export mode
 }));

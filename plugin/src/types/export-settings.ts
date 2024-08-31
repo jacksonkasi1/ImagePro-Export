@@ -29,6 +29,9 @@ export interface ImageExportState {
 
   quality: number;
   setQuality: (quality: number) => void;
+
+  exportMode: 'ZIP' | 'FOLDER' | 'RAW';
+  setExportMode: (mode: 'ZIP' | 'FOLDER' | 'RAW') => void;
 }
 
 
