@@ -19,26 +19,28 @@ import ImageExportOption from './ImageExportOption';
 
 // ** import store
 import { useImageExportStore } from '@/store/use-image-export-store';
+import { useImageNodesStore } from '@/store/use-image-nodes-store';
+import { useUtilsStore } from '@/store/use-utils-store';
 
 // ** import types
 import { CaseOption, FormatOption } from '@/types/enums';
+import { emit } from '@create-figma-plugin/utilities';
+import { ExportAssetsHandler } from '@/types/events';
 
 const Footer = () => {
   const [isExpanded, setIsExpanded] = useState(false); // State to manage footer expansion
   const [contentHeight, setContentHeight] = useState('0px');
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const { caseOption, setCaseOption, formatOption, setFormatOption } = useImageExportStore();
+  const { caseOption, exportScaleOption, setCaseOption, formatOption, setFormatOption } = useImageExportStore();
+  const { isLoading, setIsLoading } = useUtilsStore();
+  const { selectedNodeIds } = useImageNodesStore();
 
-  function handleCaseChange(event: JSX.TargetedEvent<HTMLInputElement>) {
-    const caseValue = event.currentTarget.value;
-    setCaseOption(caseValue as CaseOption);
-  }
-
-  function handleFormatChange(event: JSX.TargetedEvent<HTMLInputElement>) {
-    const formatValue = event.currentTarget.value;
-    setFormatOption(formatValue as FormatOption);
-  }
+  useEffect(() => {
+    if (contentRef.current) {
+      setContentHeight(isExpanded ? `${contentRef.current.scrollHeight}px` : '0px');
+    }
+  }, [isExpanded]);
 
   const caseOptions = Object.values(CaseOption).map((value) => ({
     value,
@@ -50,11 +52,29 @@ const Footer = () => {
     text: value,
   }));
 
-  useEffect(() => {
-    if (contentRef.current) {
-      setContentHeight(isExpanded ? `${contentRef.current.scrollHeight}px` : '0px');
+  function handleCaseChange(event: JSX.TargetedEvent<HTMLInputElement>) {
+    const caseValue = event.currentTarget.value;
+    setCaseOption(caseValue as CaseOption);
+  }
+
+  function handleFormatChange(event: JSX.TargetedEvent<HTMLInputElement>) {
+    const formatValue = event.currentTarget.value;
+    setFormatOption(formatValue as FormatOption);
+  }
+
+  const handleExport = async () => {
+    try {
+      setIsLoading(true);
+      emit<ExportAssetsHandler>('EXPORT_ASSETS', {
+        selectedNodeIds,
+        formatOption,
+        exportScaleOption,
+        caseOption,
+      });
+    } catch (error) {
+      setIsLoading(false);
     }
-  }, [isExpanded]);
+  };
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-auto bg-primary-bg">
@@ -86,9 +106,7 @@ const Footer = () => {
         >
           <Container space="small">
             <div className="grid items-center grid-cols-4 gap-2">
-              <Text>
-                Format
-              </Text>
+              <Text>Format</Text>
               <div className="col-span-3">
                 <Dropdown onChange={handleFormatChange} options={formatOptions} value={formatOption} />
               </div>
@@ -106,7 +124,9 @@ const Footer = () => {
           <div className="flex items-center justify-between h-12 gap-2">
             {/* Case Option */}
             <Dropdown onChange={handleCaseChange} options={caseOptions} value={caseOption} />
-            <Button>Export</Button>
+            <Button loading={isLoading} onClick={handleExport}>
+              Export
+            </Button>
           </div>
         </Container>
       </Fragment>

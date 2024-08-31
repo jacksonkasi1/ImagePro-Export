@@ -7,7 +7,9 @@ import { searchNodes } from './core/handlers/search-nodes-handler';
 
 // ** import types
 import { NodeData } from './types/node';
-import { FetchImageNodesHandler, SearchNodesHandler } from './types/events';
+import { ExportAssetsHandler, FetchImageNodesHandler, SearchNodesHandler } from './types/events';
+import { handleExportRequest } from './core/handlers/export-handler';
+import { ExportRequestData } from './types/export-settings';
 
 export default function () {
   showUI({
@@ -47,4 +49,8 @@ figma.on('selectionchange', async () => {
 on<SearchNodesHandler>('SEARCH_NODES', async (query) => {
   const allImageNodes: NodeData[] = await searchNodes(query);
   emit<FetchImageNodesHandler>('FETCH_IMAGE_NODES', allImageNodes);
+});
+
+on<ExportAssetsHandler>('EXPORT_ASSETS', async (data) => {
+  await handleExportRequest(data);
 });

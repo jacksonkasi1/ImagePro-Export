@@ -1,3 +1,5 @@
+import { FormatOption } from "./enums";
+
 export interface UtilsState {
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
@@ -10,6 +12,6 @@ export interface ImageData {
   nodeName: string;
   scale: number;
   imageData: number[];
-  exportOption: string;
+  formatOption: FormatOption;
   caseOption: string;
 }

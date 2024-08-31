@@ -30,3 +30,11 @@ export interface ImageExportState {
   quality: number;
   setQuality: (quality: number) => void;
 }
+
+
+export interface ExportRequestData {
+  selectedNodeIds: string[];
+  formatOption: FormatOption; // asset format options
+  exportScaleOption: string; // scale options
+  caseOption: string; // options for caseOption
+}

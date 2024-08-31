@@ -1,16 +1,15 @@
-import { getScaleValues } from '@/helpers/common';
-import { ExportSettingsImage, ExportSettingsPDF, ExportSettingsSVG } from '@/types/export-settings';
+// ** import figma utils
+import { emit } from '@create-figma-plugin/utilities';
 
-// Define an interface for the data parameter
-interface ExportRequestData {
-  selectedNodeIds: string[];
-  exportOption: 'PDF' | 'SVG' | 'PNG' | 'JPG' | 'WEBP';
-  exportScaleOption: string; // scale options
-  caseOption: string; // options for caseOption
-}
+// ** import helpers
+import { getScaleValues } from '@/helpers/common';
+
+// ** import types
+import { ExportCompleteHandler } from '@/types/events';
+import { ExportRequestData, ExportSettingsImage, ExportSettingsPDF, ExportSettingsSVG } from '@/types/export-settings';
 
 export const handleExportRequest = async (data: ExportRequestData) => {
-  const { selectedNodeIds, exportOption, exportScaleOption, caseOption } = data;
+  const { selectedNodeIds, formatOption, exportScaleOption, caseOption } = data;
   const scales = getScaleValues(exportScaleOption);
   const images = [];
 
@@ -20,7 +19,7 @@ export const handleExportRequest = async (data: ExportRequestData) => {
       for (const scale of scales) {
         let exportSettings: ExportSettings;
 
-        switch (exportOption) {
+        switch (formatOption) {
           case 'PDF':
             exportSettings = { format: 'PDF' } as ExportSettingsPDF;
             break;
@@ -30,7 +29,7 @@ export const handleExportRequest = async (data: ExportRequestData) => {
           case 'PNG':
           case 'JPG':
             exportSettings = {
-              format: exportOption,
+              format: formatOption,
               constraint: { type: 'SCALE', value: scale },
             } as ExportSettingsImage;
             break;
@@ -49,12 +48,11 @@ export const handleExportRequest = async (data: ExportRequestData) => {
           nodeName: node.name,
           scale,
           imageData: Array.from(imageData),
-          exportOption,
+          formatOption,
           caseOption,
         });
       }
     }
   }
-
-  figma.ui.postMessage({ type: 'EXPORT_COMPLETE', data: images });
+  emit<ExportCompleteHandler>('EXPORT_COMPLETE', images);
 };
