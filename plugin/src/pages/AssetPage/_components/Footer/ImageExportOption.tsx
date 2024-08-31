@@ -1,7 +1,7 @@
 import { Fragment, h, JSX } from 'preact';
 
 // ** import figma ui components & icons
-import { Container, Text, Dropdown, VerticalSpace } from '@create-figma-plugin/ui';
+import { Text, Dropdown, VerticalSpace, RangeSlider } from '@create-figma-plugin/ui';
 
 // ** import store
 import { useImageExportStore } from '@/store/use-image-export-store';
@@ -10,12 +10,17 @@ import { useImageExportStore } from '@/store/use-image-export-store';
 import { ExportScaleOption } from '@/types/enums';
 
 const ImageExportOption = () => {
-  const { exportScaleOption, setExportScaleOption } = useImageExportStore();
+  const { exportScaleOption, setExportScaleOption, quality, setQuality } = useImageExportStore();
 
   function handleScaleChange(event: JSX.TargetedEvent<HTMLInputElement>) {
     const scaleValue = event.currentTarget.value;
     setExportScaleOption(scaleValue as ExportScaleOption);
   }
+
+  const handleQualityChange = (event: JSX.TargetedEvent<HTMLInputElement>) => {
+    const newQuality = parseFloat(event.currentTarget.value);
+    setQuality(newQuality);
+  };
 
   const scaleOptions = Object.values(ExportScaleOption).map((value) => ({
     value,
@@ -33,8 +38,14 @@ const ImageExportOption = () => {
       <VerticalSpace space="small" />
       <div className="grid items-center grid-cols-4 gap-2">
         <Text>Compression</Text>
-        <div className="col-span-3">
-          <Text>Opt</Text>
+        <div className="flex items-center col-span-3">
+          <RangeSlider
+            minimum={0}
+            maximum={100}
+            onInput={handleQualityChange}
+            value={quality.toString()}
+          />
+          <Text className="ml-2">{`${Math.round(quality)}%`}</Text> {/* Display quality in percentage */}
         </div>
       </div>
     </Fragment>
