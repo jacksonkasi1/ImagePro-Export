@@ -33,8 +33,8 @@ const ImageGridListView = ({
   const isGridView = viewType === 'grid';
 
   return (
-    <HoverScrollbar className="h-80">
-      <div className={cn('gap-2 h-full', isGridView ? 'grid grid-cols-2' : 'flex flex-col')}>
+    <HoverScrollbar className="overflow-visible h-80" thumbClassName='-mr-2'>
+      <div className={cn('gap-2 h-full  mr-2', isGridView ? 'grid grid-cols-2' : 'flex flex-col')}>
         {allNodes.map((image, index) => (
           <div
             key={`${image.id}_${index}`}
