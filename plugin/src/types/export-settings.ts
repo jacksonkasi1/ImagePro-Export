@@ -1,4 +1,4 @@
-import { CaseOption, ExportOption, ExportScaleOption } from './enums';
+import { CaseOption, FormatOption, ExportScaleOption } from './enums';
 
 export interface ExportSettings {
   format: string;
@@ -18,8 +18,8 @@ export interface ExportSettingsSVG extends ExportSettings {
 }
 
 export interface ImageExportState {
-  exportOption: ExportOption;
-  setExportOption: (option: ExportOption) => void;
+  formatOption: FormatOption;
+  setFormatOption: (option: FormatOption) => void;
 
   exportScaleOption: ExportScaleOption;
   setExportScaleOption: (option: ExportScaleOption) => void;

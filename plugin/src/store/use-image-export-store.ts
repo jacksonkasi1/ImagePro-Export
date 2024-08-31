@@ -2,11 +2,11 @@ import { create } from "zustand";
 
 // ** import types
 import { ImageExportState } from "@/types/export-settings";
-import { ExportOption, ExportScaleOption, CaseOption } from "@/types/enums";
+import { FormatOption, ExportScaleOption, CaseOption } from "@/types/enums";
 
 export const useImageExportStore = create<ImageExportState>((set) => ({
-  exportOption: ExportOption.JPG,
-  setExportOption: (option: ExportOption) => set({ exportOption: option }),
+  formatOption: FormatOption.JPG,
+  setFormatOption: (option: FormatOption) => set({ formatOption: option }),
 
   exportScaleOption: ExportScaleOption.ONE_X,
   setExportScaleOption: (option: ExportScaleOption) =>

@@ -1,4 +1,4 @@
-export enum ExportOption {
+export enum FormatOption {
   JPG = 'JPG',
   PNG = 'PNG',
   WEBP = 'WEBP',
