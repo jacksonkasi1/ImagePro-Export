@@ -11,8 +11,7 @@ export enum ExportScaleOption {
   ONE_POINT_FIVE_X = '1.5x',
   TWO_X = '2x',
   THREE_X = '3x',
-  FOUR_X = '4x',
-  ALL = 'ALL',
+  FOUR_X = '4x'
 }
 
 export enum CaseOption {
