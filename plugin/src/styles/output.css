@@ -685,6 +685,11 @@ video {
   margin: 0.5rem;
 }
 
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
 .-mr-1 {
   margin-right: -0.25rem;
 }
@@ -759,6 +764,10 @@ video {
 
 .h-10 {
   height: 2.5rem;
+}
+
+.h-12 {
+  height: 3rem;
 }
 
 .h-16 {
@@ -846,8 +855,20 @@ video {
   height: 100%;
 }
 
+.h-11 {
+  height: 2.75rem;
+}
+
+.h-1 {
+  height: 0.25rem;
+}
+
 .max-h-20 {
   max-height: 5rem;
+}
+
+.max-h-28 {
+  max-height: 7rem;
 }
 
 .max-h-3 {
@@ -858,20 +879,16 @@ video {
   max-height: 8rem;
 }
 
+.max-h-8 {
+  max-height: 2rem;
+}
+
 .max-h-80 {
   max-height: 20rem;
 }
 
 .max-h-96 {
   max-height: 24rem;
-}
-
-.max-h-8 {
-  max-height: 2rem;
-}
-
-.max-h-28 {
-  max-height: 7rem;
 }
 
 .\!w-fit {
@@ -1147,6 +1164,10 @@ video {
   border-width: 2px;
 }
 
+.border-t-2 {
+  border-top-width: 2px;
+}
+
 .border-none {
   border-style: none;
 }
@@ -1224,6 +1245,10 @@ video {
 
 .border-b-f-border {
   border-bottom-color: var(--figma-color-border);
+}
+
+.border-t-f-border {
+  border-top-color: var(--figma-color-border);
 }
 
 .\!border-opacity-0 {
@@ -1838,6 +1863,10 @@ video {
 
 .hover\:border-opacity-100:hover {
   --tw-border-opacity: 1;
+}
+
+.hover\:bg-active-bg:hover {
+  background-color: var(--figma-color-bg-tertiary);
 }
 
 .hover\:bg-gray-100:hover {

@@ -6,6 +6,7 @@ import { Divider } from '@create-figma-plugin/ui';
 // ** import sub-component
 import SearchBox from './_components/SearchBox';
 import ImageSelector from './_components/ImageSelector';
+import Footer from './_components/Footer';
 
 const AssetPage = () => {
   return (
@@ -13,6 +14,7 @@ const AssetPage = () => {
       <SearchBox />
       <Divider />
       <ImageSelector />
+      <Footer />
     </Fragment>
   );
 };
