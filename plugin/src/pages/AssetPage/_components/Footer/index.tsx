@@ -85,7 +85,7 @@ const Footer = () => {
           <Container space="small">
             <div className="grid items-center grid-cols-4 gap-2">
               <Text>
-                <Bold>Format</Bold>
+                Format
               </Text>
               <div className="col-span-3">
                 <Dropdown onChange={handleFormatChange} options={formatOptions} value={formatOption} />
