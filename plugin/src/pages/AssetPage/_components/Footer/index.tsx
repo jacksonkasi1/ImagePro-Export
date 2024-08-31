@@ -19,6 +19,7 @@ import { useImageExportStore } from '@/store/use-image-export-store';
 
 // ** import types
 import { CaseOption, FormatOption } from '@/types/enums';
+import ImageExportOption from './ImageExportOption';
 
 const Footer = () => {
   const [isExpanded, setIsExpanded] = useState(false); // State to manage footer expansion
@@ -81,7 +82,6 @@ const Footer = () => {
             transition: 'max-height 0.3s ease-in-out',
           }}
         >
-          <VerticalSpace space="extraSmall" />
           <Container space="small">
             <div className="grid items-center grid-cols-4 gap-2">
               <Text>
@@ -91,6 +91,8 @@ const Footer = () => {
                 <Dropdown onChange={handleFormatChange} options={formatOptions} value={formatOption} />
               </div>
             </div>
+            <VerticalSpace space="small" />
+            <ImageExportOption />
           </Container>
           <VerticalSpace space="small" />
         </div>
