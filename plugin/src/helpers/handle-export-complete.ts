@@ -35,7 +35,7 @@ export const handleExportComplete = async ({ data, setIsLoading, quality }: Expo
 
       let processedBlob = blob;
 
-      if (['JPG', 'PNG', 'WEBP'].includes(formatOption) && quality < 1) {
+      if (['JPG', 'PNG', 'WEBP'].includes(formatOption) && quality < 100) {
         processedBlob = await compressImage(blob, formatOption, quality);
       }
 
