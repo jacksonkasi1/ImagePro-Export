@@ -81,7 +81,7 @@ const Footer = () => {
             transition: 'max-height 0.3s ease-in-out',
           }}
         >
-          <VerticalSpace space="small" />
+          <VerticalSpace space="extraSmall" />
           <Container space="small">
             <div className="grid items-center grid-cols-4 gap-2">
               <Text>
