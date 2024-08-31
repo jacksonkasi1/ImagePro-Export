@@ -7,10 +7,13 @@ import { Text, Dropdown, VerticalSpace, RangeSlider } from '@create-figma-plugin
 import { useImageExportStore } from '@/store/use-image-export-store';
 
 // ** import enums
-import { ExportScaleOption } from '@/types/enums';
+import { ExportScaleOption, FormatOption } from '@/types/enums';
+
+// ** import utils
+import { cn } from '@/lib/utils';
 
 const ImageExportOption = () => {
-  const { exportScaleOption, setExportScaleOption, quality, setQuality } = useImageExportStore();
+  const { formatOption, exportScaleOption, setExportScaleOption, quality, setQuality } = useImageExportStore();
 
   function handleScaleChange(event: JSX.TargetedEvent<HTMLInputElement>) {
     const scaleValue = event.currentTarget.value;
@@ -27,23 +30,31 @@ const ImageExportOption = () => {
     text: value,
   }));
 
+  const isDisabled = formatOption === FormatOption.PDF || formatOption === FormatOption.SVG;
+
   return (
     <Fragment>
       <div className="grid items-center grid-cols-4 gap-2">
-        <Text>Scale</Text>
+        <Text className={cn({ 'text-secondary-text': isDisabled })}>Scale</Text>
         <div className="col-span-3">
-          <Dropdown onChange={handleScaleChange} options={scaleOptions} value={exportScaleOption} />
+          <Dropdown
+            onChange={handleScaleChange}
+            options={scaleOptions}
+            value={exportScaleOption}
+            disabled={isDisabled}
+          />
         </div>
       </div>
       <VerticalSpace space="small" />
       <div className="grid items-center grid-cols-4 gap-2">
-        <Text>Compression</Text>
+        <Text className={cn({ 'text-secondary-text': isDisabled })}>Compression</Text>
         <div className="flex items-center col-span-3">
           <RangeSlider
             minimum={0}
             maximum={100}
             onInput={handleQualityChange}
             value={quality.toString()}
+            disabled={isDisabled}
           />
           <Text className="ml-2">{`${Math.round(quality)}%`}</Text> {/* Display quality in percentage */}
         </div>
