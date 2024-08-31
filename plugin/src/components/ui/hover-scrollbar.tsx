@@ -136,7 +136,7 @@ const HoverScrollbar = ({ children, className, thumbClassName, ...rest }: HoverS
               transition: 'opacity 0.3s, background-color 0.3s', // Smooth transition for opacity and color
               opacity: isHovered || isDragging.current ? 1 : 0, // Keep visible if hovered or dragging
               pointerEvents: 'auto', // Ensures thumb can be interacted with
-              zIndex: 1000, // Ensure thumb is above other content
+              // zIndex: 1000, // Ensure thumb is above other content
             }}
           />
         )}
