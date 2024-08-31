@@ -14,12 +14,14 @@ import {
   VerticalSpace,
 } from '@create-figma-plugin/ui';
 
+// ** import sub-component
+import ImageExportOption from './ImageExportOption';
+
 // ** import store
 import { useImageExportStore } from '@/store/use-image-export-store';
 
 // ** import types
 import { CaseOption, FormatOption } from '@/types/enums';
-import ImageExportOption from './ImageExportOption';
 
 const Footer = () => {
   const [isExpanded, setIsExpanded] = useState(false); // State to manage footer expansion
