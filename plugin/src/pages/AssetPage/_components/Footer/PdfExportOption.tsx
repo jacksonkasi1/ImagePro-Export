@@ -1,18 +1,65 @@
-import { h, JSX } from 'preact';
+import { Fragment, h, JSX } from 'preact';
+import { useState } from 'preact/hooks';
 
 // ** import figma ui components & icons
-import { Container, Text, Button, Dropdown } from '@create-figma-plugin/ui';
+import { Text, Dropdown, Bold, Toggle, Columns, VerticalSpace } from '@create-figma-plugin/ui';
 
-// ** import utils
-import { cn } from '@/lib/utils';
+// ** import store
+import { useImageExportStore } from '@/store/use-image-export-store';
+
+// ** import types
+import { PdfFormatOption } from '@/types/enums';
 
 const PdfExportOption = () => {
+  const { pdfFormatOption, setPdfFormatOption } = useImageExportStore();
+
+  const [vectorGradients, setVectorGradients] = useState<boolean>(false);
+  const [outlineLinks, setOutlineLinks] = useState<boolean>(false);
+
+  const handlePdfFormatChange = (event: JSX.TargetedEvent<HTMLInputElement>) => {
+    const formatValue = event.currentTarget.value as PdfFormatOption;
+    setPdfFormatOption(formatValue);
+  };
+
+  const pdfFormatOptions = Object.values(PdfFormatOption).map((value) => ({
+    value,
+    text: value,
+  }));
+
+  function toggleVectorGradient(newValue: boolean) {
+    setVectorGradients(newValue);
+  }
+
+  function toggleOutlineLinks(newValue: boolean) {
+    setOutlineLinks(newValue);
+  }
+
   return (
-    <Container space="small">
-      <div className={'h-10 flex items-center justify-between'}>
-        <Text>PdfExportOption</Text>
+    <Fragment>
+      <Text>
+        <Bold>PDF Export Options (optional)</Bold>
+      </Text>
+      <VerticalSpace space="small" />
+      <div className="grid items-center grid-cols-4 gap-2">
+        <Text>Format</Text>
+        <div className="col-span-3">
+          <Dropdown
+            onChange={handlePdfFormatChange}
+            options={pdfFormatOptions}
+            value={pdfFormatOption}
+          />
+        </div>
       </div>
-    </Container>
+      <VerticalSpace space="small" />
+      <Columns>
+        <Toggle onValueChange={toggleVectorGradient} value={vectorGradients}>
+          <Text>Vector Gradients</Text>
+        </Toggle>
+        <Toggle onValueChange={toggleOutlineLinks} value={outlineLinks}>
+          <Text>Outline Links</Text>
+        </Toggle>
+      </Columns>
+    </Fragment>
   );
 };
 

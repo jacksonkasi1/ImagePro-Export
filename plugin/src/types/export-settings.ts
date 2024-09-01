@@ -1,4 +1,4 @@
-import { CaseOption, FormatOption, ExportScaleOption, ExportMode } from './enums';
+import { CaseOption, FormatOption, ExportScaleOption, ExportMode, PdfFormatOption } from './enums';
 
 export interface ExportSettings {
   format: string;
@@ -32,6 +32,9 @@ export interface ImageExportState {
 
   exportMode: ExportMode;
   setExportMode: (mode: ExportMode) => void;
+
+  pdfFormatOption: PdfFormatOption;
+  setPdfFormatOption: (option: PdfFormatOption) => void;
 }
 
 export interface ExportRequestData {

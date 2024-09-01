@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 // ** import types
 import { ImageExportState } from "@/types/export-settings";
-import { FormatOption, ExportScaleOption, CaseOption, ExportMode } from "@/types/enums";
+import { FormatOption, ExportScaleOption, CaseOption, ExportMode, PdfFormatOption } from "@/types/enums";
 
 export const useImageExportStore = create<ImageExportState>((set) => ({
   formatOption: FormatOption.JPG,
@@ -20,4 +20,7 @@ export const useImageExportStore = create<ImageExportState>((set) => ({
 
   exportMode: ExportMode.ZIP, // default export mode
   setExportMode: (mode: ExportMode) => set({exportMode: mode}), // Setter for export mode
+
+  pdfFormatOption: PdfFormatOption.RGB, // default to RGB
+  setPdfFormatOption: (option: PdfFormatOption) => set({ pdfFormatOption: option }),
 }));

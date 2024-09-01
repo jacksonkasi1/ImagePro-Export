@@ -18,6 +18,7 @@ import {
 } from '@create-figma-plugin/ui';
 
 // ** import sub-component
+import PdfExportOption from './PdfExportOption';
 import ImageExportOption from './ImageExportOption';
 
 // ** import store
@@ -42,7 +43,7 @@ const Footer = () => {
     if (contentRef.current) {
       setContentHeight(isExpanded ? `${contentRef.current.scrollHeight}px` : '0px');
     }
-  }, [isExpanded]);
+  }, [isExpanded, formatOption]);
 
   const caseOptions = Object.values(CaseOption).map((value) => ({
     value,
@@ -126,7 +127,7 @@ const Footer = () => {
               </div>
             </div>
             <VerticalSpace space="small" />
-            <ImageExportOption />
+            {formatOption === FormatOption.PDF ? <PdfExportOption /> : <ImageExportOption />}
           </Container>
           <VerticalSpace space="small" />
         </div>
