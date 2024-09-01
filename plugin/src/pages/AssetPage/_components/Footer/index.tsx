@@ -1,6 +1,9 @@
 import { Fragment, h, JSX } from 'preact';
 import { useState, useRef, useEffect } from 'preact/hooks';
 
+// ** import figma utils
+import { emit } from '@create-figma-plugin/utilities';
+
 // ** import figma ui components & icons
 import {
   Bold,
@@ -24,7 +27,6 @@ import { useUtilsStore } from '@/store/use-utils-store';
 
 // ** import types
 import { CaseOption, FormatOption } from '@/types/enums';
-import { emit } from '@create-figma-plugin/utilities';
 import { ExportAssetsHandler } from '@/types/events';
 
 const Footer = () => {
@@ -32,9 +34,9 @@ const Footer = () => {
   const [contentHeight, setContentHeight] = useState('0px');
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const { caseOption, exportScaleOption, setCaseOption, formatOption, setFormatOption } = useImageExportStore();
   const { isLoading, setIsLoading } = useUtilsStore();
   const { selectedNodeIds } = useImageNodesStore();
+  const { caseOption, exportScaleOption, setCaseOption, formatOption, setFormatOption } = useImageExportStore();
 
   useEffect(() => {
     if (contentRef.current) {
