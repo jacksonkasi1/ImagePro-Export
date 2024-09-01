@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 // ** import types
 import { ImageExportState } from "@/types/export-settings";
-import { FormatOption, ExportScaleOption, CaseOption } from "@/types/enums";
+import { FormatOption, ExportScaleOption, CaseOption, ExportMode } from "@/types/enums";
 
 export const useImageExportStore = create<ImageExportState>((set) => ({
   formatOption: FormatOption.JPG,
@@ -18,6 +18,6 @@ export const useImageExportStore = create<ImageExportState>((set) => ({
   quality: 80, // default 80% quality
   setQuality: (quality: number) => set({ quality }),
 
-  exportMode: 'ZIP', // default export mode
-  setExportMode: (mode: 'ZIP' | 'FOLDER' | 'RAW') => set({exportMode: mode}), // Setter for export mode
+  exportMode: ExportMode.ZIP, // default export mode
+  setExportMode: (mode: ExportMode) => set({exportMode: mode}), // Setter for export mode
 }));

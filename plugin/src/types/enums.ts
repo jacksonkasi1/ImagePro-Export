@@ -11,7 +11,7 @@ export enum ExportScaleOption {
   ONE_POINT_FIVE_X = '1.5x',
   TWO_X = '2x',
   THREE_X = '3x',
-  FOUR_X = '4x'
+  FOUR_X = '4x',
 }
 
 export enum CaseOption {
@@ -19,4 +19,10 @@ export enum CaseOption {
   SNAKE_CASE = 'snake_case',
   KEBAB_CASE = 'kebab-case',
   PASCAL_CASE = 'PascalCase',
+}
+
+export enum ExportMode {
+  ZIP = 'ZIP',
+  FOLDER = 'FOLDER',
+  RAW = 'RAW',
 }

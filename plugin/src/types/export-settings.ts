@@ -1,4 +1,4 @@
-import { CaseOption, FormatOption, ExportScaleOption } from './enums';
+import { CaseOption, FormatOption, ExportScaleOption, ExportMode } from './enums';
 
 export interface ExportSettings {
   format: string;
@@ -30,10 +30,9 @@ export interface ImageExportState {
   quality: number;
   setQuality: (quality: number) => void;
 
-  exportMode: 'ZIP' | 'FOLDER' | 'RAW';
-  setExportMode: (mode: 'ZIP' | 'FOLDER' | 'RAW') => void;
+  exportMode: ExportMode;
+  setExportMode: (mode: ExportMode) => void;
 }
-
 
 export interface ExportRequestData {
   selectedNodeIds: string[];
