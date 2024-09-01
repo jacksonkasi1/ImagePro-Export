@@ -16,7 +16,9 @@ import { ExportCompleteHandler, FetchImageNodesHandler } from '@/types/events';
 import { useUtilsStore } from '@/store/use-utils-store';
 import { useImageNodesStore } from '@/store/use-image-nodes-store';
 import { useImageExportStore } from '@/store/use-image-export-store';
-import { handleExportComplete } from './helpers/handle-export-complete';
+
+// ** import helpers
+import { handleExportComplete } from '@/helpers/handle-export-complete';
 
 function Plugin() {
   const { setIsLoading } = useUtilsStore();
