@@ -54,12 +54,24 @@ const Footer = () => {
 
   function handleCaseChange(event: JSX.TargetedEvent<HTMLInputElement>) {
     const caseValue = event.currentTarget.value;
-    setCaseOption(caseValue as CaseOption);
+
+    // Validate if the caseValue is a valid CaseOption
+    if (Object.values(CaseOption).includes(caseValue as CaseOption)) {
+      setCaseOption(caseValue as CaseOption);
+    } else {
+      console.warn('Invalid case option selected:', caseValue);
+    }
   }
 
   function handleFormatChange(event: JSX.TargetedEvent<HTMLInputElement>) {
     const formatValue = event.currentTarget.value;
-    setFormatOption(formatValue as FormatOption);
+
+    // Validate if the formatValue is a valid FormatOption
+    if (Object.values(FormatOption).includes(formatValue as FormatOption)) {
+      setFormatOption(formatValue as FormatOption);
+    } else {
+      console.warn('Invalid format option selected:', formatValue);
+    }
   }
 
   const handleExport = async () => {
