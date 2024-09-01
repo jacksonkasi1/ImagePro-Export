@@ -45,19 +45,15 @@ const PdfExportOption = () => {
       <div className="grid items-center grid-cols-4 gap-2">
         <Text>Format</Text>
         <div className="col-span-3">
-          <Dropdown
-            onChange={handlePdfFormatChange}
-            options={pdfFormatOptions}
-            value={pdfFormatOption}
-          />
+          <Dropdown onChange={handlePdfFormatChange} options={pdfFormatOptions} value={pdfFormatOption} />
         </div>
       </div>
       <VerticalSpace space="small" />
       <Columns>
-        <Toggle onValueChange={toggleVectorGradient} value={vectorGradients}>
+        <Toggle onValueChange={toggleVectorGradient} value={vectorGradients} disabled>
           <Text>Vector Gradients</Text>
         </Toggle>
-        <Toggle onValueChange={toggleOutlineLinks} value={outlineLinks}>
+        <Toggle onValueChange={toggleOutlineLinks} value={outlineLinks} disabled>
           <Text>Outline Links</Text>
         </Toggle>
       </Columns>
