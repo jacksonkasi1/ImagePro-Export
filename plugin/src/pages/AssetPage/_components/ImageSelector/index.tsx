@@ -22,7 +22,7 @@ import { cn } from '@/lib/utils';
 const ImageSelector = () => {
   const { allNodes, allNodesCount, selectedNodeIds, setSelectedNodeIds, setSelectedNodesCount } = useImageNodesStore();
 
-  const [base64Images, setBase64Images] = useState<{ [key: string]: string }>({});
+  const [base64Images, setBase64Images] = useState<Record<string, string>>({});
   const [viewType, setViewType] = useState<'grid' | 'list'>('grid'); // State for toggling between grid and list views
 
   useEffect(() => {

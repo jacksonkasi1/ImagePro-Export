@@ -59,7 +59,7 @@ export const SegmentedControl = ({
   return (
     <div className={cn('inline-flex border h-10 w-full items-center border-transparent border-b-f-border', className)}>
       {options.map((option) => (
-        <Text className='cursor-pointer'>
+        <Text className="cursor-pointer">
           <Bold>
             <label
               key={option.value}
@@ -68,7 +68,7 @@ export const SegmentedControl = ({
                 selectedValue === option.value
                   ? 'text-primary-text'
                   : 'text-secondary-text dark:hover:text-primary-text',
-                option.disabled || disabled ? 'opacity-50 cursor-not-allowed' : ''
+                (option.disabled ?? disabled) ? 'opacity-50 cursor-not-allowed' : ''
               )}
             >
               <input
