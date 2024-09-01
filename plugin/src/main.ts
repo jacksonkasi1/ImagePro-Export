@@ -10,7 +10,6 @@ import { handleExportRequest } from './core/handlers/export-handler';
 import { NodeData } from './types/node';
 import { ExportAssetsHandler, FetchImageNodesHandler, SearchNodesHandler } from './types/events';
 
-
 export default function () {
   showUI({
     height: 540, // min - 540
@@ -19,16 +18,25 @@ export default function () {
 }
 
 /**
+ * Fetches image nodes and emits an event with the fetched nodes.
+ * @param {Array<SceneNode>} nodes - Array of selected nodes.
+ */
+const fetchAndEmitImageNodes = async (nodes: ReadonlyArray<SceneNode>) => {
+  const allImageNodes: NodeData[] = [];
+
+  for (const node of nodes) {
+    await getImageNodes(node, allImageNodes);
+  }
+
+  emit<FetchImageNodesHandler>('FETCH_IMAGE_NODES', allImageNodes);
+};
+
+/**
  * Initializes the Figma plugin, and fetching initial nodes if any are selected.
  */
 const initializePlugin = async () => {
   const selectedNodes = figma.currentPage.selection;
-  const allImageNodes: NodeData[] = [];
-
-  for (const node of selectedNodes) {
-    await getImageNodes(node, allImageNodes);
-  }
-  emit<FetchImageNodesHandler>('FETCH_IMAGE_NODES', allImageNodes);
+  await fetchAndEmitImageNodes(selectedNodes);
 };
 
 void initializePlugin();
@@ -38,12 +46,7 @@ void initializePlugin();
  */
 figma.on('selectionchange', async () => {
   const selectedNodes = figma.currentPage.selection;
-  const allImageNodes: NodeData[] = [];
-
-  for (const node of selectedNodes) {
-    await getImageNodes(node, allImageNodes);
-  }
-  emit<FetchImageNodesHandler>('FETCH_IMAGE_NODES', allImageNodes);
+  await fetchAndEmitImageNodes(selectedNodes);
 });
 
 on<SearchNodesHandler>('SEARCH_NODES', async (query) => {
