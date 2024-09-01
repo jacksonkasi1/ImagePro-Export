@@ -39,9 +39,6 @@ function Plugin() {
     on<ExportCompleteHandler>('EXPORT_COMPLETE', (data) => {
       handleExportComplete({ data, setIsLoading, quality: qualityRef.current, exportMode }); // Use ref here
     });
-
-    // cleanup
-    return;
   }, []);
 
   return <Root />;
