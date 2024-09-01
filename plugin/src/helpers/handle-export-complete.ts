@@ -23,7 +23,7 @@ export const handleExportComplete = async ({ data, setIsLoading, quality, export
   try {
     if (exportMode === 'ZIP') {
       const zip = new JSZip();
-      const fileNames: Set<string> = new Set();
+      const fileNames = new Set<string>();
 
       const base64Promises = data.map(async (image: ImageData) => {
         const { nodeName, imageData, formatOption, caseOption } = image;
