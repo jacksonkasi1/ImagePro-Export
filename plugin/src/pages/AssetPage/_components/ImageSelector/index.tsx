@@ -35,7 +35,7 @@ const ImageSelector = () => {
       setBase64Images(newBase64Images);
     };
 
-    fetchBase64Images();
+    void fetchBase64Images();
   }, [allNodes]);
 
   useEffect(() => {
