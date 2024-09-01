@@ -3,31 +3,19 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
 // ** import helpers
-import { arrayBufferToBase64, compressImage, renameFile } from '@/helpers/file-operation';
+import { arrayBufferToBase64, processImage, renameFile } from '@/helpers/file-operation';
 
 // ** import types
 import { ImageData } from '@/types/utils';
-import { ExportMode, FormatOption } from '@/types/enums';
+import { ExportMode, PdfFormatOption } from '@/types/enums';
 
 interface ExportCompleteParams {
   data: ImageData[];
   setIsLoading: (isLoading: boolean) => void;
   quality: number;
   exportMode: ExportMode;
+  pdfFormatOption?: PdfFormatOption;
 }
-
-// Helper function to process and compress image
-const processImage = async (imageData: number[], formatOption: FormatOption, quality: number): Promise<Blob> => {
-  const blob = new Blob([new Uint8Array(imageData)], {
-    type: `image/${formatOption.toLowerCase()}`,
-  });
-
-  if (['JPG', 'PNG', 'WEBP'].includes(formatOption) && quality < 100) {
-    return await compressImage(blob, formatOption, quality);
-  }
-
-  return blob;
-};
 
 // Helper function to handle file saving logic
 const saveFile = async (
@@ -45,7 +33,13 @@ const saveFile = async (
 };
 
 // Refactored function
-export const handleExportComplete = async ({ data, setIsLoading, quality, exportMode }: ExportCompleteParams) => {
+export const handleExportComplete = async ({
+  data,
+  setIsLoading,
+  quality,
+  exportMode,
+  pdfFormatOption,
+}: ExportCompleteParams) => {
   if (!data) return;
 
   try {
@@ -58,7 +52,7 @@ export const handleExportComplete = async ({ data, setIsLoading, quality, export
 
     for (const image of data) {
       const { nodeName, imageData, formatOption, caseOption } = image;
-      const processedBlob = await processImage(imageData, formatOption, quality);
+      const processedBlob = await processImage(imageData, formatOption, quality, pdfFormatOption);
 
       const base64Image = await arrayBufferToBase64(new Uint8Array(await processedBlob.arrayBuffer()), formatOption);
       let fileName = renameFile({ name: nodeName, format: formatOption, caseOption });

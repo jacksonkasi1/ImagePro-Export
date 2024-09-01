@@ -27,7 +27,7 @@ import { useImageNodesStore } from '@/store/use-image-nodes-store';
 import { useUtilsStore } from '@/store/use-utils-store';
 
 // ** import types
-import { CaseOption, FormatOption } from '@/types/enums';
+import { CaseOption, FormatOption, } from '@/types/enums';
 import { ExportAssetsHandler } from '@/types/events';
 
 const Footer = () => {
@@ -37,7 +37,7 @@ const Footer = () => {
 
   const { isLoading, setIsLoading } = useUtilsStore();
   const { selectedNodeIds } = useImageNodesStore();
-  const { caseOption, exportScaleOption, setCaseOption, formatOption, setFormatOption } = useImageExportStore();
+  const { caseOption, exportScaleOption, setCaseOption, formatOption, setFormatOption, pdfFormatOption } = useImageExportStore();
 
   useEffect(() => {
     if (contentRef.current) {
@@ -85,6 +85,7 @@ const Footer = () => {
         formatOption,
         exportScaleOption,
         caseOption,
+        pdfFormatOption
       });
     } catch (error) {
       setIsLoading(false);

@@ -22,14 +22,19 @@ import { handleExportComplete } from '@/helpers/handle-export-complete';
 
 function Plugin() {
   const { setIsLoading } = useUtilsStore();
-  const { quality, exportMode } = useImageExportStore();
+  const { quality, exportMode, pdfFormatOption } = useImageExportStore();
   const { setAllNodes, setAllNodesCount, setSelectedNodeIds, setSelectedNodesCount } = useImageNodesStore();
 
   const qualityRef = useRef(quality);
+  const pdfFormatOptionRef = useRef(pdfFormatOption); // Create a ref for pdfFormatOption
 
   useEffect(() => {
     qualityRef.current = quality; // Update ref whenever quality changes
   }, [quality]);
+
+  useEffect(() => {
+    pdfFormatOptionRef.current = pdfFormatOption; // Update ref whenever pdfFormatOption changes
+  }, [pdfFormatOption]);
 
   useEffect(() => {
     on<FetchImageNodesHandler>('FETCH_IMAGE_NODES', (image_nodes) => {
@@ -38,8 +43,15 @@ function Plugin() {
       setSelectedNodeIds([]);
       setSelectedNodesCount(0);
     });
+
     on<ExportCompleteHandler>('EXPORT_COMPLETE', (data) => {
-      handleExportComplete({ data, setIsLoading, quality: qualityRef.current, exportMode }); // Use ref here
+      handleExportComplete({
+        data,
+        setIsLoading,
+        quality: qualityRef.current, // Use ref for quality
+        exportMode,
+        pdfFormatOption: pdfFormatOptionRef.current, // Use ref for pdfFormatOption
+      });
     });
   }, []);
 
