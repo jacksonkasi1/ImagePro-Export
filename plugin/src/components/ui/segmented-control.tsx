@@ -77,11 +77,11 @@ export const SegmentedControl = ({
                 value={option.value}
                 checked={selectedValue === option.value}
                 onChange={handleChange}
-                disabled={option.disabled || disabled}
+                disabled={option.disabled ?? disabled}
                 className="sr-only" // Hide the default radio button
               />
               <div className="flex items-center justify-center cursor-pointer">
-                {option.children ? option.children : option.label || option.value}
+                {option.children ? option.children : option.label ?? option.value}
               </div>
             </label>
           </Bold>
