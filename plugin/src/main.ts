@@ -31,7 +31,7 @@ const initializePlugin = async () => {
   emit<FetchImageNodesHandler>('FETCH_IMAGE_NODES', allImageNodes);
 };
 
-initializePlugin();
+void initializePlugin();
 
 /**
  * Triggered when the node selection changes in Figma. Fetches image nodes for the selected nodes.
