@@ -1,75 +1,36 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  darkMode: ['class'],
-  content: ['./src/**/*.{js,jsx,ts,tsx,html}'],
+export default {
+  content: ['./src/**/*.{ts,tsx}'],
   theme: {
-    container: {
-      center: true,
-      padding: '2rem',
-      screens: {
-        '2xl': '1400px',
-      },
-    },
     extend: {
       colors: {
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
-        primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
-        },
-        secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
-        },
-        destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
-        },
-        muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
-        },
-        accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
-        },
-        popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
-        },
-        card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
-        },
-      },
-      borderRadius: {
-        lg: `var(--radius)`,
-        md: `calc(var(--radius) - 2px)`,
-        sm: 'calc(var(--radius) - 4px)',
-      },
-      fontFamily: {
-        sans: ['Graphik', 'sans-serif'],
-        serif: ['Merriweather', 'serif'],
-      },
-      keyframes: {
-        'accordion-down': {
-          from: { height: '0' },
-          to: { height: 'var(--radix-accordion-content-height)' },
-        },
-        'accordion-up': {
-          from: { height: 'var(--radix-accordion-content-height)' },
-          to: { height: '0' },
-        },
-      },
-      animation: {
-        'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out',
+        // Primary colors for light and dark mode
+        'primary-bg': 'var(--figma-color-bg)', // Light: rgba(255, 255, 255, 1), Dark: #2c2c2c
+        'secondary-bg': 'var(--figma-color-bg-secondary)', // Light: #f5f5f5, Dark: #383838
+        'active-bg': 'var(--figma-color-bg-tertiary)',
+
+        'primary-text': 'var(--figma-color-text)', // Light: rgba(0, 0, 0, 0.9), Dark: rgba(255, 255, 255, 1)
+        'secondary-text': 'var(--figma-color-text-secondary)', // Light: rgba(0, 0, 0, 0.5), Dark: rgba(255, 255, 255, 0.7)
+
+        // Brand colors for light and dark mode
+        'brand-bg': 'var(--figma-color-bg-brand)', // Light: #0d99ff, Dark: #0c8ce9
+        'brand-text': 'var(--figma-color-text-brand)', // Light: #007be5, Dark: #7cc4f8
+        'selected-bg': 'var(--figma-color-bg-selected)', // Light: #bde3ff, Dark:
+
+        // Additional colors
+        'f-border': 'var(--figma-color-border)', // Light: #e6e6e6,  Dark: #444444
+
+        // Additional colors for scrollbar
+        'scrollbar-thumb': 'var(--figma-color-border)',
+        'scrollbar-track': 'var(--figma-color-bg-secondary)',
+        'scrollbar-thumb-hover': 'var(--figma-color-bg-secondary)',
+
+        'light-gray': '#B2B2B2',
+        'secondary-gray': '#0000004d',
+        'btn-bg-dark': '#505050',
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [require('tailwind-scrollbar')],
+  darkMode: ['class', '.figma-dark'], // Enables dark mode using .figma-dark class
 };

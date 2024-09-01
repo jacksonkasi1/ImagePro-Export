@@ -1,7 +1,12 @@
-node_modules
-dist
-settings.json
-yarn-error.log
-.vscode
+.DS_Store
+*.log
+*.css.d.ts
+/build/
+/manifest.json
+node_modules/
+
+backup
+
 manifest.json
+
 backup.manifest.json
