@@ -5,9 +5,9 @@ import { emit } from '@create-figma-plugin/utilities';
 import { getScaleValues } from '@/helpers/common';
 
 // ** import types
+import { FormatOption } from '@/types/enums';
 import { ExportCompleteHandler } from '@/types/events';
 import { ExportRequestData, ExportSettingsImage, ExportSettingsPDF, ExportSettingsSVG } from '@/types/export-settings';
-import { FormatOption } from '@/types/enums';
 
 export const handleExportRequest = async (data: ExportRequestData) => {
   const { selectedNodeIds, formatOption, exportScaleOption, caseOption } = data;
@@ -22,13 +22,12 @@ export const handleExportRequest = async (data: ExportRequestData) => {
   }> = [];
 
   for (const nodeId of selectedNodeIds) {
-    let node: SceneNode | null; // Initialize as null to handle cases where node is not found
+    let node: SceneNode | null;
     try {
-      // Ensure `getNodeByIdAsync` correctly typed and returns `SceneNode` or null
-      node = await figma.getNodeByIdAsync(nodeId) as SceneNode | null; 
+      node = (await figma.getNodeByIdAsync(nodeId)) as SceneNode | null;
     } catch (error) {
-      console.error(`Failed to get node with ID ${nodeId}:`, error);
-      continue; // Skip this iteration if an error occurs
+      console.error('Failed to get node with ID:', nodeId, error);
+      continue;
     }
 
     if (node) {
@@ -50,13 +49,13 @@ export const handleExportRequest = async (data: ExportRequestData) => {
             break;
           case 'WEBP':
             exportSettings = {
-              format: 'JPG', // Use JPG as default
+              format: 'JPG',
               constraint: { type: 'SCALE', value: scale },
             } as ExportSettingsImage;
             break;
           default:
-            console.error(`Unsupported format option: ${formatOption}`);
-            continue; // Skip unsupported formats
+            console.error('Unsupported format option:', formatOption);
+            continue;
         }
 
         try {
@@ -69,11 +68,11 @@ export const handleExportRequest = async (data: ExportRequestData) => {
             caseOption,
           });
         } catch (error) {
-          console.error(`Failed to export node ${nodeId} with scale ${scale}:`, error);
+          console.error('Failed to export node with ID:', nodeId, 'with scale', scale, error);
         }
       }
     }
   }
-  
+
   emit<ExportCompleteHandler>('EXPORT_COMPLETE', images);
 };
