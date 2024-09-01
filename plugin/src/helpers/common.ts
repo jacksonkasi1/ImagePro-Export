@@ -10,8 +10,6 @@ export const getScaleValues = (option: string): number[] => {
       return [3];
     case '4x':
       return [4];
-    case 'ALL':
-      return [1, 1.5, 2, 3, 4];
     default:
       return [1];
   }
