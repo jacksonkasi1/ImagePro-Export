@@ -21,10 +21,12 @@ const PdfExportOption = () => {
     setPdfFormatOption(formatValue);
   };
 
-  const pdfFormatOptions = Object.values(PdfFormatOption).map((value) => ({
-    value,
-    text: value,
-  }));
+  // Mapping PdfFormatOption values to their respective display labels
+  const pdfFormatOptions = [
+    { value: PdfFormatOption.RGB, text: 'RGB (Default)' },
+    { value: PdfFormatOption.CYMK, text: 'CYMK (for Print)' },
+    { value: PdfFormatOption.Grayscale, text: 'Grayscale' },
+  ];
 
   function toggleVectorGradient(newValue: boolean) {
     setVectorGradients(newValue);
