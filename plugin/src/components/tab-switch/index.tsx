@@ -10,16 +10,18 @@ const TabSwitch = () => {
   const options: Array<SegmentedControlOption> = [
     {
       value: 'asset',
-
       label: 'Asset',
     },
   ];
 
   function handleChange(event: JSX.TargetedEvent<HTMLInputElement>) {
     const newValue = event.currentTarget.value;
-    console.log(newValue);
-    setValue(newValue);
+
+    // Sanitize newValue to prevent XSS
+    const sanitizedValue = newValue.replace(/[<>]/g, '');
+    setValue(sanitizedValue);
   }
+
   return <SegmentedControl onChange={handleChange} options={options} value={value} />;
 };
 
