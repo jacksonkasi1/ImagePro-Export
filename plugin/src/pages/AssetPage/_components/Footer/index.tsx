@@ -2,7 +2,7 @@ import { Fragment, h, JSX } from 'preact';
 import { useState, useRef, useEffect } from 'preact/hooks';
 
 // ** import figma utils
-import { emit } from '@create-figma-plugin/utilities';
+import { emit, formatWarningMessage } from '@create-figma-plugin/utilities';
 
 // ** import figma ui components & icons
 import {
@@ -25,6 +25,9 @@ import ImageExportOption from './ImageExportOption';
 import { useImageExportStore } from '@/store/use-image-export-store';
 import { useImageNodesStore } from '@/store/use-image-nodes-store';
 import { useUtilsStore } from '@/store/use-utils-store';
+
+// ** import lib
+import notify from '@/lib/notify';
 
 // ** import types
 import { CaseOption, FormatOption } from '@/types/enums';
@@ -80,6 +83,12 @@ const Footer = () => {
 
   const handleExport = async () => {
     try {
+      if (selectedNodeIds.length === 0) {
+        console.warn(formatWarningMessage('Please select at least one image to export.'));
+        notify.error('Please select at least one image to export.');
+        return;
+      }
+
       setIsLoading(true);
       emit<ExportAssetsHandler>('EXPORT_ASSETS', {
         selectedNodeIds,
@@ -111,6 +120,13 @@ const Footer = () => {
             </button>
           </div>
         </Container>
+
+        {isExpanded ? (
+          <Fragment>
+            <Divider />
+            <VerticalSpace space="small" />
+          </Fragment>
+        ) : null}
 
         {/* Footer Middle -  Dynamic Export Options */}
         <div
