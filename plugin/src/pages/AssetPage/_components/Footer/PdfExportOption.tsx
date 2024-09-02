@@ -13,6 +13,9 @@ import {
   Textbox,
 } from '@create-figma-plugin/ui';
 
+// ** import figma utils
+import { formatWarningMessage } from '@create-figma-plugin/utilities';
+
 // ** import store
 import { useImageExportStore } from '@/store/use-image-export-store';
 
@@ -53,13 +56,12 @@ const PdfExportOption = () => {
     const sanitizedValue = newValue.replace(/[^a-zA-Z0-9!@#$%^&*()_+=-]/g, '');
 
     // Validate the input (e.g., ensuring it's not too long or contains only allowed characters)
-    const isValid = sanitizedValue.length <= 100; // Set your maximum length requirement
+    const isValid = sanitizedValue.length <= 50; // Set your maximum length 50
 
     if (isValid) {
       setPdfPassword(sanitizedValue);
     } else {
-      console.warn('Invalid password input');
-      // Optionally, you can set an error message in the state or provide feedback to the user
+      console.warn(formatWarningMessage('Invalid password input'));
     }
   };
 
