@@ -16,6 +16,9 @@ import {
 // ** import figma utils
 import { formatWarningMessage } from '@create-figma-plugin/utilities';
 
+// ** import lib
+import notify from '@/lib/notify';
+
 // ** import store
 import { useImageExportStore } from '@/store/use-image-export-store';
 
@@ -62,6 +65,7 @@ const PdfExportOption = () => {
       setPdfPassword(sanitizedValue);
     } else {
       console.warn(formatWarningMessage('Invalid password input'));
+      notify.warn('Password maximum length is 50 characters');
     }
   };
 

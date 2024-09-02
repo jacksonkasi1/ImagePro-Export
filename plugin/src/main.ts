@@ -43,22 +43,25 @@ void initializePlugin();
 
 // ** Notification handler **
 on<NotificationHandler>('NOTIFY', (message, type, timeout = 3000) => {
-  let icon = '';
+  let options: NotificationOptions = { timeout };
+
   switch (type) {
     case 'success':
-      icon = '✔️';
+      message = `✔️ ${message}`;
       break;
     case 'warn':
-      icon = '⚠️';
+      message = `⚠️ ${message}`;
       break;
     case 'error':
-      icon = '✘';
+      message = `✘ ${message}`;
+      options.error = true; // Use Figma's error style
       break;
     case 'loading':
-      icon = '⏳';
+      message = `⏳ ${message}`;
       break;
   }
-  figma.notify(`${icon} ${message}`, { timeout });
+
+  figma.notify(message, options);
 });
 
 /**
