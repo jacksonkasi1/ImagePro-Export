@@ -26,3 +26,9 @@ export enum ExportMode {
   FOLDER = 'FOLDER',
   RAW = 'RAW',
 }
+
+export enum PdfFormatOption {
+  RGB = 'RGB',
+  CYMK = 'CYMK',
+  Grayscale = 'Grayscale',
+}

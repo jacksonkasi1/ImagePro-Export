@@ -2,7 +2,7 @@ import { Fragment, h, JSX } from 'preact';
 import { useState, useRef, useEffect } from 'preact/hooks';
 
 // ** import figma utils
-import { emit } from '@create-figma-plugin/utilities';
+import { emit, formatWarningMessage } from '@create-figma-plugin/utilities';
 
 // ** import figma ui components & icons
 import {
@@ -18,12 +18,16 @@ import {
 } from '@create-figma-plugin/ui';
 
 // ** import sub-component
+import PdfExportOption from './PdfExportOption';
 import ImageExportOption from './ImageExportOption';
 
 // ** import store
 import { useImageExportStore } from '@/store/use-image-export-store';
 import { useImageNodesStore } from '@/store/use-image-nodes-store';
 import { useUtilsStore } from '@/store/use-utils-store';
+
+// ** import lib
+import notify from '@/lib/notify';
 
 // ** import types
 import { CaseOption, FormatOption } from '@/types/enums';
@@ -36,13 +40,14 @@ const Footer = () => {
 
   const { isLoading, setIsLoading } = useUtilsStore();
   const { selectedNodeIds } = useImageNodesStore();
-  const { caseOption, exportScaleOption, setCaseOption, formatOption, setFormatOption } = useImageExportStore();
+  const { caseOption, exportScaleOption, setCaseOption, formatOption, setFormatOption, pdfFormatOption } =
+    useImageExportStore();
 
   useEffect(() => {
     if (contentRef.current) {
       setContentHeight(isExpanded ? `${contentRef.current.scrollHeight}px` : '0px');
     }
-  }, [isExpanded]);
+  }, [isExpanded, formatOption]);
 
   const caseOptions = Object.values(CaseOption).map((value) => ({
     value,
@@ -78,12 +83,21 @@ const Footer = () => {
 
   const handleExport = async () => {
     try {
+      if (selectedNodeIds.length === 0) {
+        console.warn(formatWarningMessage('Please select at least one image to export.'));
+        notify.warn('Please select at least one image to export.');
+        return;
+      }
+
       setIsLoading(true);
+      notify.loading('Exporting assets...');
+
       emit<ExportAssetsHandler>('EXPORT_ASSETS', {
         selectedNodeIds,
         formatOption,
         exportScaleOption,
         caseOption,
+        pdfFormatOption,
       });
     } catch (error) {
       setIsLoading(false);
@@ -96,14 +110,14 @@ const Footer = () => {
         <Divider />
         {/* Footer Top */}
         <Container space="small">
-          <div className={'h-10 flex items-center justify-between'}>
+          <div
+            className={'h-10 flex items-center justify-between cursor-pointer'}
+            onClick={() => setIsExpanded(!isExpanded)} // Toggle expansion state
+          >
             <Text>
               <Bold>Export</Bold>
             </Text>
-            <button
-              className={'rounded-sm text-primary-text'}
-              onClick={() => setIsExpanded(!isExpanded)} // Toggle expansion state
-            >
+            <button className={'rounded-sm text-primary-text'}>
               {isExpanded ? <IconChevronDown32 /> : <IconChevronUp32 />}
             </button>
           </div>
@@ -118,6 +132,9 @@ const Footer = () => {
             transition: 'max-height 0.3s ease-in-out',
           }}
         >
+          <Divider />
+          <VerticalSpace space="small" />
+
           <Container space="small">
             <div className="grid items-center grid-cols-4 gap-2">
               <Text>Format</Text>
@@ -126,6 +143,7 @@ const Footer = () => {
               </div>
             </div>
             <VerticalSpace space="small" />
+            {/* {formatOption === FormatOption.PDF ? <PdfExportOption /> : <ImageExportOption />} */}
             <ImageExportOption />
           </Container>
           <VerticalSpace space="small" />
@@ -138,7 +156,7 @@ const Footer = () => {
           <div className="flex items-center justify-between h-12 gap-2">
             {/* Case Option */}
             <Dropdown onChange={handleCaseChange} options={caseOptions} value={caseOption} />
-            <Button loading={isLoading} onClick={handleExport}>
+            <Button loading={isLoading} onClick={handleExport} disabled={isLoading} >
               Export
             </Button>
           </div>

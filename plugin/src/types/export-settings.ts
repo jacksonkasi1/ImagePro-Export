@@ -1,5 +1,4 @@
-import { CaseOption, FormatOption, ExportScaleOption, ExportMode } from './enums';
-
+import { CaseOption, FormatOption, ExportScaleOption, ExportMode, PdfFormatOption } from './enums';
 export interface ExportSettings {
   format: string;
   constraint?: { type: 'SCALE'; value: number };
@@ -11,6 +10,7 @@ export interface ExportSettingsImage extends ExportSettings {
 
 export interface ExportSettingsPDF extends ExportSettings {
   format: 'PDF';
+  colorProfile?: 'DOCUMENT' | 'SRGB' | 'DISPLAY_P3_V4';
 }
 
 export interface ExportSettingsSVG extends ExportSettings {
@@ -32,11 +32,18 @@ export interface ImageExportState {
 
   exportMode: ExportMode;
   setExportMode: (mode: ExportMode) => void;
+
+  pdfFormatOption: PdfFormatOption;
+  setPdfFormatOption: (option: PdfFormatOption) => void;
+
+  pdfPassword: string;
+  setPdfPassword: (password: string) => void;
 }
 
 export interface ExportRequestData {
   selectedNodeIds: string[];
-  formatOption: FormatOption; // asset format options
-  exportScaleOption: string; // scale options
-  caseOption: string; // options for caseOption
+  formatOption: FormatOption;
+  exportScaleOption: string;
+  caseOption: string;
+  pdfFormatOption?: PdfFormatOption;
 }

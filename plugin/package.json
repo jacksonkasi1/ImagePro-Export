@@ -9,6 +9,7 @@
     "compressorjs": "^1.2.1",
     "file-saver": "^2.0.5",
     "jszip": "^3.10.1",
+    "pdf-lib": "^1.17.1",
     "preact": ">=10",
     "zustand": "^4.5.5"
   },

@@ -8,7 +8,7 @@ import { handleExportRequest } from './core/handlers/export-handler';
 
 // ** import types
 import { NodeData } from './types/node';
-import { ExportAssetsHandler, FetchImageNodesHandler, SearchNodesHandler } from './types/events';
+import { ExportAssetsHandler, FetchImageNodesHandler, NotificationHandler, SearchNodesHandler } from './types/events';
 
 export default function () {
   showUI({
@@ -40,6 +40,29 @@ const initializePlugin = async () => {
 };
 
 void initializePlugin();
+
+// ** Notification handler **
+on<NotificationHandler>('NOTIFY', (message, type, timeout = 3000) => {
+  let options: NotificationOptions = { timeout };
+
+  switch (type) {
+    case 'success':
+      message = `✔️ ${message}`;
+      break;
+    case 'warn':
+      message = `⚠️ ${message}`;
+      break;
+    case 'error':
+      message = `✘ ${message}`;
+      options.error = true; // Use Figma's error style
+      break;
+    case 'loading':
+      message = `⏳ ${message}`;
+      break;
+  }
+
+  figma.notify(message, options);
+});
 
 /**
  * Triggered when the node selection changes in Figma. Fetches image nodes for the selected nodes.

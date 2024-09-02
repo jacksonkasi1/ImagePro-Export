@@ -37,12 +37,12 @@ const SearchBox = () => {
   };
 
   /**
-   * Debounce the search query to emit only after 500ms of inactivity.
+   * Debounce the search query to emit only after 350ms of inactivity.
    */
   useEffect(() => {
     const handler = setTimeout(() => {
       emit<SearchNodesHandler>('SEARCH_NODES', searchQuery);
-    }, 500);
+    }, 350);
 
     return () => {
       clearTimeout(handler);
