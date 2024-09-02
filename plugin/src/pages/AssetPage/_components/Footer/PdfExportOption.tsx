@@ -48,7 +48,19 @@ const PdfExportOption = () => {
 
   const handleSetPassword = (event: JSX.TargetedEvent<HTMLInputElement>) => {
     const newValue = event.currentTarget.value;
-    setPdfPassword(newValue);
+
+    // Sanitize the input to remove potentially harmful characters
+    const sanitizedValue = newValue.replace(/[^a-zA-Z0-9!@#$%^&*()_+=-]/g, '');
+
+    // Validate the input (e.g., ensuring it's not too long or contains only allowed characters)
+    const isValid = sanitizedValue.length <= 100; // Set your maximum length requirement
+
+    if (isValid) {
+      setPdfPassword(sanitizedValue);
+    } else {
+      console.warn('Invalid password input');
+      // Optionally, you can set an error message in the state or provide feedback to the user
+    }
   };
 
   const handleRequirePasswordChange = (newValue: boolean) => {
