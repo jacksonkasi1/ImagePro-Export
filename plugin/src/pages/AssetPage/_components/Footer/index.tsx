@@ -141,7 +141,7 @@ const Footer = () => {
               </div>
             </div>
             <VerticalSpace space="small" />
-            {/* {formatOption === FormatOption.PDF ? <PdfExportOption /> : <ImageExportOption />} */}
+            {formatOption === FormatOption.PDF ? <PdfExportOption /> : <ImageExportOption />}
             <ImageExportOption />
           </Container>
           <VerticalSpace space="small" />
