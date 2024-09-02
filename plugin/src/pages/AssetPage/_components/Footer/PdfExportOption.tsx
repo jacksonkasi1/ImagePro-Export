@@ -2,7 +2,16 @@ import { Fragment, h, JSX } from 'preact';
 import { useState } from 'preact/hooks';
 
 // ** import figma ui components & icons
-import { Text, Dropdown, Bold, Toggle, Columns, VerticalSpace } from '@create-figma-plugin/ui';
+import {
+  Text,
+  Dropdown,
+  Bold,
+  Toggle,
+  Columns,
+  VerticalSpace,
+  useInitialFocus,
+  Textbox,
+} from '@create-figma-plugin/ui';
 
 // ** import store
 import { useImageExportStore } from '@/store/use-image-export-store';
@@ -10,38 +19,67 @@ import { useImageExportStore } from '@/store/use-image-export-store';
 // ** import types
 import { PdfFormatOption } from '@/types/enums';
 
+// Mapping PdfFormatOption values to their respective display labels
+const pdfFormatOptions = [
+  { value: PdfFormatOption.RGB, text: 'RGB (Default)' },
+  { value: PdfFormatOption.CYMK, text: 'CYMK (for Print)' },
+  { value: PdfFormatOption.Grayscale, text: 'Grayscale' },
+];
+
 const PdfExportOption = () => {
-  const { pdfFormatOption, setPdfFormatOption } = useImageExportStore();
+  const { pdfFormatOption, setPdfFormatOption, pdfPassword, setPdfPassword } = useImageExportStore();
 
   const [vectorGradients, setVectorGradients] = useState<boolean>(false);
   const [outlineLinks, setOutlineLinks] = useState<boolean>(false);
+  const [requirePassword, setRequirePassword] = useState<boolean>(false);
 
   const handlePdfFormatChange = (event: JSX.TargetedEvent<HTMLInputElement>) => {
     const formatValue = event.currentTarget.value as PdfFormatOption;
     setPdfFormatOption(formatValue);
   };
 
-  // Mapping PdfFormatOption values to their respective display labels
-  const pdfFormatOptions = [
-    { value: PdfFormatOption.RGB, text: 'RGB (Default)' },
-    { value: PdfFormatOption.CYMK, text: 'CYMK (for Print)' },
-    { value: PdfFormatOption.Grayscale, text: 'Grayscale' },
-  ];
-
-  function toggleVectorGradient(newValue: boolean) {
+  const toggleVectorGradient = (newValue: boolean) => {
     setVectorGradients(newValue);
-  }
+  };
 
-  function toggleOutlineLinks(newValue: boolean) {
+  const toggleOutlineLinks = (newValue: boolean) => {
     setOutlineLinks(newValue);
-  }
+  };
+
+  const handleSetPassword = (event: JSX.TargetedEvent<HTMLInputElement>) => {
+    const newValue = event.currentTarget.value;
+    setPdfPassword(newValue);
+  };
+
+  const handleRequirePasswordChange = (newValue: boolean) => {
+    setRequirePassword(newValue);
+  };
 
   return (
     <Fragment>
       <Text>
+        <Bold>PDF Password Protection(optional)</Bold>
+      </Text>
+      <VerticalSpace space="medium" />
+      <Toggle onValueChange={handleRequirePasswordChange} value={requirePassword}>
+        <Text>Requires a password to open PDFs</Text>
+      </Toggle>
+      <VerticalSpace space="small" />
+      {requirePassword && (
+        <Textbox
+          {...useInitialFocus()}
+          onInput={handleSetPassword}
+          value={pdfPassword}
+          revertOnEscapeKeyDown
+          placeholder="Enter a password"
+          variant="border"
+        />
+      )}
+      <VerticalSpace space="small" />
+      <Text>
         <Bold>PDF Export Options (optional)</Bold>
       </Text>
-      <VerticalSpace space="small" />
+      <VerticalSpace space="medium" />
       <div className="grid items-center grid-cols-4 gap-2">
         <Text>Format</Text>
         <div className="col-span-3">

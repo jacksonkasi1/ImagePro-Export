@@ -35,6 +35,9 @@ export interface ImageExportState {
 
   pdfFormatOption: PdfFormatOption;
   setPdfFormatOption: (option: PdfFormatOption) => void;
+
+  pdfPassword: string;
+  setPdfPassword: (password: string) => void;
 }
 
 export interface ExportRequestData {

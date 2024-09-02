@@ -23,4 +23,7 @@ export const useImageExportStore = create<ImageExportState>((set) => ({
 
   pdfFormatOption: PdfFormatOption.RGB, // default to RGB
   setPdfFormatOption: (option: PdfFormatOption) => set({ pdfFormatOption: option }),
+
+  pdfPassword: '',
+  setPdfPassword: (password: string) => set({ pdfPassword: password }),
 }));
