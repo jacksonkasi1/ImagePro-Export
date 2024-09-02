@@ -90,6 +90,8 @@ const Footer = () => {
       }
 
       setIsLoading(true);
+      notify.loading('Exporting assets...');
+
       emit<ExportAssetsHandler>('EXPORT_ASSETS', {
         selectedNodeIds,
         formatOption,
@@ -154,7 +156,7 @@ const Footer = () => {
           <div className="flex items-center justify-between h-12 gap-2">
             {/* Case Option */}
             <Dropdown onChange={handleCaseChange} options={caseOptions} value={caseOption} />
-            <Button loading={isLoading} onClick={handleExport}>
+            <Button loading={isLoading} onClick={handleExport} disabled={isLoading} >
               Export
             </Button>
           </div>
