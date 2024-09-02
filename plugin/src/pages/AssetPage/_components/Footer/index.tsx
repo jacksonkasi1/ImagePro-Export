@@ -82,6 +82,7 @@ const Footer = () => {
   }
 
   const handleExport = async () => {
+    // while render without click this is exicute 10+ times
     try {
       if (selectedNodeIds.length === 0) {
         console.warn(formatWarningMessage('Please select at least one image to export.'));
