@@ -25,3 +25,8 @@ export interface ExportCompleteHandler extends EventHandler {
   name: 'EXPORT_COMPLETE';
   handler: (data: ImageData[]) => void; // The handler takes an array of ImageData as input
 }
+
+export interface NotificationHandler extends EventHandler {
+  name: 'NOTIFY';
+  handler: (message: string, type: 'success' | 'warn' | 'error' | 'loading', timeout?: number) => void;
+}
