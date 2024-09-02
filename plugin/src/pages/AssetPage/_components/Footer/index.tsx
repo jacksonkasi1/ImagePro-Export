@@ -85,7 +85,7 @@ const Footer = () => {
     try {
       if (selectedNodeIds.length === 0) {
         console.warn(formatWarningMessage('Please select at least one image to export.'));
-        notify.error('Please select at least one image to export.');
+        notify.warn('Please select at least one image to export.');
         return;
       }
 
