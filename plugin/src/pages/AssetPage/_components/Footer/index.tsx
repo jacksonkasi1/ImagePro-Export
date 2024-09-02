@@ -121,13 +121,6 @@ const Footer = () => {
           </div>
         </Container>
 
-        {isExpanded ? (
-          <Fragment>
-            <Divider />
-            <VerticalSpace space="small" />
-          </Fragment>
-        ) : null}
-
         {/* Footer Middle -  Dynamic Export Options */}
         <div
           ref={contentRef}
@@ -137,6 +130,9 @@ const Footer = () => {
             transition: 'max-height 0.3s ease-in-out',
           }}
         >
+          <Divider />
+          <VerticalSpace space="small" />
+
           <Container space="small">
             <div className="grid items-center grid-cols-4 gap-2">
               <Text>Format</Text>
