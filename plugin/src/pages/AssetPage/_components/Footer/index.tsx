@@ -27,7 +27,7 @@ import { useImageNodesStore } from '@/store/use-image-nodes-store';
 import { useUtilsStore } from '@/store/use-utils-store';
 
 // ** import types
-import { CaseOption, FormatOption, } from '@/types/enums';
+import { CaseOption, FormatOption } from '@/types/enums';
 import { ExportAssetsHandler } from '@/types/events';
 
 const Footer = () => {
@@ -37,7 +37,8 @@ const Footer = () => {
 
   const { isLoading, setIsLoading } = useUtilsStore();
   const { selectedNodeIds } = useImageNodesStore();
-  const { caseOption, exportScaleOption, setCaseOption, formatOption, setFormatOption, pdfFormatOption } = useImageExportStore();
+  const { caseOption, exportScaleOption, setCaseOption, formatOption, setFormatOption, pdfFormatOption } =
+    useImageExportStore();
 
   useEffect(() => {
     if (contentRef.current) {
@@ -85,7 +86,7 @@ const Footer = () => {
         formatOption,
         exportScaleOption,
         caseOption,
-        pdfFormatOption
+        pdfFormatOption,
       });
     } catch (error) {
       setIsLoading(false);
@@ -98,14 +99,14 @@ const Footer = () => {
         <Divider />
         {/* Footer Top */}
         <Container space="small">
-          <div className={'h-10 flex items-center justify-between'}>
+          <div
+            className={'h-10 flex items-center justify-between cursor-pointer'}
+            onClick={() => setIsExpanded(!isExpanded)} // Toggle expansion state
+          >
             <Text>
               <Bold>Export</Bold>
             </Text>
-            <button
-              className={'rounded-sm text-primary-text'}
-              onClick={() => setIsExpanded(!isExpanded)} // Toggle expansion state
-            >
+            <button className={'rounded-sm text-primary-text'}>
               {isExpanded ? <IconChevronDown32 /> : <IconChevronUp32 />}
             </button>
           </div>
