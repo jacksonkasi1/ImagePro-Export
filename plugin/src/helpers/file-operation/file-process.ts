@@ -1,12 +1,13 @@
 // ** import helper
-import { compressImage } from './compress-image';
-import { encryptPdfWithLib } from '@/helpers/pdf-encrypt';
+import { compressImage } from '@/helpers/file-operation/compress-image';
+import { encryptPdfWithLib } from '@/helpers/pdf-operation/pdf-encrypt';
+import { convertPdfToCYMK, convertPdfToGrayscale } from '@/helpers/pdf-operation/pdf-utils';
 
 // ** import types
 import { FormatOption, PdfFormatOption } from '@/types/enums';
 
 // Interface for the processImage function parameters
-interface ProcessImageParams {
+interface ProcessFilesParams {
   imageData: number[]; // Image data to be processed
   formatOption: FormatOption; // Format of the image (JPG, PNG, PDF, etc.)
   quality: number; // Image quality for compression
@@ -15,39 +16,53 @@ interface ProcessImageParams {
 }
 
 // Helper function to process and compress image & cover pdf format
-export const processImage = async ({
+export const processFiles = async ({
   imageData,
   formatOption,
   quality,
-  pdfFormatOption,
+  pdfFormatOption = PdfFormatOption.RGB, // Default to RGB
   password,
-}: ProcessImageParams): Promise<Blob> => {
+}: ProcessFilesParams): Promise<Blob> => {
+
+  // Create a blob from the imageData
   const blob = new Blob([new Uint8Array(imageData)], {
-    type: `image/${formatOption.toLowerCase()}`,
+    type: `image/png`,
   });
 
-  // Handle image compression for JPG, PNG, and WEBP
-  if (['JPG', 'PNG', 'WEBP'].includes(formatOption) && quality < 100) {
-    return await compressImage(blob, formatOption, quality);
+  // Handle image compression for JPG, PNG, and WEBP formats
+  if (['JPG', 'PNG', 'WEBP'].includes(formatOption)) {
+    if (quality < 100) {
+      return await compressImage(blob, formatOption, quality); // Compress image if quality is less than 100
+    }
+    return blob; // Return the original blob if no compression is needed
   }
 
-  // Handle PDF encryption if the format is PDF and password is provided
+  // Handle PDF processing if the format is PDF
   if (formatOption === 'PDF') {
-    const pdfBytes = new Uint8Array(await blob.arrayBuffer());
+    let pdfBytes = new Uint8Array(await blob.arrayBuffer());
 
-    if (!password) {
-      return blob; // Return original PDF if no password is provided
+    // Perform color conversion based on the pdfFormatOption
+    if (pdfFormatOption === PdfFormatOption.CYMK) {
+      pdfBytes = await convertPdfToCYMK(blob); // Convert to CYMK
+    } else if (pdfFormatOption === PdfFormatOption.Grayscale) {
+      pdfBytes = await convertPdfToGrayscale(blob); // Convert to Grayscale
     }
 
-    // Encrypt the PDF using pdf-lib-plus-encrypt
-    const encryptedPdfData = await encryptPdfWithLib(pdfBytes, password);
-
-    if (!encryptedPdfData) {
-      return blob; // Return original PDF if encryption fails
+    // If a password is provided, encrypt the PDF
+    if (password) {
+      const encryptedPdfData = await encryptPdfWithLib(pdfBytes, password);
+      if (encryptedPdfData) {
+        return new Blob([encryptedPdfData], { type: 'application/pdf' }); // Return encrypted PDF blob
+      } else {
+        console.warn('PDF encryption failed. Returning unencrypted PDF.');
+        return blob; // Return original PDF if encryption fails
+      }
     }
 
-    return new Blob([encryptedPdfData], { type: 'application/pdf' });
+    // Return the processed PDF without encryption
+    return new Blob([pdfBytes], { type: 'application/pdf' });
   }
 
+  // Return the original blob if no further processing is required
   return blob;
 };

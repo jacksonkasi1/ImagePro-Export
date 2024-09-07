@@ -37,7 +37,6 @@ export const SegmentedControl = ({
   useEffect(() => {
     if (!selectedValue && options.length > 0) {
       const firstEnabledOption = options.find((option) => !option.disabled);
-      console.log({ firstEnabledOption });
 
       if (firstEnabledOption && onValueChange) {
         onValueChange(firstEnabledOption.value);

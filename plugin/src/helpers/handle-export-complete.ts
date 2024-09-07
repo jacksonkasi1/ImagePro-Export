@@ -3,7 +3,7 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
 // ** import helpers
-import { arrayBufferToBase64, processImage, renameFile, saveFile } from '@/helpers/file-operation';
+import { arrayBufferToBase64, processFiles, renameFile, saveFile } from '@/helpers/file-operation';
 
 // ** import types
 import { ImageData } from '@/types/utils';
@@ -39,7 +39,7 @@ export const handleExportComplete = async ({
 
     for (const image of data) {
       const { nodeName, imageData, formatOption, caseOption } = image;
-      const processedBlob = await processImage({
+      const processedBlob = await processFiles({
         imageData,
         formatOption,
         quality,
