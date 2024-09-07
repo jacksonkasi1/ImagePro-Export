@@ -80,3 +80,4 @@ on<SearchNodesHandler>('SEARCH_NODES', async (query) => {
 on<ExportAssetsHandler>('EXPORT_ASSETS', async (data) => {
   await handleExportRequest(data);
 });
+

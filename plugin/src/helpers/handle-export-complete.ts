@@ -3,7 +3,7 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
 // ** import helpers
-import { arrayBufferToBase64, processImage, renameFile } from '@/helpers/file-operation';
+import { arrayBufferToBase64, processImage, renameFile, saveFile } from '@/helpers/file-operation';
 
 // ** import types
 import { ImageData } from '@/types/utils';
@@ -15,22 +15,8 @@ interface ExportCompleteParams {
   quality: number;
   exportMode: ExportMode;
   pdfFormatOption?: PdfFormatOption;
+  password?: string;
 }
-
-// Helper function to handle file saving logic
-const saveFile = async (
-  fileName: string,
-  imageData: Blob,
-  exportMode: ExportMode,
-  zip?: JSZip,
-  base64Image?: string
-) => {
-  if (exportMode === ExportMode.ZIP && zip && base64Image) {
-    zip.file(fileName, base64Image.split(',')[1], { base64: true });
-  } else if (exportMode === ExportMode.RAW) {
-    saveAs(imageData, fileName);
-  }
-};
 
 // Refactored function
 export const handleExportComplete = async ({
@@ -39,6 +25,7 @@ export const handleExportComplete = async ({
   quality,
   exportMode,
   pdfFormatOption,
+  password,
 }: ExportCompleteParams) => {
   if (!data) return;
 
@@ -52,7 +39,13 @@ export const handleExportComplete = async ({
 
     for (const image of data) {
       const { nodeName, imageData, formatOption, caseOption } = image;
-      const processedBlob = await processImage(imageData, formatOption, quality, pdfFormatOption);
+      const processedBlob = await processImage({
+        imageData,
+        formatOption,
+        quality,
+        pdfFormatOption,
+        password,
+      });
 
       const base64Image = await arrayBufferToBase64(new Uint8Array(await processedBlob.arrayBuffer()), formatOption);
       let fileName = renameFile({ name: nodeName, format: formatOption, caseOption });

@@ -23,9 +23,9 @@ importers:
       jszip:
         specifier: ^3.10.1
         version: 3.10.1
-      pdf-lib:
-        specifier: ^1.17.1
-        version: 1.17.1
+      pdf-lib-plus-encrypt:
+        specifier: ^1.1.0
+        version: 1.1.0
       preact:
         specifier: '>=10'
         version: 10.23.2
@@ -814,8 +814,8 @@ packages:
     resolution: {integrity: sha512-5HviZNaZcfqP95rwpv+1HDgUamezbqdSYTyzjTvwtJSnIH+3vnbmWsItli8OFEndS984VT55M3jduxZbX351gg==}
     engines: {node: '>=12'}
 
-  pdf-lib@1.17.1:
-    resolution: {integrity: sha512-V/mpyJAoTsN4cnP31vc0wfNA1+p20evqqnap0KLoRUN0Yk/p3wN52DOEsL4oBFcLdb76hlpKPtzJIgo67j/XLw==}
+  pdf-lib-plus-encrypt@1.1.0:
+    resolution: {integrity: sha512-ktiVSQfl9KuSOfqstRIF6T39vV+duc1W0dGPTa7ZJHT/0S2Mrwo01oWNhuOWtouSwGqWfpDp53XSryvE65gkjg==}
 
   picocolors@1.0.1:
     resolution: {integrity: sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==}
@@ -2041,7 +2041,7 @@ snapshots:
 
   path-type@5.0.0: {}
 
-  pdf-lib@1.17.1:
+  pdf-lib-plus-encrypt@1.1.0:
     dependencies:
       '@pdf-lib/standard-fonts': 1.0.0
       '@pdf-lib/upng': 1.0.1
