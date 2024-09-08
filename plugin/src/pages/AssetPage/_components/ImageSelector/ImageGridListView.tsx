@@ -86,7 +86,7 @@ const ImageGridListView = ({
                     <Columns space="medium">
                       <div className="flex flex-col gap-1">
                         <Text className={cn('truncate w-fit font-medium')}>{truncateText(image.name, 6)}</Text>
-                        <Text className="text-secondary-text">{image.type}</Text>
+                        <Text className="text-secondary-text">{truncateText(image.type, 6)}</Text>
                       </div>
                       <Text className="text-secondary-text">
                         {Math.round(image.dimensions.width)}x{Math.round(image.dimensions.height)}px
@@ -123,7 +123,7 @@ const ImageGridListView = ({
                         <Text className={cn('truncate w-full font-medium')}>{truncateText(image.name, 17)}</Text>
                       </div>
                       <div className="flex flex-col gap-2">
-                        <Text className="text-secondary-text">{image.type}</Text>
+                        <Text className="text-secondary-text">{truncateText(image.type, 10)}</Text>
                         <Text className="text-secondary-text">
                           {Math.round(image.dimensions.width)}x{Math.round(image.dimensions.height)}px
                         </Text>
