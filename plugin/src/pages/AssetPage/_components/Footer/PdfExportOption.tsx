@@ -52,6 +52,13 @@ const PdfExportOption = () => {
     setOutlineLinks(newValue);
   };
 
+  const handleRequirePasswordChange = (newValue: boolean) => {
+    setRequirePassword(newValue);
+    if (!newValue) {
+      setPdfPassword('');
+    }
+  };
+
   const handleSetPassword = (event: JSX.TargetedEvent<HTMLInputElement>) => {
     const newValue = event.currentTarget.value;
 
@@ -67,10 +74,6 @@ const PdfExportOption = () => {
       console.warn(formatWarningMessage('Invalid password input'));
       notify.warn('Password maximum length is 50 characters');
     }
-  };
-
-  const handleRequirePasswordChange = (newValue: boolean) => {
-    setRequirePassword(newValue);
   };
 
   return (
