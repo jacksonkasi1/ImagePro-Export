@@ -37,6 +37,7 @@ export const handleExportRequest = async (data: ExportRequestData) => {
           case 'PDF':
             if (pdfFormatOption === PdfFormatOption.CYMK || pdfFormatOption === PdfFormatOption.Grayscale) {
               exportSettings = { format: 'JPG' } as ExportSettingsImage;
+              break;
             }
             exportSettings = { format: 'PDF' } as ExportSettingsPDF;
             break;

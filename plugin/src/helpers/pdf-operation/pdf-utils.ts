@@ -21,7 +21,7 @@ export async function convertPdfToGrayscale(imageBlob: Blob): Promise<Uint8Array
     let grayscaleImageBlob = await compressImage(imageBlob, 'jpg', 100, true);
 
     // Convert the grayscale image to a PDF document
-    const grayscalePdfBytes = await convertImageToPdf(new Uint8Array(await grayscaleImageBlob.arrayBuffer()));
+    const grayscalePdfBytes = await convertImageToPdf(new Uint8Array(await grayscaleImageBlob.arrayBuffer()),true);
 
     return grayscalePdfBytes;
   } catch (error) {
