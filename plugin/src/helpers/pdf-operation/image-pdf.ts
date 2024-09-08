@@ -4,7 +4,7 @@ import { PDFDocument } from 'pdf-lib-plus-encrypt';
 /**
  * Converts an image (PNG or JPG) into a PDF document.
  * @param imageBytes The Uint8Array of the image (PNG or JPG).
- * @param isJpg Optional boolean indicating if the image is a JPG (defaults to true for JPG).
+ * @param isJpg Optional boolean indicating if the image is a JPG (defaults to false for PNG).
  * @returns Uint8Array of the generated PDF document with the image embedded.
  */
 export async function convertImageToPdf(imageBytes: Uint8Array, isJpg: boolean = false): Promise<Uint8Array> {
