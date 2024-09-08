@@ -18,10 +18,10 @@ export async function convertPdfToCYMK(imageBlob: Blob): Promise<Uint8Array> {
 export async function convertPdfToGrayscale(imageBlob: Blob): Promise<Uint8Array> {
   try {
     // Process the image and convert it to CMYK
-    let grayscaleImageBlob = await compressImage(imageBlob, 'jpg', 100, true);
+    let grayscaleImageBlob = await compressImage(imageBlob, 'png', 100, true);
 
     // Convert the grayscale image to a PDF document
-    const grayscalePdfBytes = await convertImageToPdf(new Uint8Array(await grayscaleImageBlob.arrayBuffer()),true);
+    const grayscalePdfBytes = await convertImageToPdf(new Uint8Array(await grayscaleImageBlob.arrayBuffer()));
 
     return grayscalePdfBytes;
   } catch (error) {
