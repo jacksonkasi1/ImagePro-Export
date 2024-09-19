@@ -143,8 +143,7 @@ const Footer = () => {
               </div>
             </div>
             <VerticalSpace space="small" />
-            {/* {formatOption === FormatOption.PDF ? <PdfExportOption /> : <ImageExportOption />} */}
-            <ImageExportOption />
+            {formatOption === FormatOption.PDF ? <PdfExportOption /> : <ImageExportOption />}
           </Container>
           <VerticalSpace space="small" />
         </div>
@@ -156,7 +155,7 @@ const Footer = () => {
           <div className="flex items-center justify-between h-12 gap-2">
             {/* Case Option */}
             <Dropdown onChange={handleCaseChange} options={caseOptions} value={caseOption} />
-            <Button loading={isLoading} onClick={handleExport} disabled={isLoading} >
+            <Button loading={isLoading} onClick={handleExport} disabled={isLoading}>
               Export
             </Button>
           </div>

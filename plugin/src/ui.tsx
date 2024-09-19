@@ -6,8 +6,8 @@ import { on } from '@create-figma-plugin/utilities';
 import { render } from '@create-figma-plugin/ui';
 
 // ** import pages & style
-import '!./styles/output.css';
 import Root from '@/pages';
+import '!./styles/output.css';
 
 // ** import types
 import { ExportCompleteHandler, FetchImageNodesHandler } from '@/types/events';
@@ -22,19 +22,27 @@ import { handleExportComplete } from '@/helpers/handle-export-complete';
 
 function Plugin() {
   const { setIsLoading } = useUtilsStore();
-  const { quality, exportMode, pdfFormatOption } = useImageExportStore();
+  const { quality, exportMode, pdfFormatOption, pdfPassword } = useImageExportStore();
+
   const { setAllNodes, setAllNodesCount, setSelectedNodeIds, setSelectedNodesCount } = useImageNodesStore();
 
+  // Create refs for quality, pdfFormatOption, and pdfPassword
   const qualityRef = useRef(quality);
-  const pdfFormatOptionRef = useRef(pdfFormatOption); // Create a ref for pdfFormatOption
+  const pdfFormatOptionRef = useRef(pdfFormatOption);
+  const pdfPasswordRef = useRef(pdfPassword);
 
+  // Sync refs with the latest state values
   useEffect(() => {
-    qualityRef.current = quality; // Update ref whenever quality changes
+    qualityRef.current = quality;
   }, [quality]);
 
   useEffect(() => {
-    pdfFormatOptionRef.current = pdfFormatOption; // Update ref whenever pdfFormatOption changes
+    pdfFormatOptionRef.current = pdfFormatOption;
   }, [pdfFormatOption]);
+
+  useEffect(() => {
+    pdfPasswordRef.current = pdfPassword;
+  }, [pdfPassword]);
 
   useEffect(() => {
     on<FetchImageNodesHandler>('FETCH_IMAGE_NODES', (image_nodes) => {
@@ -51,6 +59,7 @@ function Plugin() {
         quality: qualityRef.current, // Use ref for quality
         exportMode,
         pdfFormatOption: pdfFormatOptionRef.current, // Use ref for pdfFormatOption
+        password: pdfPasswordRef.current, // Use ref for pdfPassword
       });
     });
   }, []);

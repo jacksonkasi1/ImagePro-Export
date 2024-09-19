@@ -12,6 +12,6 @@ export const getMimeType = (format?: string): string => {
     case 'pdf':
       return 'application/pdf';
     default:
-      return 'application/octet-stream'; // generic binary data
+      return 'application/png'; // generic binary data
   }
 };

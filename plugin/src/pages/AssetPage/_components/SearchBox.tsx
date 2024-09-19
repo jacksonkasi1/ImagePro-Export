@@ -1,6 +1,9 @@
 import { Fragment, h, JSX } from 'preact';
 import { useEffect } from 'preact/hooks';
 
+// ** import 3rd-party lib
+import { useDebounce } from 'use-debounce';
+
 // ** import figma utils
 import { emit } from '@create-figma-plugin/utilities';
 
@@ -39,15 +42,11 @@ const SearchBox = () => {
   /**
    * Debounce the search query to emit only after 350ms of inactivity.
    */
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      emit<SearchNodesHandler>('SEARCH_NODES', searchQuery);
-    }, 350);
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 350);
 
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [searchQuery]);
+  useEffect(() => {
+    emit<SearchNodesHandler>('SEARCH_NODES', debouncedSearchQuery);
+  }, [debouncedSearchQuery]);
 
   return (
     <Fragment>

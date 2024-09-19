@@ -23,12 +23,15 @@ importers:
       jszip:
         specifier: ^3.10.1
         version: 3.10.1
-      pdf-lib:
-        specifier: ^1.17.1
-        version: 1.17.1
+      pdf-lib-plus-encrypt:
+        specifier: ^1.1.0
+        version: 1.1.0
       preact:
         specifier: '>=10'
         version: 10.23.2
+      use-debounce:
+        specifier: ^10.0.3
+        version: 10.0.3(react@18.3.1)
       zustand:
         specifier: ^4.5.5
         version: 4.5.5(react@18.3.1)
@@ -811,8 +814,8 @@ packages:
     resolution: {integrity: sha512-5HviZNaZcfqP95rwpv+1HDgUamezbqdSYTyzjTvwtJSnIH+3vnbmWsItli8OFEndS984VT55M3jduxZbX351gg==}
     engines: {node: '>=12'}
 
-  pdf-lib@1.17.1:
-    resolution: {integrity: sha512-V/mpyJAoTsN4cnP31vc0wfNA1+p20evqqnap0KLoRUN0Yk/p3wN52DOEsL4oBFcLdb76hlpKPtzJIgo67j/XLw==}
+  pdf-lib-plus-encrypt@1.1.0:
+    resolution: {integrity: sha512-ktiVSQfl9KuSOfqstRIF6T39vV+duc1W0dGPTa7ZJHT/0S2Mrwo01oWNhuOWtouSwGqWfpDp53XSryvE65gkjg==}
 
   picocolors@1.0.1:
     resolution: {integrity: sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==}
@@ -1289,6 +1292,12 @@ packages:
     hasBin: true
     peerDependencies:
       browserslist: '>= 4.21.0'
+
+  use-debounce@10.0.3:
+    resolution: {integrity: sha512-DxQSI9ZKso689WM1mjgGU3ozcxU1TJElBJ3X6S4SMzMNcm2lVH0AHmyXB+K7ewjz2BSUKJTDqTcwtSMRfB89dg==}
+    engines: {node: '>= 16.0.0'}
+    peerDependencies:
+      react: '*'
 
   use-sync-external-store@1.2.2:
     resolution: {integrity: sha512-PElTlVMwpblvbNqQ82d2n6RjStvdSoNe9FG28kNfz3WiXilJm4DdNkEzRhCZuIDwY8U08WVihhGR5iRqAwfDiw==}
@@ -2032,7 +2041,7 @@ snapshots:
 
   path-type@5.0.0: {}
 
-  pdf-lib@1.17.1:
+  pdf-lib-plus-encrypt@1.1.0:
     dependencies:
       '@pdf-lib/standard-fonts': 1.0.0
       '@pdf-lib/upng': 1.0.1
@@ -2508,6 +2517,10 @@ snapshots:
       browserslist: 4.23.3
       escalade: 3.1.2
       picocolors: 1.0.1
+
+  use-debounce@10.0.3(react@18.3.1):
+    dependencies:
+      react: 18.3.1
 
   use-sync-external-store@1.2.2(react@18.3.1):
     dependencies:
