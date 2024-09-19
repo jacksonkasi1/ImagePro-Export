@@ -1,48 +1,22 @@
 {
-    "compilerOptions": {
-      /* Basic Options */
-      "target": "ES2020",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2020', etc. */
-      "module": "CommonJS",                        /* Specify module code generation: 'CommonJS', 'ES6', 'ES2020', 'ESNext', etc. */
-      "lib": ["ES2020"],                           /* Specify library files to be included in the compilation. */
-      "allowJs": false,                            /* Disallow JavaScript files to be compiled. */
-      "checkJs": false,                            /* Disable type checking on JavaScript files. */
-      "jsx": "react",                               /* Specify JSX code generation: 'preserve', 'react', 'react-native'. */
-      "declaration": false,                        /* Do not generate corresponding '.d.ts' files. */
-      "declarationMap": false,                     /* Do not generate sourcemaps for declaration files. */
-      "sourceMap": true,                           /* Generates corresponding '.map' file for debugging. */
-      "outDir": "./dist",                          /* Redirect output structure to the directory. */
-      "rootDir": "./src",                          /* Specify the root directory of input files. */
-      "removeComments": true,                      /* Do not emit comments to the output. */
-      "strict": true,                              /* Enable all strict type-checking options. */
-      "noImplicitAny": true,                       /* Raise error on expressions and declarations with an implied 'any' type. */
-      "strictNullChecks": true,                    /* Enable strict null checks. */
-      "strictFunctionTypes": true,                 /* Enable strict checking of function types. */
-      "strictBindCallApply": true,                 /* Enable strict 'bind', 'call', and 'apply' methods on functions. */
-      "strictPropertyInitialization": true,        /* Enable strict checking of property initialization in classes. */
-      "noImplicitThis": true,                      /* Raise error on 'this' expressions with an implied 'any' type. */
-      "alwaysStrict": true,                        /* Parse in strict mode and emit "use strict" for each source file. */
-      
-      /* Additional Checks */
-      "noUnusedLocals": true,                      /* Report errors on unused locals. */
-      "noUnusedParameters": true,                  /* Report errors on unused parameters. */
-      "noImplicitReturns": true,                   /* Report error when not all code paths in function return a value. */
-      "noFallthroughCasesInSwitch": true,          /* Report errors for fallthrough cases in switch statement. */
-      
-      /* Module Resolution Options */
-      "moduleResolution": "node",                  /* Specify module resolution strategy: 'node' (Node.js) or 'classic'. */
-      "resolveJsonModule": true,                   /* Allow importing .json files. */
-      "esModuleInterop": true,                     /* Emit additional JS to ease support for importing CommonJS modules. */
-      "allowSyntheticDefaultImports": true,        /* Allow default imports from modules with no default export. */
-      
-      /* Experimental Features */
-      "experimentalDecorators": false,             /* Disable experimental support for ES7 decorators. */
-      "emitDecoratorMetadata": false,              /* Disable emitting design-type metadata for decorated declarations. */
-      
-      /* Advanced Options */
-      "skipLibCheck": true,                        /* Skip type checking of all declaration files (*.d.ts). */
-      "forceConsistentCasingInFileNames": true     /* Ensure that casing is correct in imports. */
-    },
-    "include": ["src"],
-    "exclude": ["node_modules", "dist"]
-  }
-  
+  "compilerOptions": {
+    /* Basic Options */
+    "target": "ES2020",                          /* Specify ECMAScript target version */
+    "module": "CommonJS",                        /* Specify module code generation */
+    "rootDir": "./src",                          /* Root directory of input files */
+    "outDir": "./dist",                          /* Output directory for compiled files */
+    "esModuleInterop": true,                     /* Enable interoperability between CommonJS and ES Modules */
+    "strict": true,                              /* Enable all strict type-checking options */
+    "skipLibCheck": true,                        /* Skip type checking of all declaration files */
+    "forceConsistentCasingInFileNames": true,    /* Ensure consistent casing in file names */
+
+    /* Module Resolution */
+    "moduleResolution": "node",                  /* Use Node.js module resolution strategy */
+    "resolveJsonModule": true,                   /* Allow importing JSON modules */
+
+    /* Type Definitions */
+    "types": ["node"]                             /* Include Node.js type definitions */
+  },
+  "include": ["src"],                             /* Include all TypeScript files in the src directory */
+  "exclude": ["node_modules", "dist"]             /* Exclude node_modules and dist directories */
+}

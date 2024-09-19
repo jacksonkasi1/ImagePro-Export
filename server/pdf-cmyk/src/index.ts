@@ -1,17 +1,21 @@
 import express, { Request, Response } from 'express';
-import multer from 'multer';
+import multer, { FileFilterCallback } from 'multer';
 import path from 'path';
 import { exec } from 'child_process';
 import { promises as fs } from 'fs';
+import { Express } from 'express';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Serve static files from the 'public' directory
+app.use(express.static('public'));
+
 // Configure Multer for file uploads
 const upload = multer({
   dest: 'uploads/',
-  limits: { fileSize: 50 * 1024 * 1024 }, // 50 MB limit
-  fileFilter: (req, file, cb) => {
+  limits: { fileSize: 20 * 1024 * 1024 }, // 20 MB limit
+  fileFilter: (_req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
     if (file.mimetype !== 'application/pdf') {
       return cb(new Error('Only PDF files are allowed.'));
     }
@@ -27,7 +31,9 @@ app.post('/upload', upload.single('file'), async (req: Request, res: Response) =
     }
 
     const inputPath = path.resolve(req.file.path);
-    const outputFilename = `${path.parse(req.file.originalname).name}_cmyk.pdf`;
+    const originalName = path.parse(req.file.originalname).name;
+    const sanitizedOriginalName = originalName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_\-]/g, '');
+    const outputFilename = `${sanitizedOriginalName}_cmyk.pdf`;
     const outputDir = path.resolve('public/assets');
     const outputPath = path.join(outputDir, outputFilename);
 
@@ -48,8 +54,12 @@ app.post('/upload', upload.single('file'), async (req: Request, res: Response) =
 
       console.log(`Ghostscript Output: ${stdout}`);
 
-      // Delete the original uploaded file
-      await fs.unlink(inputPath).catch(console.error);
+      try {
+        // Delete the original uploaded file
+        await fs.unlink(inputPath);
+      } catch (unlinkError) {
+        console.error('Error deleting the uploaded file:', unlinkError);
+      }
 
       // Send the converted PDF as a download
       res.download(outputPath, outputFilename, async (err) => {
@@ -58,18 +68,32 @@ app.post('/upload', upload.single('file'), async (req: Request, res: Response) =
           return res.status(500).json({ error: 'Error sending the converted PDF.' });
         }
 
-        // Optionally, delete the converted file after download
-        await fs.unlink(outputPath).catch(console.error);
+        try {
+          // Optionally, delete the converted file after download
+          await fs.unlink(outputPath);
+        } catch (unlinkError) {
+          console.error('Error deleting the converted file:', unlinkError);
+        }
       });
+
+      return;
     });
+
+    return;
   } catch (error: any) {
     console.error('Server Error:', error);
     res.status(500).json({ error: error.message || 'Internal Server Error.' });
   }
 });
 
+// GET /test route to serve public/index.html
+app.get('/test', (_req: Request, res: Response) => {
+  const filePath = path.join(__dirname, '../public/index.html');
+  res.sendFile(filePath);
+});
+
 // Basic health check endpoint
-app.get('/', (req: Request, res: Response) => {
+app.get('/', (_req: Request, res: Response) => {
   res.send('PDF RGB to CMYK Converter Server is running.');
 });
 
