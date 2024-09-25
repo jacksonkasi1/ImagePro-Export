@@ -15,7 +15,12 @@
     "resolveJsonModule": true,                   /* Allow importing JSON modules */
 
     /* Type Definitions */
-    "types": ["node"]                             /* Include Node.js type definitions */
+    "types": ["node"],                             /* Include Node.js type definitions */
+
+    "paths": {
+      "@/*": ["./src/*"],
+    }
+
   },
   "include": ["src"],                             /* Include all TypeScript files in the src directory */
   "exclude": ["node_modules", "dist"]             /* Exclude node_modules and dist directories */

@@ -63,7 +63,7 @@
       formData.append('file', file);
 
       try {
-        const response = await fetch('/upload', {
+        const response = await fetch('/api/pdf-opt/cmyk-upload"', {
           method: 'POST',
           body: formData,
         });
