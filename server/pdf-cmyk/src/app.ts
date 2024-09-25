@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 
-import pdfRoutes from "@/routes";
+import pdfRoutes from "./routes";
 
 const app = express();
 

@@ -1,29 +1,33 @@
 # Stage 1: Build
 FROM node:18-alpine AS builder
 
-# Install Ghostscript
-RUN apk add --no-cache ghostscript
+# Install Ghostscript and pnpm
+RUN apk add --no-cache ghostscript \
+    && npm install -g pnpm
 
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package.json package-lock.json ./
+# Copy package.json and pnpm-lock.yaml (if it exists)
+COPY package.json ./
+# For pnpm
+COPY pnpm-lock.yaml ./ 
 
-# Install dependencies
-RUN npm ci
+# Install dependencies using pnpm
+RUN pnpm install
 
 # Copy the rest of the application code
 COPY . .
 
 # Build the TypeScript code
-RUN npm run build
+RUN pnpm run build
 
 # Stage 2: Run
 FROM node:18-alpine
 
-# Install Ghostscript
-RUN apk add --no-cache ghostscript
+# Install Ghostscript and pnpm
+RUN apk add --no-cache ghostscript \
+    && npm install -g pnpm
 
 # Set working directory
 WORKDIR /app
@@ -32,11 +36,13 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/public ./public
 
-# Copy package.json and package-lock.json
-COPY package.json package-lock.json ./
+# Copy package.json and pnpm-lock.yaml
+COPY package.json ./
+# For pnpm
+COPY pnpm-lock.yaml ./ 
 
 # Install only production dependencies
-RUN npm ci --only=production
+RUN pnpm install --prod
 
 # Expose port
 EXPOSE 3000

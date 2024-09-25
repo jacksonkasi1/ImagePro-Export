@@ -3,8 +3,8 @@ import { exec } from "child_process";
 import { promises as fs } from "fs";
 
 // Import the utility function and types
-import { sanitizeFileName } from "@/utils/file-utils";
-import { UploadedPdf } from "@/types/pdf";
+import { sanitizeFileName } from "../utils/file-utils";
+import { UploadedPdf } from "../types/pdf";
 
 /**
  * Convert a PDF file to CMYK using Ghostscript
