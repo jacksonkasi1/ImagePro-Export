@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PDF RGB to CMYK Converter</title>
+  <title>PDF Operations</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -12,7 +12,7 @@
       border: 1px solid #ccc;
       border-radius: 8px;
     }
-    input[type="file"] {
+    input[type="file"], input[type="password"], button {
       display: block;
       margin-bottom: 20px;
     }
@@ -36,7 +36,10 @@
   </style>
 </head>
 <body>
-  <h1>PDF RGB to CMYK Converter</h1>
+  <h1>PDF Operations</h1>
+  
+  <!-- PDF RGB to CMYK Conversion Form -->
+  <h2>Convert PDF to CMYK</h2>
   <form id="uploadForm">
     <input type="file" id="fileInput" name="file" accept="application/pdf" required />
     <button type="submit">Convert PDF</button>
@@ -44,13 +47,32 @@
   <div id="progress"></div>
   <a id="downloadLink" href="#" download>Download CMYK PDF</a>
 
+  <hr>
+
+  <!-- PDF Password Protection Form -->
+  <h2>Password Protect PDF</h2>
+  <form id="passwordForm">
+    <input type="file" id="passwordFileInput" name="file" accept="application/pdf" required />
+    <input type="password" id="passwordInput" name="password" placeholder="Enter password" required />
+    <button type="submit">Set PDF Password</button>
+  </form>
+  <div id="passwordProgress"></div>
+  <a id="passwordDownloadLink" href="#" download>Download Password Protected PDF</a>
+
   <script>
-    const form = document.getElementById('uploadForm');
+    const uploadForm = document.getElementById('uploadForm');
     const fileInput = document.getElementById('fileInput');
     const progressDiv = document.getElementById('progress');
     const downloadLink = document.getElementById('downloadLink');
 
-    form.addEventListener('submit', async (e) => {
+    const passwordForm = document.getElementById('passwordForm');
+    const passwordFileInput = document.getElementById('passwordFileInput');
+    const passwordInput = document.getElementById('passwordInput');
+    const passwordProgressDiv = document.getElementById('passwordProgress');
+    const passwordDownloadLink = document.getElementById('passwordDownloadLink');
+
+    // Handle CMYK conversion form submission
+    uploadForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const file = fileInput.files[0];
@@ -82,6 +104,44 @@
       } catch (error) {
         console.error('Error:', error);
         progressDiv.textContent = `Error: ${error.message}`;
+      }
+    });
+
+    // Handle password protection form submission
+    passwordForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const file = passwordFileInput.files[0];
+      const password = passwordInput.value;
+      if (!file || !password) return;
+
+      passwordProgressDiv.textContent = 'Uploading and setting password...';
+      passwordDownloadLink.style.display = 'none';
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('password', password);
+
+      try {
+        const response = await fetch('/api/pdf-opt/password-upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Password setting failed.');
+        }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        passwordDownloadLink.href = url;
+        passwordDownloadLink.style.display = 'inline-block';
+        passwordDownloadLink.textContent = 'Download Password Protected PDF';
+        passwordProgressDiv.textContent = 'Password setting complete.';
+      } catch (error) {
+        console.error('Error:', error);
+        passwordProgressDiv.textContent = `Error: ${error.message}`;
       }
     });
   </script>
