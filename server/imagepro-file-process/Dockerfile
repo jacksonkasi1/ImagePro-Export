@@ -46,7 +46,8 @@ RUN pnpm install --prod
 RUN mkdir -p /app/uploads && chmod -R 777 /app/uploads
 
 # Expose port
-EXPOSE 7860
+EXPOSE 7860,7861
+
 
 # Start the server
 CMD ["node", "dist/index.js", "--host", "0.0.0.0", "--port", "7860"]
