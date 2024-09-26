@@ -33,8 +33,8 @@ read -p "Enter your email address for the SSH key: " USER_EMAIL
 
 # Define file paths
 KEY_DIR="$HOME/.ssh"
-PRIVATE_KEY_FILE="$KEY_DIR/id_ed25519.txt"
-PUBLIC_KEY_FILE="$KEY_DIR/id_ed25519.pub.txt"
+PRIVATE_KEY_FILE="$KEY_DIR/id_ed25519"
+PUBLIC_KEY_FILE="$KEY_DIR/id_ed25519.pub"
 
 # Create .ssh directory if it doesn't exist
 mkdir -p "$KEY_DIR"
@@ -42,10 +42,6 @@ mkdir -p "$KEY_DIR"
 # Generate SSH key pair
 echo_color "green" "Generating a new SSH key pair..."
 ssh-keygen -t ed25519 -C "$USER_EMAIL" -f "$KEY_DIR/id_ed25519" -N ""
-
-# Rename keys to .txt for easier access (optional)
-mv "$KEY_DIR/id_ed25519" "$PRIVATE_KEY_FILE"
-mv "$KEY_DIR/id_ed25519.pub" "$PUBLIC_KEY_FILE"
 
 echo_color "green" "SSH key pair generated successfully!"
 echo
@@ -59,8 +55,8 @@ echo "You can view it using the following command:"
 echo
 echo_color "yellow" "cat $PUBLIC_KEY_FILE"
 echo
-echo_color "green" "Next Steps:"
-echo "1. Copy the contents of your public key:"
+echo_color "green" "Next Steps for Hugging Face SSH Key:"
+echo "1. Copy the contents of your public key using the following command:"
 echo_color "yellow" "cat $PUBLIC_KEY_FILE"
 echo
 echo "2. Log in to your Hugging Face account."
@@ -68,4 +64,16 @@ echo "3. Navigate to [Hugging Face SSH Keys](https://huggingface.co/settings/key
 echo "4. Click on 'Add SSH Key' and paste your public key."
 echo "5. Save the SSH key."
 echo
-echo_color "green" "Your SSH setup is complete!"
+echo_color "green" "Now, you need to add your private key to GitHub Secrets for use in GitHub Actions:"
+echo "1. Copy the contents of your private key using the following command:"
+echo_color "yellow" "cat $PRIVATE_KEY_FILE"
+echo
+echo "2. Go to your GitHub repository and navigate to:"
+echo_color "yellow" "Settings > Secrets and variables > Actions"
+echo "3. Click on 'New repository secret'."
+echo "4. Set the name as:"
+echo_color "yellow" "HF_SSH_KEY"
+echo "5. Paste the copied private key into the value field."
+echo "6. Click 'Add secret' to save."
+echo
+echo_color "green" "Your SSH setup is complete and ready for use in GitHub Actions!"
