@@ -14,38 +14,18 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v3
 
-      # Set up Hugging Face Space remote with Hugging Face username and token
-      - name: Set up Hugging Face Space remote
-        run: |
-          # Define variables
-          HF_USERNAME=jacksonkasi
-          HF_SPACE_NAME=imagepro-file-process
-          HF_TOKEN=${{ secrets.HF_TOKEN }}
+      # Set up SSH key
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.HF_SSH_KEY }}
 
-          # Add Hugging Face Space as a remote named 'space'
-          git remote add space https://${HF_USERNAME}:${HF_TOKEN}@huggingface.co/spaces/${HF_USERNAME}/${HF_SPACE_NAME}.git
+      # Add Hugging Face Space as a remote named 'space'
+      - name: Add Hugging Face remote
+        run: |
+          git remote add space git@hf.co:spaces/jacksonkasi/imagepro-file-process.git
 
       # Push the code to Hugging Face Space
       - name: Push to Hugging Face Space
         run: |
           git push --force space main
-
-# Notes:
-# 1. **Secrets Configuration:**
-#    - **HF_TOKEN:** Create a [Hugging Face access token](https://huggingface.co/settings/tokens) with appropriate write permissions and add it to your GitHub repository secrets as `HF_TOKEN`.
-#    - **HF_USERNAME:** If you prefer not to hardcode your username, you can also store it as a secret (e.g., `HF_USERNAME`) and reference it similarly to `HF_TOKEN`.
-
-# 2. **Hugging Face Space Repository:**
-#    - Ensure that the Hugging Face Space `imagepro-file-process` exists under your Hugging Face account (`jacksonkasi`). If it doesn't exist, create it first.
-
-# 3. **Branch Configuration:**
-#    - This workflow pushes the `main` branch to the Hugging Face Space. Ensure that your Hugging Face Space is set to track the `main` branch or adjust the branch name accordingly.
-
-# 4. **Optional Git Configuration:**
-#    - If you encounter issues related to Git configurations (e.g., user name or email), you can set them up in the workflow before pushing:
-#      ```yaml
-#      - name: Configure Git
-#        run: |
-#          git config user.name "Your Name"
-#          git config user.email "your-email@example.com"
-#      ```
