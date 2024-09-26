@@ -43,7 +43,7 @@ COPY pnpm-lock.yaml ./
 RUN pnpm install --prod
 
 # Create the uploads directory and set permissions
-RUN mkdir -p /app/uploads && chmod -R 777 /app/uploads
+RUN mkdir -p /app/uploads /app/public/assets && chmod -R 777 /app/uploads /app/public/assets
 
 # Expose port
 EXPOSE 7860

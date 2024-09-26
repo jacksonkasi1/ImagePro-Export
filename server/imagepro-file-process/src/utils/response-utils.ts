@@ -17,7 +17,9 @@ export const sendFileAndCleanup = async (
   res.download(filePath, fileName, async (err) => {
     if (err) {
       console.error("Error sending file:", err);
-      res.status(500).json({ error: "Error sending the file." });
+      if (!res.headersSent) {
+        res.status(500).json({ error: "Error sending the file." });
+      }
     }
 
     // Clean up all files in filesToRemove array
