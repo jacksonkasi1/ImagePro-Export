@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
   workflow_dispatch:
 
 jobs:
@@ -19,15 +20,15 @@ jobs:
 
       # Set up SSH key
       - name: Set up SSH key
-        uses: webfactory/ssh-agent@v0
+        uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.HF_SSH_KEY }}
 
       # Configure Git user
       - name: Configure Git user
         run: |
-          git config user.name "Your Name"
-          git config user.email "your-email@example.com"
+          git config user.name "jacksonkasi1"
+          git config user.email "jacksonkasipeacock@gmail.com"
 
       # Initialize Git repository in subdirectory
       - name: Initialize Git repository
