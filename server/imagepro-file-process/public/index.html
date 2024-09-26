@@ -1,149 +1,238 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>PDF Operations</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 50px auto;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-    input[type="file"], input[type="password"], button {
-      display: block;
-      margin-bottom: 20px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    #progress {
-      margin-top: 20px;
-    }
-    #downloadLink {
-      display: none;
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
-      text-decoration: none;
-      border-radius: 4px;
-    }
-  </style>
-</head>
-<body>
-  <h1>PDF Operations</h1>
-  
-  <!-- PDF RGB to CMYK Conversion Form -->
-  <h2>Convert PDF to CMYK</h2>
-  <form id="uploadForm">
-    <input type="file" id="fileInput" name="file" accept="application/pdf" required />
-    <button type="submit">Convert PDF</button>
-  </form>
-  <div id="progress"></div>
-  <a id="downloadLink" href="#" download>Download CMYK PDF</a>
-
-  <hr>
-
-  <!-- PDF Password Protection Form -->
-  <h2>Password Protect PDF</h2>
-  <form id="passwordForm">
-    <input type="file" id="passwordFileInput" name="file" accept="application/pdf" required />
-    <input type="password" id="passwordInput" name="password" placeholder="Enter password" required />
-    <button type="submit">Set PDF Password</button>
-  </form>
-  <div id="passwordProgress"></div>
-  <a id="passwordDownloadLink" href="#" download>Download Password Protected PDF</a>
-
-  <script>
-    const uploadForm = document.getElementById('uploadForm');
-    const fileInput = document.getElementById('fileInput');
-    const progressDiv = document.getElementById('progress');
-    const downloadLink = document.getElementById('downloadLink');
-
-    const passwordForm = document.getElementById('passwordForm');
-    const passwordFileInput = document.getElementById('passwordFileInput');
-    const passwordInput = document.getElementById('passwordInput');
-    const passwordProgressDiv = document.getElementById('passwordProgress');
-    const passwordDownloadLink = document.getElementById('passwordDownloadLink');
-
-    // Handle CMYK conversion form submission
-    uploadForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const file = fileInput.files[0];
-      if (!file) return;
-
-      progressDiv.textContent = 'Uploading and converting...';
-      downloadLink.style.display = 'none';
-
-      const formData = new FormData();
-      formData.append('file', file);
-
-      try {
-        const response = await fetch('/api/pdf-opt/cmyk-upload', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.error || 'Conversion failed.');
-        }
-
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        downloadLink.href = url;
-        downloadLink.style.display = 'inline-block';
-        downloadLink.textContent = 'Download CMYK PDF';
-        progressDiv.textContent = 'Conversion complete.';
-      } catch (error) {
-        console.error('Error:', error);
-        progressDiv.textContent = `Error: ${error.message}`;
+  <head>
+    <meta charset="UTF-8" />
+    <title>PDF Operations</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
       }
-    });
-
-    // Handle password protection form submission
-    passwordForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const file = passwordFileInput.files[0];
-      const password = passwordInput.value;
-      if (!file || !password) return;
-
-      passwordProgressDiv.textContent = 'Uploading and setting password...';
-      passwordDownloadLink.style.display = 'none';
-
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('password', password);
-
-      try {
-        const response = await fetch('/api/pdf-opt/password-upload', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.error || 'Password setting failed.');
-        }
-
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        passwordDownloadLink.href = url;
-        passwordDownloadLink.style.display = 'inline-block';
-        passwordDownloadLink.textContent = 'Download Password Protected PDF';
-        passwordProgressDiv.textContent = 'Password setting complete.';
-      } catch (error) {
-        console.error('Error:', error);
-        passwordProgressDiv.textContent = `Error: ${error.message}`;
+      input[type="file"],
+      input[type="password"],
+      button {
+        display: block;
+        margin-bottom: 20px;
       }
-    });
-  </script>
-</body>
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      #progress,
+      #passwordProgress,
+      #grayscaleProgress {
+        margin-top: 20px;
+      }
+      #downloadLink,
+      #passwordDownloadLink,
+      #grayscaleDownloadLink {
+        display: none;
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>PDF Operations</h1>
+
+    <!-- PDF RGB to CMYK Conversion Form -->
+    <h2>Convert PDF to CMYK</h2>
+    <form id="uploadForm">
+      <input
+        type="file"
+        id="fileInput"
+        name="file"
+        accept="application/pdf"
+        required
+      />
+      <button type="submit">Convert PDF</button>
+    </form>
+    <div id="progress"></div>
+    <a id="downloadLink" href="#" download>Download CMYK PDF</a>
+
+    <hr />
+
+    <!-- PDF Password Protection Form -->
+    <h2>Password Protect PDF</h2>
+    <form id="passwordForm">
+      <input
+        type="file"
+        id="passwordFileInput"
+        name="file"
+        accept="application/pdf"
+        required
+      />
+      <input
+        type="password"
+        id="passwordInput"
+        name="password"
+        placeholder="Enter password"
+        required
+      />
+      <button type="submit">Set PDF Password</button>
+    </form>
+    <div id="passwordProgress"></div>
+    <a id="passwordDownloadLink" href="#" download
+      >Download Password Protected PDF</a
+    >
+
+    <hr />
+
+    <!-- PDF Grayscale Conversion Form -->
+    <h2>Convert PDF to Grayscale</h2>
+    <form id="grayscaleForm">
+      <input
+        type="file"
+        id="grayscaleFileInput"
+        name="file"
+        accept="application/pdf"
+        required
+      />
+      <button type="submit">Convert to Grayscale</button>
+    </form>
+    <div id="grayscaleProgress"></div>
+    <a id="grayscaleDownloadLink" href="#" download>Download Grayscale PDF</a>
+
+    <script>
+      const uploadForm = document.getElementById("uploadForm");
+      const fileInput = document.getElementById("fileInput");
+      const progressDiv = document.getElementById("progress");
+      const downloadLink = document.getElementById("downloadLink");
+
+      const passwordForm = document.getElementById("passwordForm");
+      const passwordFileInput = document.getElementById("passwordFileInput");
+      const passwordInput = document.getElementById("passwordInput");
+      const passwordProgressDiv = document.getElementById("passwordProgress");
+      const passwordDownloadLink = document.getElementById(
+        "passwordDownloadLink",
+      );
+
+      const grayscaleForm = document.getElementById("grayscaleForm");
+      const grayscaleFileInput = document.getElementById("grayscaleFileInput");
+      const grayscaleProgressDiv = document.getElementById("grayscaleProgress");
+      const grayscaleDownloadLink = document.getElementById(
+        "grayscaleDownloadLink",
+      );
+
+      // Handle CMYK conversion form submission
+      uploadForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        progressDiv.textContent = "Uploading and converting...";
+        downloadLink.style.display = "none";
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+          const response = await fetch("/api/pdf-opt/cmyk-upload", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || "Conversion failed.");
+          }
+
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          downloadLink.href = url;
+          downloadLink.style.display = "inline-block";
+          downloadLink.textContent = "Download CMYK PDF";
+          progressDiv.textContent = "Conversion complete.";
+        } catch (error) {
+          console.error("Error:", error);
+          progressDiv.textContent = `Error: ${error.message}`;
+        }
+      });
+
+      // Handle password protection form submission
+      passwordForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const file = passwordFileInput.files[0];
+        const password = passwordInput.value;
+        if (!file || !password) return;
+
+        passwordProgressDiv.textContent = "Uploading and setting password...";
+        passwordDownloadLink.style.display = "none";
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("password", password);
+
+        try {
+          const response = await fetch("/api/pdf-opt/password-upload", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || "Password setting failed.");
+          }
+
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          passwordDownloadLink.href = url;
+          passwordDownloadLink.style.display = "inline-block";
+          passwordDownloadLink.textContent = "Download Password Protected PDF";
+          passwordProgressDiv.textContent = "Password setting complete.";
+        } catch (error) {
+          console.error("Error:", error);
+          passwordProgressDiv.textContent = `Error: ${error.message}`;
+        }
+      });
+
+      // Handle grayscale conversion form submission
+      grayscaleForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const file = grayscaleFileInput.files[0];
+        if (!file) return;
+
+        grayscaleProgressDiv.textContent =
+          "Uploading and converting to grayscale...";
+        grayscaleDownloadLink.style.display = "none";
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+          const response = await fetch("/api/pdf-opt/grayscale-upload", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || "Grayscale conversion failed.");
+          }
+
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          grayscaleDownloadLink.href = url;
+          grayscaleDownloadLink.style.display = "inline-block";
+          grayscaleDownloadLink.textContent = "Download Grayscale PDF";
+          grayscaleProgressDiv.textContent = "Grayscale conversion complete.";
+        } catch (error) {
+          console.error("Error:", error);
+          grayscaleProgressDiv.textContent = `Error: ${error.message}`;
+        }
+      });
+    </script>
+  </body>
 </html>
