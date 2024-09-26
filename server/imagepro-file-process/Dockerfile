@@ -46,7 +46,7 @@ RUN pnpm install --prod
 RUN mkdir -p /app/uploads && chmod -R 777 /app/uploads
 
 # Expose port
-EXPOSE 7860,7861
+EXPOSE 7860
 
 
 # Start the server
