@@ -20,6 +20,11 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.HF_SSH_KEY }}
 
+      # Add Hugging Face host key to known hosts
+      - name: Add Hugging Face to known hosts
+        run: |
+          ssh-keyscan -t rsa hf.co >> ~/.ssh/known_hosts
+
       # Add Hugging Face Space as a remote named 'space'
       - name: Add Hugging Face remote
         run: |
