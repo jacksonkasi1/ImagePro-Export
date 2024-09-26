@@ -14,40 +14,41 @@ jobs:
       run:
         working-directory: server/imagepro-file-process
     steps:
-      # Checkout the code from the GitHub repository
+      # 1. Checkout the code from the GitHub repository
       - name: Checkout the repository
         uses: actions/checkout@v3
 
-      # Set up SSH key
+      # 2. Set up SSH key
       - name: Set up SSH key
         uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.HF_SSH_KEY }}
 
-      # Configure Git user
+      # 3. Initialize Git repository in subdirectory
+      - name: Initialize Git repository
+        run: |
+          git init
+          git branch -m main
+          git remote add origin git@hf.co:spaces/jacksonkasi/imagepro-file-process.git
+
+      # 4. Configure Git user
       - name: Configure Git user
         run: |
           git config user.name "jacksonkasi1"
           git config user.email "jacksonkasipeacock@gmail.com"
 
-      # Initialize Git repository in subdirectory
-      - name: Initialize Git repository
-        run: |
-          git init
-          git remote add origin git@hf.co:spaces/jacksonkasi/imagepro-file-process.git
-
-      # Disable strict host key checking
+      # 5. Disable strict host key checking
       - name: Disable strict host key checking
         run: |
           echo -e "Host hf.co\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 
-      # Add and commit files
+      # 6. Add and commit files
       - name: Add and commit files
         run: |
           git add .
           git commit -m "Deploy to Hugging Face Space"
 
-      # Push to Hugging Face Space
+      # 7. Push to Hugging Face Space
       - name: Push to Hugging Face Space
         run: |
           git push -u origin main --force
