@@ -1,0 +1,34 @@
+name: Deploy to Hugging Face Space
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy-to-huggingface:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the code from the GitHub repository
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      # Set up Hugging Face Space remote with Hugging Face username
+      - name: Set up Hugging Face Space remote
+        run: |
+          # Use 'jacksonkasi' as the Hugging Face username, manually specified
+          git remote add space https://huggingface.co/spaces/jacksonkasi/${{ github.repository }}
+          # Set remote URL using Hugging Face token stored in GitHub secrets
+          git remote set-url space https://jacksonkasi:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/jacksonkasi/${{ github.repository }}
+
+      # Build and push the Docker image to Hugging Face Space
+      - name: Build and push Docker image to Hugging Face Space
+        working-directory: server/imagepro-file-process
+        run: |
+          git push --force space main
+
+# Variable samples:
+# HF_TOKEN: A personal access token for Hugging Face, stored in GitHub secrets. It should be created at https://huggingface.co/settings/tokens and added to the repository secrets at https://github.com/<user_name>/<repo_name>/settings/secrets/actions.
+# github.actor: This is the GitHub username of the person who initiated the workflow.
+# github.repository: This is the GitHub repository name in the format <user_name>/<repo_name>.

@@ -9,8 +9,7 @@ RUN apk add --no-cache ghostscript \
 WORKDIR /app
 
 # Copy package.json and pnpm-lock.yaml (if it exists)
-COPY package.json ./
-# For pnpm
+COPY package.json ./ 
 COPY pnpm-lock.yaml ./ 
 
 # Install dependencies using pnpm
@@ -37,15 +36,17 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/public ./public
 
 # Copy package.json and pnpm-lock.yaml
-COPY package.json ./
-# For pnpm
+COPY package.json ./ 
 COPY pnpm-lock.yaml ./ 
 
 # Install only production dependencies
 RUN pnpm install --prod
 
+# Create the uploads directory and set permissions
+RUN mkdir -p /app/uploads && chmod -R 777 /app/uploads
+
 # Expose port
-EXPOSE 3000
+EXPOSE 7860
 
 # Start the server
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/index.js", "--host", "0.0.0.0", "--port", "7860"]

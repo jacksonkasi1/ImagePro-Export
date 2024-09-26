@@ -1,7 +1,7 @@
 {
-  "name": "pdf-cmyk-converter",
+  "name": "imagepro-file-process",
   "version": "1.0.0",
-  "description": "A Docker-based Node.js server to convert RGB PDFs to CMYK.",
+  "description": "A Docker-based Node.js server to convert RGB PDFs to CMYK & lot..",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
