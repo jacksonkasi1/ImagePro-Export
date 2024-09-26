@@ -9,6 +9,9 @@ on:
 jobs:
   deploy-to-huggingface:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server/imagepro-file-process
     steps:
       # Checkout the code from the GitHub repository
       - name: Checkout the repository
@@ -16,21 +19,34 @@ jobs:
 
       # Set up SSH key
       - name: Set up SSH key
-        uses: webfactory/ssh-agent@v0.5.4
+        uses: webfactory/ssh-agent@v0
         with:
           ssh-private-key: ${{ secrets.HF_SSH_KEY }}
 
-      # Add Hugging Face host key to known hosts
-      - name: Add Hugging Face to known hosts
+      # Configure Git user
+      - name: Configure Git user
         run: |
-          ssh-keyscan -t rsa hf.co >> ~/.ssh/known_hosts
+          git config user.name "Your Name"
+          git config user.email "your-email@example.com"
 
-      # Add Hugging Face Space as a remote named 'space'
-      - name: Add Hugging Face remote
+      # Initialize Git repository in subdirectory
+      - name: Initialize Git repository
         run: |
-          git remote add space git@hf.co:spaces/jacksonkasi/imagepro-file-process.git
+          git init
+          git remote add origin git@hf.co:spaces/jacksonkasi/imagepro-file-process.git
 
-      # Push the code to Hugging Face Space
+      # Disable strict host key checking
+      - name: Disable strict host key checking
+        run: |
+          echo -e "Host hf.co\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+
+      # Add and commit files
+      - name: Add and commit files
+        run: |
+          git add .
+          git commit -m "Deploy to Hugging Face Space"
+
+      # Push to Hugging Face Space
       - name: Push to Hugging Face Space
         run: |
-          git push --force space main
+          git push -u origin main --force
