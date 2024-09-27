@@ -102,6 +102,24 @@
     <div id="grayscaleProgress"></div>
     <a id="grayscaleDownloadLink" href="#" download>Download Grayscale PDF</a>
 
+        <!-- PDF Merge with Options Form -->
+    <h2>Merge Multiple PDFs with Options</h2>
+    <form id="mergeForm" enctype="multipart/form-data">
+      <input type="file" id="mergeFileInput" name="files" accept="application/pdf" multiple required />
+      <label for="colorMode">Select Color Mode:</label>
+      <select id="colorMode" name="colorMode">
+        <option value="">None</option>
+        <option value="grayscale">Grayscale</option>
+        <option value="cmyk">CMYK</option>
+      </select>
+      <label for="password">Set Password (optional):</label>
+      <input type="password" id="password" name="password" />
+      <button type="submit">Merge PDFs</button>
+    </form>
+    <div id="mergeProgress"></div>
+    <a id="mergeDownloadLink" href="#" download>Download Merged PDF</a>
+
+
     <script>
       const uploadForm = document.getElementById("uploadForm");
       const fileInput = document.getElementById("fileInput");
@@ -122,6 +140,13 @@
       const grayscaleDownloadLink = document.getElementById(
         "grayscaleDownloadLink",
       );
+
+      const mergeForm = document.getElementById('mergeForm');
+      const mergeFileInput = document.getElementById('mergeFileInput');
+      const colorModeSelect = document.getElementById('colorMode');
+      const mergeProgressDiv = document.getElementById('mergeProgress');
+      const mergeDownloadLink = document.getElementById('mergeDownloadLink');
+
 
       // Handle CMYK conversion form submission
       uploadForm.addEventListener("submit", async (e) => {
@@ -233,6 +258,60 @@
           grayscaleProgressDiv.textContent = `Error: ${error.message}`;
         }
       });
+
+      // Handle PDF merge with options form submission
+      mergeForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const files = mergeFileInput.files;
+        const colorMode = colorModeSelect.value;
+        const password = passwordInput.value;
+
+        if (!files || files.length < 2) {
+          mergeProgressDiv.textContent = 'Please upload at least two PDF files.';
+          return;
+        }
+
+        mergeProgressDiv.textContent = 'Uploading and merging...';
+        mergeDownloadLink.style.display = 'none';
+
+        const formData = new FormData();
+        for (let i = 0; i < files.length; i++) {
+          formData.append('files', files[i]);
+        }
+
+        if (colorMode) {
+          formData.append('colorMode', colorMode);
+        }
+
+        if (password) {
+          formData.append('password', password);
+        }
+
+        try {
+          const response = await fetch('/api/pdf-opt/merge-upload', {
+            method: 'POST',
+            body: formData,
+          });
+
+          if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Merge failed.');
+          }
+
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          mergeDownloadLink.href = url;
+          mergeDownloadLink.style.display = 'inline-block';
+          mergeDownloadLink.textContent = 'Download Merged PDF';
+          mergeProgressDiv.textContent = 'Merge complete.';
+        } catch (error) {
+          console.error('Error:', error);
+          mergeProgressDiv.textContent = `Error: ${error.message}`;
+        }
+      });
+
+
     </script>
   </body>
 </html>

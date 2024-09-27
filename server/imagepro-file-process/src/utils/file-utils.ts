@@ -36,3 +36,13 @@ export const sanitizeFileName = (originalName: string): string => {
       .replace(/\s+/g, "_")        // Replace spaces with underscores
       .replace(/[^a-zA-Z0-9_\-]/g, "");  // Remove special characters
 };
+
+/**
+ * Validate that only PDF files are uploaded (multiple file upload)
+ */
+export const uploadMultiplePdfFiles = (_req: Express.Request, file: Express.Multer.File, cb: FileFilterCallback): void => {
+  if (file.mimetype !== "application/pdf") {
+    return cb(new Error("Only PDF files are allowed."));
+  }
+  cb(null, true);
+};
