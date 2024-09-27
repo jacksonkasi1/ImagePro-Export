@@ -11,7 +11,7 @@ WORKDIR /app
 # Copy package.json and pnpm-lock.yaml
 COPY package.json pnpm-lock.yaml ./
 
-# Install dependencies using pnpm
+# Install dependencies
 RUN pnpm install
 
 # Copy the rest of the application code
@@ -23,8 +23,8 @@ RUN pnpm run build
 # Stage 2: Run
 FROM node:18
 
-# Install Ghostscript, PDFtk, cron, and pnpm
-RUN apt-get update && apt-get install -y ghostscript pdftk cron \
+# Install Ghostscript, PDFtk, and pnpm
+RUN apt-get update && apt-get install -y ghostscript pdftk \
     && npm install -g pnpm
 
 # Set working directory
@@ -40,33 +40,12 @@ COPY package.json pnpm-lock.yaml ./
 # Install only production dependencies using pnpm
 RUN pnpm install --prod
 
-# Create the uploads, assets, and logs directories and set permissions
+# Create necessary directories
 RUN mkdir -p /app/uploads /app/public/assets /app/logs \
-    && chmod -R 777 /app/uploads /app/public/assets /app/logs
-
-# Ensure /run exists and is writable
-RUN mkdir -p /run && chmod 755 /run
-
-# Copy the cron scripts
-COPY cron/clean-files.sh /etc/cron.hourly/clean-files
-COPY cron/reset-log.sh /etc/cron.weekly/reset-log
-
-# Ensure the cron scripts are executable
-RUN chmod +x /etc/cron.hourly/clean-files /etc/cron.weekly/reset-log
-
-# Set up the cron jobs with the correct user field
-RUN echo "0 * * * * root /etc/cron.hourly/clean-files" > /etc/cron.d/cleanup-cron \
-    && echo "0 0 * * 0 root /etc/cron.weekly/reset-log" >> /etc/cron.d/cleanup-cron
-
-# Set permissions for cron job file
-RUN chmod 0644 /etc/cron.d/cleanup-cron
-
-# Copy the start script
-COPY start.sh /app/start.sh
-RUN chmod +x /app/start.sh
+    && chmod -R 755 /app/uploads /app/public/assets /app/logs
 
 # Expose port
 EXPOSE 7860
 
-# Start the application
-CMD ["/app/start.sh"]
+# Start both server and cron tasks
+CMD ["sh", "-c", "node dist/index.js --host 0.0.0.0 --port 7860 & node cron/cron-runner.js"]
