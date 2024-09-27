@@ -23,8 +23,9 @@ RUN pnpm run build
 # Stage 2: Run
 FROM node:18
 
-# Install Ghostscript, PDFtk, and cron
-RUN apt-get update && apt-get install -y ghostscript pdftk cron
+# Install Ghostscript, PDFtk, cron, and pnpm
+RUN apt-get update && apt-get install -y ghostscript pdftk cron \
+    && npm install -g pnpm
 
 # Set working directory
 WORKDIR /app
@@ -36,15 +37,15 @@ COPY --from=builder /app/public ./public
 # Copy package.json and pnpm-lock.yaml
 COPY package.json pnpm-lock.yaml ./
 
-# Install only production dependencies
-RUN npm install --production
+# Install only production dependencies using pnpm
+RUN pnpm install --prod
 
-# Create the uploads directory and set permissions
+# Create the uploads and assets directories and set permissions
 RUN mkdir -p /app/uploads /app/public/assets \
     && chmod -R 755 /app/uploads /app/public/assets
 
-# Ensure the cron PID directory exists and set correct permissions
-RUN mkdir -p /var/run/crond && chmod 777 /var/run/crond
+# Ensure the cron PID file exists and has correct permissions
+RUN touch /var/run/crond.pid && chmod 666 /var/run/crond.pid
 
 # Copy the cron scripts
 COPY cron/clean-files.sh /etc/cron.hourly/clean-files
