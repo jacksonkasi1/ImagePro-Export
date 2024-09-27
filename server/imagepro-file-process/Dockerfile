@@ -48,4 +48,4 @@ RUN mkdir -p /app/uploads /app/public/assets /app/logs \
 EXPOSE 7860
 
 # Start both server and cron tasks
-CMD ["sh", "-c", "node dist/index.js --host 0.0.0.0 --port 7860 & node cron/cron-runner.js"]
+CMD ["sh", "-c", "node dist/index.js --host 0.0.0.0 --port 7860 & node cron/cron-tasks.js"]
