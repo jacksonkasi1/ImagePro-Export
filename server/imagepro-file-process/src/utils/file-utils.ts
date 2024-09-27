@@ -27,7 +27,7 @@ export const removeFile = async (filePath: string): Promise<void> => {
 };
 
 /**
- * Sanitizes a filename by replacing spaces with underscores and removing any special characters.
+ * Sanitize file names to prevent security issues
  * @param originalName The original file name
  * @returns Sanitized file name
  */
