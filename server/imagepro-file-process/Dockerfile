@@ -40,12 +40,12 @@ COPY package.json pnpm-lock.yaml ./
 # Install only production dependencies using pnpm
 RUN pnpm install --prod
 
-# Create the uploads and assets directories and set permissions
-RUN mkdir -p /app/uploads /app/public/assets \
-    && chmod -R 755 /app/uploads /app/public/assets
+# Create the uploads, assets, and logs directories and set permissions
+RUN mkdir -p /app/uploads /app/public/assets /app/logs \
+    && chmod -R 755 /app/uploads /app/public/assets /app/logs
 
-# Ensure the cron PID file exists and has correct permissions
-RUN touch /var/run/crond.pid && chmod 666 /var/run/crond.pid
+# Ensure /run exists and is writable
+RUN mkdir -p /run && chmod 755 /run
 
 # Copy the cron scripts
 COPY cron/clean-files.sh /etc/cron.hourly/clean-files
