@@ -10,7 +10,7 @@ const router = Router();
 
 const upload = multer({
   dest: "uploads/",
-  limits: { fileSize: 20 * 1024 * 1024, files: 10 }, // 20 MB per file limit and max 10 files
+  limits: { fileSize: 20 * 1024 * 1024, files: 30 }, // 20 MB per file limit and max 30 files
   fileFilter: uploadMultiplePdfFiles,
 });
 
@@ -19,13 +19,13 @@ const upload = multer({
  * Upload multiple PDFs, optionally apply password protection and grayscale/CMYK conversion, then merge them into one.
  */
 router.post("/merge-upload", (req: Request, res: Response) => {
-  upload.array("files", 10)(req, res, async (err) => {
+  upload.array("files", 30)(req, res, async (err) => {
     let outputFile: { outputPath: string; outputFilename: string } | undefined;
 
     if (err instanceof multer.MulterError) {
       // Handle Multer-specific errors
       if (err.code === "LIMIT_FILE_COUNT") {
-        return res.status(400).json({ error: "Cannot upload more than 10 PDF files." });
+        return res.status(400).json({ error: "Cannot upload more than 30 PDF files." });
       }
       return res.status(400).json({ error: err.message });
     } else if (err) {
