@@ -9,8 +9,8 @@ set -e
 # Define variables
 IMAGE_NAME="imagepro-file-process"
 CONTAINER_NAME="imagepro-file-process-container"
-HOST_PORT=3000
-CONTAINER_PORT=3000
+HOST_PORT=7860
+CONTAINER_PORT=7860
 
 # Function to check if a container is running
 is_container_running() {
