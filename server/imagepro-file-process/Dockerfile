@@ -34,6 +34,9 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/public ./public
 
+# Copy cron tasks
+COPY --from=builder /app/cron ./cron
+
 # Copy package.json and pnpm-lock.yaml
 COPY package.json pnpm-lock.yaml ./
 
