@@ -45,6 +45,7 @@ RUN pnpm install --prod
 
 # Create necessary directories
 RUN mkdir -p /app/uploads /app/public/assets /app/logs \
+# Todo: Need to fix the permission issue
     && chmod -R 777 /app/uploads /app/public/assets /app/logs
 
 # Expose port
