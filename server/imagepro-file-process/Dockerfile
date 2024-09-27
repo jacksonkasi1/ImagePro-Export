@@ -42,7 +42,7 @@ RUN pnpm install --prod
 
 # Create the uploads, assets, and logs directories and set permissions
 RUN mkdir -p /app/uploads /app/public/assets /app/logs \
-    && chmod -R 755 /app/uploads /app/public/assets /app/logs
+    && chmod -R 777 /app/uploads /app/public/assets /app/logs
 
 # Ensure /run exists and is writable
 RUN mkdir -p /run && chmod 755 /run
