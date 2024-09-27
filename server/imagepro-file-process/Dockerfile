@@ -23,8 +23,9 @@ RUN pnpm run build
 # Stage 2: Run
 FROM node:18
 
-# Install Ghostscript, PDFtk, and cron
-RUN apt-get update && apt-get install -y ghostscript pdftk cron
+# Install Ghostscript, PDFtk, cron, and pnpm
+RUN apt-get update && apt-get install -y ghostscript pdftk cron \
+    && npm install -g pnpm
 
 # Set working directory
 WORKDIR /app
