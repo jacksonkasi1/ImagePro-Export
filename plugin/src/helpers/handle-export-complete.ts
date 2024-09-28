@@ -18,7 +18,7 @@ interface ExportCompleteParams {
   password?: string;
 }
 
-// Refactored function
+// Refactored function with parallel processing
 export const handleExportComplete = async ({
   data,
   setIsLoading,
@@ -37,27 +37,36 @@ export const handleExportComplete = async ({
 
     const fileNames = new Set<string>();
 
-    for (const image of data) {
-      const { nodeName, imageData, formatOption, caseOption } = image;
-      const processedBlob = await processFiles({
-        imageData,
-        formatOption,
-        quality,
-        pdfFormatOption,
-        password,
-      });
+    // Process all files in parallel
+    await Promise.all(
+      data.map(async (image) => {
+        const { nodeName, imageData, formatOption, caseOption } = image;
 
-      const base64Image = await arrayBufferToBase64(new Uint8Array(await processedBlob.arrayBuffer()), formatOption);
-      let fileName = renameFile({ name: nodeName, format: formatOption, caseOption });
+        // Process each file
+        const processedBlob = await processFiles({
+          imageData,
+          formatOption,
+          quality,
+          pdfFormatOption,
+          password,
+        });
 
-      while (fileNames.has(fileName)) {
-        fileName = renameFile({ name: nodeName, format: formatOption, caseOption, count: fileNames.size + 1 });
-      }
-      fileNames.add(fileName);
+        // Convert processed image to base64
+        const base64Image = await arrayBufferToBase64(new Uint8Array(await processedBlob.arrayBuffer()), formatOption);
 
-      await saveFile(fileName, processedBlob, exportMode, zip, base64Image);
-    }
+        // Rename the file
+        let fileName = renameFile({ name: nodeName, format: formatOption, caseOption });
+        while (fileNames.has(fileName)) {
+          fileName = renameFile({ name: nodeName, format: formatOption, caseOption, count: fileNames.size + 1 });
+        }
+        fileNames.add(fileName);
 
+        // Save the file (in ZIP or individually)
+        await saveFile(fileName, processedBlob, exportMode, zip, base64Image);
+      })
+    );
+
+    // If export mode is ZIP, generate and download the ZIP file
     if (exportMode === ExportMode.ZIP && zip) {
       const content = await zip.generateAsync({ type: 'blob' });
       saveAs(content, 'exported_images.zip');
