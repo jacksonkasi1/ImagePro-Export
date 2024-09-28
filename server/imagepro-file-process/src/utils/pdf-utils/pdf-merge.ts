@@ -1,6 +1,9 @@
 import path from "path";
-import { exec } from "child_process";
 import { promises as fs } from "fs";
+import { exec } from "child_process";
+
+import { v4 as uuidv4 } from 'uuid';
+
 import { UploadedPdf } from "../../types/pdf";
 
 /**
@@ -10,7 +13,8 @@ import { UploadedPdf } from "../../types/pdf";
  */
 export const mergePdfFiles = async (files: Express.Multer.File[]): Promise<UploadedPdf> => {
   const outputDir = path.resolve("public/assets");
-  const outputFilename = `merged_${Date.now()}.pdf`;
+  const uniqueId = uuidv4();
+  const outputFilename = `merged_${uniqueId}.pdf`;
   const outputPath = path.join(outputDir, outputFilename);
 
   await fs.mkdir(outputDir, { recursive: true });
