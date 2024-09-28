@@ -35,17 +35,17 @@ router.post('/process', upload.single('file'), async (req: Request, res: Respons
   let outputFile: UploadedPdf = { outputPath: file.path, outputFilename: file.originalname };
 
   try {
-    // Apply password protection if password is provided
-    if (password) {
-      outputFile = await applyPassword(outputFile, password);
-    }
-
-    // Convert color mode if colorMode is provided
+    // Convert color mode first if colorMode is provided
     if (colorMode === 'cmyk' || colorMode === 'grayscale') {
       outputFile = await convertToColorMode(outputFile, colorMode);
     }
 
-    // Send the password-protected PDF to the client and clean up temp files
+    // Apply password protection if password is provided, using the result from the color mode conversion
+    if (password) {
+      outputFile = await applyPassword(outputFile, password);
+    }
+
+    // Send the final processed PDF to the client and clean up temp files
     await sendFileAndCleanup(res, outputFile.outputPath, outputFile.outputFilename, [
       file.path,
       outputFile.outputPath,
