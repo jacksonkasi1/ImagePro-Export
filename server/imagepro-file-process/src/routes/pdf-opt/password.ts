@@ -2,7 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import { Request, Response } from "express";
 
-import { setPasswordOnPdf } from "../../utils/pdf-utils";
+import { applyPassword } from "../../utils/pdf-utils";
 import { uploadPdfFile } from "../../utils/file-utils";
 import { sendFileAndCleanup } from "../../utils/response-utils";
 
@@ -31,7 +31,8 @@ router.post("/password-upload", upload.single("file"), async (req: Request, res:
       return res.status(400).json({ error: "Password is required." });
     }
 
-    outputFile = await setPasswordOnPdf(req.file, password);
+    const file = { outputPath: req.file.path, outputFilename: req.file.originalname }
+    outputFile = await applyPassword(file, password);
 
     await sendFileAndCleanup(res, outputFile.outputPath, outputFile.outputFilename, [
       req.file.path,

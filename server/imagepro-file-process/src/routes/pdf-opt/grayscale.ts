@@ -2,7 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import { Request, Response } from "express";
 
-import { convertPdfToGrayscale } from "../../utils/pdf-utils";
+import { convertToColorMode } from "../../utils/pdf-utils";
 import { uploadPdfFile } from "../../utils/file-utils";
 import { sendFileAndCleanup } from "../../utils/response-utils";
 
@@ -27,7 +27,7 @@ router.post("/grayscale-upload", upload.single("file"), async (req: Request, res
     }
 
     // Convert PDF to Grayscale
-    outputFile = await convertPdfToGrayscale(req.file);
+    outputFile = await convertToColorMode(req.file, 'grayscale');
 
     // Send the converted PDF as a download and clean up both original and converted files
     await sendFileAndCleanup(res, outputFile.outputPath, outputFile.outputFilename, [

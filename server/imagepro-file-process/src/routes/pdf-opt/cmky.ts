@@ -3,7 +3,7 @@ import multer from "multer";
 import { Request, Response } from "express";
 
 // ** import utils
-import { convertPdfToCmyk } from "../../utils/pdf-utils";
+import { convertToColorMode } from "../../utils/pdf-utils";
 import { uploadPdfFile } from "../../utils/file-utils";
 import { sendFileAndCleanup } from "../../utils/response-utils";
 
@@ -30,7 +30,7 @@ router.post("/cmyk-upload", upload.single("file"), async (req: Request, res: Res
       }
   
       // Convert PDF to CMYK
-      outputFile = await convertPdfToCmyk(req.file);
+      outputFile = await convertToColorMode(req.file, 'cmyk');
 
       // Send the converted PDF as a download and clean up both original and converted files
       await sendFileAndCleanup(res, outputFile.outputPath, outputFile.outputFilename, [
