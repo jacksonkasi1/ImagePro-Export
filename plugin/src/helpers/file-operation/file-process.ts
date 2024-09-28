@@ -1,7 +1,6 @@
-// ** import helper
+// ** import helpers
 import { compressImage } from '@/helpers/file-operation/compress-image';
-import { encryptPdfWithLib } from '@/helpers/pdf-operation/pdf-encrypt';
-import { convertPdfToCYMK, convertPdfToGrayscale } from '@/helpers/pdf-operation/pdf-utils';
+import { config } from '@/config'; // Import base URL from config
 
 // ** import types
 import { FormatOption, PdfFormatOption } from '@/types/enums';
@@ -15,7 +14,13 @@ interface ProcessFilesParams {
   password?: string; // Optional password for encrypting PDFs
 }
 
-// Helper function to process and compress image & cover pdf format
+/**
+ * Helper function to process and compress image & cover PDF format.
+ * Calls the server API to handle PDF color conversion and encryption.
+ * If exporting PDF in RGB format without a password, the function will return the blob directly.
+ * @param {ProcessFilesParams} params - The file processing parameters.
+ * @returns {Promise<Blob>} - The processed file as a Blob.
+ */
 export const processFiles = async ({
   imageData,
   formatOption,
@@ -39,28 +44,42 @@ export const processFiles = async ({
 
   // Handle PDF processing if the format is PDF
   if (formatOption === 'PDF') {
-    let pdfBytes = new Uint8Array(await blob.arrayBuffer());
 
-    // Perform color conversion based on the pdfFormatOption
-    if (pdfFormatOption === PdfFormatOption.CYMK) {
-      pdfBytes = await convertPdfToCYMK(blob); // Convert to CYMK
-    } else if (pdfFormatOption === PdfFormatOption.Grayscale) {
-      pdfBytes = await convertPdfToGrayscale(blob); // Convert to Grayscale
+    // If exporting PDF in RGB format without password, return the blob directly
+    if (pdfFormatOption === PdfFormatOption.RGB && !password) {
+      return new Blob([new Uint8Array(await blob.arrayBuffer())], { type: 'application/pdf' });
     }
 
-    // If a password is provided, encrypt the PDF
+    const formData = new FormData();
+    formData.append('file', blob);
+
+    // Perform color conversion and password protection via server API
+    let apiUrl = `${config.FILE_SERVER}/api/pdf-opt/process`;
+
+    // Add the PDF color format option if it's not RGB
+    if (pdfFormatOption !== PdfFormatOption.RGB) {
+      formData.append('colorMode', pdfFormatOption); // CYMK or Grayscale
+    }
+
+    // Add the password if provided
     if (password) {
-      const encryptedPdfData = await encryptPdfWithLib(pdfBytes, password);
-      if (encryptedPdfData) {
-        return new Blob([encryptedPdfData], { type: 'application/pdf' }); // Return encrypted PDF blob
-      } else {
-        console.warn('PDF encryption failed. Returning unencrypted PDF.');
-        return blob; // Return original PDF if encryption fails
-      }
+      formData.append('password', password);
     }
 
-    // Return the processed PDF without encryption
-    return new Blob([pdfBytes], { type: 'application/pdf' });
+    // Call the server API to process the PDF
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      console.error('PDF processing failed:', response.statusText);
+      throw new Error('PDF processing failed');
+    }
+
+    // Get the processed PDF blob from the server response
+    const pdfBlob = await response.blob();
+    return pdfBlob;
   }
 
   // Return the original blob if no further processing is required

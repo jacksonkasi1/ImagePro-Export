@@ -5,12 +5,12 @@ import { emit } from '@create-figma-plugin/utilities';
 import { getScaleValues } from '@/helpers/common';
 
 // ** import types
-import { FormatOption, PdfFormatOption } from '@/types/enums';
+import { FormatOption } from '@/types/enums';
 import { ExportCompleteHandler } from '@/types/events';
 import { ExportRequestData, ExportSettingsImage, ExportSettingsPDF, ExportSettingsSVG } from '@/types/export-settings';
 
 export const handleExportRequest = async (data: ExportRequestData) => {
-  const { selectedNodeIds, formatOption, exportScaleOption, caseOption, pdfFormatOption } = data;
+  const { selectedNodeIds, formatOption, exportScaleOption, caseOption } = data;
 
   const scales: number[] = getScaleValues(exportScaleOption);
   const images: Array<{
@@ -35,10 +35,6 @@ export const handleExportRequest = async (data: ExportRequestData) => {
         let exportSettings: ExportSettings;
         switch (formatOption) {
           case 'PDF':
-            if (pdfFormatOption === PdfFormatOption.CYMK || pdfFormatOption === PdfFormatOption.Grayscale) {
-              exportSettings = { format: 'PNG', constraint: { type: 'SCALE', value: 4 } } as ExportSettingsImage;
-              break;
-            }
             exportSettings = { format: 'PDF' } as ExportSettingsPDF;
             break;
           case 'SVG':
