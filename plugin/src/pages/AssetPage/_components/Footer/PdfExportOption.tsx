@@ -28,7 +28,7 @@ import { PdfFormatOption } from '@/types/enums';
 // Mapping PdfFormatOption values to their respective display labels
 const pdfFormatOptions = [
   { value: PdfFormatOption.RGB, text: 'RGB (Default)' },
-  { value: PdfFormatOption.CYMK, text: 'CYMK (for Print)' },
+  { value: PdfFormatOption.CMYK, text: 'CMYK (for Print)' },
   { value: PdfFormatOption.Grayscale, text: 'Grayscale' },
 ];
 

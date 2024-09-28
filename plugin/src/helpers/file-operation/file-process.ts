@@ -58,7 +58,7 @@ export const processFiles = async ({
 
     // Add the PDF color format option if it's not RGB
     if (pdfFormatOption !== PdfFormatOption.RGB) {
-      formData.append('colorMode', pdfFormatOption); // CYMK or Grayscale
+      formData.append('colorMode', pdfFormatOption); // CMYK or Grayscale
     }
 
     // Add the password if provided

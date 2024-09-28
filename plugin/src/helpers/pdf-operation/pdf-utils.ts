@@ -4,7 +4,7 @@ import { processImageToCMYK } from '@/helpers/color-transform';
 import { convertImageToPdf } from '@/helpers/pdf-operation/image-pdf';
 
 // Convert image (as Blob) to CMYK and embed it into a PDF
-export async function convertPdfToCYMK(imageBlob: Blob): Promise<Uint8Array> {
+export async function convertPdfToCMYK(imageBlob: Blob): Promise<Uint8Array> {
   // Process the image and convert it to CMYK
   const cmykImageBlob = await processImageToCMYK(imageBlob);
 
