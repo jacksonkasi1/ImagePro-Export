@@ -45,7 +45,11 @@ router.post("/merge-upload", (req: Request, res: Response) => {
       outputFile = await mergePdfFiles(files);
 
       // Optionally apply grayscale or CMYK conversion
-      const colorMode = req.body.colorMode; // 'grayscale' or 'cmyk'
+      let colorMode = req.body.colorMode; // 'grayscale' or 'cmyk'
+
+      // Convert colorMode to lowercase
+      colorMode = colorMode ? colorMode.toLowerCase() : null;
+
       if (colorMode) {
         outputFile = await convertToColorMode(outputFile, colorMode);
       }

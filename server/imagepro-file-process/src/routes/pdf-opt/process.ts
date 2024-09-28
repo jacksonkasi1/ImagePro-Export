@@ -20,7 +20,10 @@ const upload = multer({
 // POST /api/pdf-opt/process
 router.post('/process', upload.single('file'), async (req: Request, res: Response) => {
   const file = req.file;
-  const { password, colorMode } = req.body;
+  let { password, colorMode } = req.body;
+
+  // Convert colorMode to lowercase
+  colorMode = colorMode ? colorMode.toLowerCase() : null;
 
   if (!file) {
     return res.status(400).json({ error: 'No file uploaded.' });
