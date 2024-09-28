@@ -27,6 +27,7 @@ export const sendFileAndCleanup = async (
   });
 };
 
+
 /**
  * Utility function to clean up multiple files
  * @param filePaths Array of file paths to remove
@@ -36,8 +37,12 @@ export const cleanUpFiles = async (filePaths: string[]): Promise<void> => {
     try {
       await fs.unlink(filePath);
       console.log(`Successfully deleted file: ${filePath}`);
-    } catch (error) {
-      console.error(`Error deleting file ${filePath}:`, error);
+    } catch (error: any) {
+      if (error.code === 'ENOENT') {
+        console.warn(`⚠️  File not found, skipping: ${filePath}`);
+      } else {
+        console.error(`Error deleting file ${filePath}:`, error);
+      }
     }
   }
 };
