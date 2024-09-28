@@ -2,7 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import { Request, Response } from "express";
 
-import { mergePdfFiles, applyConversion, applyPassword } from "../../utils/pdf-utils";
+import { mergePdfFiles, convertToColorMode, applyPassword } from "../../utils/pdf-utils";
 import { uploadMultiplePdfFiles } from "../../utils/file-utils";
 import { sendFileAndCleanup } from "../../utils/response-utils";
 
@@ -46,7 +46,7 @@ router.post("/merge-upload", (req: Request, res: Response) => {
       // Optionally apply grayscale or CMYK conversion
       const colorMode = req.body.colorMode; // 'grayscale' or 'cmyk'
       if (colorMode) {
-        outputFile = await applyConversion(outputFile, colorMode);
+        outputFile = await convertToColorMode(outputFile, colorMode);
       }
 
       // Optionally apply password protection

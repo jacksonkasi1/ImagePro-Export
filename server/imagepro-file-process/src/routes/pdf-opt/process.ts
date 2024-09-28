@@ -4,7 +4,7 @@ import { promises as fs } from 'fs';
 
 import { UploadedPdf } from '@/types/pdf';
 
-import { applyConversion, applyPassword } from '@/utils/pdf-utils';
+import { convertToColorMode, applyPassword } from '@/utils/pdf-utils';
 
 const router = express.Router();
 
@@ -37,7 +37,7 @@ router.post('/process', upload.single('file'), async (req: Request, res: Respons
 
     // Convert color mode if colorMode is provided
     if (colorMode === 'cmyk' || colorMode === 'grayscale') {
-      processedFile = await applyConversion(processedFile, colorMode);
+      processedFile = await convertToColorMode(processedFile, colorMode);
     }
 
     // Send the processed file to the user
