@@ -7,6 +7,7 @@ import { convertToColorMode, applyPassword } from '../../utils/pdf-utils';
 
 // ** import types
 import { UploadedPdf } from '../../types/pdf';
+import { sendFileAndCleanup } from '@/utils/response-utils';
 
 const router = express.Router();
 
@@ -19,7 +20,10 @@ const upload = multer({
 // POST /api/pdf-opt/process
 router.post('/process', upload.single('file'), async (req: Request, res: Response) => {
   const file = req.file;
-  const { password, colorMode } = req.body;
+  let { password, colorMode } = req.body;
+
+  // Convert colorMode to lowercase
+  colorMode = colorMode ? colorMode.toLowerCase() : null;
 
   if (!file) {
     return res.status(400).json({ error: 'No file uploaded.' });
@@ -29,37 +33,32 @@ router.post('/process', upload.single('file'), async (req: Request, res: Respons
     return res.status(400).json({ error: 'Either password or color mode must be provided.' });
   }
 
-  let processedFile: UploadedPdf = { outputPath: file.path, outputFilename: file.originalname };
+  let outputFile: UploadedPdf = { outputPath: file.path, outputFilename: file.originalname };
 
   try {
     // Apply password protection if password is provided
     if (password) {
-      processedFile = await applyPassword(processedFile, password);
+      outputFile = await applyPassword(outputFile, password);
     }
 
     // Convert color mode if colorMode is provided
     if (colorMode === 'cmyk' || colorMode === 'grayscale') {
-      processedFile = await convertToColorMode(processedFile, colorMode);
+      outputFile = await convertToColorMode(outputFile, colorMode);
     }
 
-    // Send the processed file to the user
-    res.download(processedFile.outputPath, processedFile.outputFilename, async (err) => {
-      if (err) {
-        console.error('Error sending file:', err);
-        return res.status(500).json({ error: 'Error processing file.' });
-      }
+    // Send the password-protected PDF to the client and clean up temp files
+    await sendFileAndCleanup(res, outputFile.outputPath, outputFile.outputFilename, [
+      file.path,
+      outputFile.outputPath,
+    ]);
+  } catch (error: any) {
+    console.error("Server Error:", error);
 
-      // Clean up files after sending
-      await fs.unlink(file.path);
-      await fs.unlink(processedFile.outputPath);
-    });
+    const filesToCleanup = [req.file?.path, outputFile?.outputPath].filter(Boolean) as string[];
 
-  } catch (error) {
-    console.error('Error processing PDF:', error);
-    res.status(500).json({ error: 'Error processing PDF.' });
-
-    // Cleanup uploaded file if error occurs
-    await fs.unlink(file.path);
+    // Cleanup files if an error occurs
+    await sendFileAndCleanup(res, "", "", filesToCleanup);
+    res.status(500).json({ error: error.message || "Internal Server Error." });
   }
 });
 
