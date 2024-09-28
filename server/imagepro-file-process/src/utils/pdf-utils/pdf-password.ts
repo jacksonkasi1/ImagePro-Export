@@ -1,33 +1,22 @@
 import path from "path";
-import { exec } from "child_process";
 import { promises as fs } from "fs";
-
-// Import the utility function and types
+import { applyEncryption } from "./pdf-convert";
 import { sanitizeFileName } from "../../utils/file-utils";
 import { UploadedPdf } from "../../types/pdf";
 
-// Ghostscript command to set password on PDF
-export const setPasswordOnPdf = async (file: Express.Multer.File, password: string): Promise<UploadedPdf> => {
-  const inputPath = path.resolve(file.path);
-  const originalName = path.parse(file.originalname).name;
-  const sanitizedOriginalName = sanitizeFileName(originalName);
-  const outputFilename = `${sanitizedOriginalName}_protected.pdf`;
+/**
+ * Applies password protection to a PDF.
+ * @param {UploadedPdf} file - The uploaded PDF file details.
+ * @param {string} password - The password to apply.
+ * @returns {Promise<UploadedPdf>} - The password-protected PDF file details.
+ */
+export const applyPassword = async (file: UploadedPdf, password: string): Promise<UploadedPdf> => {
   const outputDir = path.resolve("public/assets");
+  const outputFilename = `${sanitizeFileName(path.parse(file.outputFilename).name)}_protected.pdf`;
   const outputPath = path.join(outputDir, outputFilename);
 
   await fs.mkdir(outputDir, { recursive: true });
+  await applyEncryption(file.outputPath, outputPath, password);
 
-  const gsCommand = `gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOwnerPassword=owner_pw -sUserPassword=${password} -dEncryptionR=3 -dKeyLength=128 -sOutputFile="${outputPath}" "${inputPath}"`;
-
-  return new Promise((resolve, reject) => {
-    exec(gsCommand, async (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Ghostscript Error: ${stderr}`);
-        return reject(new Error("Error setting password on PDF."));
-      }
-
-      console.log(`Ghostscript Output: ${stdout}`);
-      resolve({ outputPath, outputFilename });
-    });
-  });
+  return { outputPath, outputFilename };
 };
