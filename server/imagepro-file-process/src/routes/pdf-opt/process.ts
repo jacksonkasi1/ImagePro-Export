@@ -3,10 +3,10 @@ import multer from 'multer';
 import { promises as fs } from 'fs';
 
 // ** import utils
-import { convertToColorMode, applyPassword } from '@/utils/pdf-utils';
+import { convertToColorMode, applyPassword } from '../../utils/pdf-utils';
 
 // ** import types
-import { UploadedPdf } from '@/types/pdf';
+import { UploadedPdf } from '../../types/pdf';
 
 const router = express.Router();
 
