@@ -69,7 +69,7 @@ export const handleExportComplete = async ({
     // If export mode is ZIP, generate and download the ZIP file
     if (exportMode === ExportMode.ZIP && zip) {
       const content = await zip.generateAsync({ type: 'blob' });
-      saveAs(content, 'exported_images.zip');
+      saveAs(content, 'exported_files.zip');
     }
   } catch (error) {
     console.error(error);
