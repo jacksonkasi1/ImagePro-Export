@@ -15,12 +15,20 @@ import { arrayBufferToBase64 } from '@/helpers/file-operation';
 
 // ** import store
 import { useImageNodesStore } from '@/store/use-image-nodes-store';
+import { useImageExportStore } from '@/store/use-image-export-store';
 
 // ** import utils
 import { cn } from '@/lib/utils';
 
+// ** import types
+import { AssetsExportType } from '@/types/enums';
+
 const ImageSelector = () => {
   const { allNodes, allNodesCount, selectedNodeIds, setSelectedNodeIds, setSelectedNodesCount } = useImageNodesStore();
+
+  const { assetsExportType } = useImageExportStore();
+
+  const isSingleExport = assetsExportType === AssetsExportType.SINGLE;
 
   const [base64Images, setBase64Images] = useState<Record<string, string>>({});
   const [viewType, setViewType] = useState<'grid' | 'list'>('grid'); // State for toggling between grid and list views
@@ -41,6 +49,10 @@ const ImageSelector = () => {
   useEffect(() => {
     setSelectedNodesCount(selectedNodeIds.length);
   }, [selectedNodeIds, setSelectedNodesCount]);
+
+  useEffect(() => {
+    setViewType(isSingleExport ? 'list' : 'grid');
+  }, [assetsExportType]);
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
@@ -76,20 +88,21 @@ const ImageSelector = () => {
         {/* View Type Toggle Buttons */}
         <div className="flex items-center justify-end gap-2">
           <button
+            disabled={isSingleExport}
             onClick={() => setViewType('grid')}
             className={cn(
               'rounded-sm text-primary-text',
-              viewType === 'grid' && 'bg-selected-bg'
+              viewType === 'grid' && 'bg-selected-bg',
+
+              // Disable the button if the export type is single
+              isSingleExport && 'cursor-not-allowed opacity-50'
             )}
           >
             <IconGrid32 className="-m-1" />
           </button>
           <button
             onClick={() => setViewType('list')}
-            className={cn(
-              'rounded-sm text-primary-text',
-              viewType === 'list' && 'bg-selected-bg'
-            )}
+            className={cn('rounded-sm text-primary-text', viewType === 'list' && 'bg-selected-bg')}
           >
             <IconList32 className="-m-1" />
           </button>

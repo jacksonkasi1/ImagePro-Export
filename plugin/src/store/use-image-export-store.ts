@@ -33,6 +33,6 @@ export const useImageExportStore = create<ImageExportState>((set) => ({
   pdfPassword: '',
   setPdfPassword: (password: string) => set({ pdfPassword: password }),
 
-  assetsExportType: AssetsExportType.SINGLE,
+  assetsExportType: AssetsExportType.MULTI,
   setAssetsExportType: (option: AssetsExportType) => set({ assetsExportType: option }),
 }));
