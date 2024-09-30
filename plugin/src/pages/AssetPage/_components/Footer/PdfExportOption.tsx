@@ -23,7 +23,7 @@ import notify from '@/lib/notify';
 import { useImageExportStore } from '@/store/use-image-export-store';
 
 // ** import types
-import { PdfFormatOption } from '@/types/enums';
+import { AssetsExportType, PdfFormatOption } from '@/types/enums';
 
 // Mapping PdfFormatOption values to their respective display labels
 const pdfFormatOptions = [
@@ -32,8 +32,14 @@ const pdfFormatOptions = [
   { value: PdfFormatOption.Grayscale, text: 'Grayscale' },
 ];
 
+const assetsExportTypes = [
+  { value: AssetsExportType.SINGLE, text: 'Single PDF file' },
+  { value: AssetsExportType.MULTI, text: 'Multiple PDF files' },
+];
+
 const PdfExportOption = () => {
   const { pdfFormatOption, setPdfFormatOption, pdfPassword, setPdfPassword } = useImageExportStore();
+  const { assetsExportType, setAssetsExportType } = useImageExportStore();
 
   const [vectorGradients, setVectorGradients] = useState<boolean>(false);
   const [outlineLinks, setOutlineLinks] = useState<boolean>(false);
@@ -42,6 +48,11 @@ const PdfExportOption = () => {
   const handlePdfFormatChange = (event: JSX.TargetedEvent<HTMLInputElement>) => {
     const formatValue = event.currentTarget.value as PdfFormatOption;
     setPdfFormatOption(formatValue);
+  };
+
+  const handleAssetsExportChange = (event: JSX.TargetedEvent<HTMLInputElement>) => {
+    const formatValue = event.currentTarget.value as AssetsExportType;
+    setAssetsExportType(formatValue);
   };
 
   const toggleVectorGradient = (newValue: boolean) => {
@@ -105,6 +116,13 @@ const PdfExportOption = () => {
         <Text>Format</Text>
         <div className="col-span-3">
           <Dropdown onChange={handlePdfFormatChange} options={pdfFormatOptions} value={pdfFormatOption} />
+        </div>
+      </div>
+      <VerticalSpace space="medium" />
+      <div className="grid items-center grid-cols-4 gap-2">
+        <Text>Asset Export</Text>
+        <div className="col-span-3">
+          <Dropdown onChange={handleAssetsExportChange} options={assetsExportTypes} value={assetsExportType} />
         </div>
       </div>
       <VerticalSpace space="small" />

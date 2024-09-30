@@ -1,4 +1,4 @@
-import { CaseOption, FormatOption, ExportScaleOption, ExportMode, PdfFormatOption } from './enums';
+import { CaseOption, FormatOption, ExportScaleOption, ExportMode, PdfFormatOption, AssetsExportType } from './enums';
 export interface ExportSettings {
   format: string;
   constraint?: { type: 'SCALE'; value: number };
@@ -38,6 +38,9 @@ export interface ImageExportState {
 
   pdfPassword: string;
   setPdfPassword: (password: string) => void;
+
+  assetsExportType: AssetsExportType;
+  setAssetsExportType: (option: AssetsExportType) => void;
 }
 
 export interface ExportRequestData {
