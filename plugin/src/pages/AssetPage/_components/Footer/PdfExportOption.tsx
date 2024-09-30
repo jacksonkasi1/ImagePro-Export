@@ -118,7 +118,7 @@ const PdfExportOption = () => {
           <Dropdown onChange={handlePdfFormatChange} options={pdfFormatOptions} value={pdfFormatOption} />
         </div>
       </div>
-      <VerticalSpace space="medium" />
+      <VerticalSpace space="small" />
       <div className="grid items-center grid-cols-4 gap-2">
         <Text>Asset Export</Text>
         <div className="col-span-3">
