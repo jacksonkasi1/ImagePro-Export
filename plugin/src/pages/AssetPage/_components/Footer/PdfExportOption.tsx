@@ -37,9 +37,13 @@ const assetsExportTypes = [
   { value: AssetsExportType.MULTI, text: 'Multiple PDF files' },
 ];
 
-const PdfExportOption = () => {
-  const { pdfFormatOption, setPdfFormatOption, pdfPassword, setPdfPassword } = useImageExportStore();
-  const { assetsExportType, setAssetsExportType } = useImageExportStore();
+interface PdfExportOptionProps {
+  onHeightChange: () => void; // Notify parent when height changes
+}
+
+const PdfExportOption = ({ onHeightChange }: PdfExportOptionProps) => {
+  const { pdfFormatOption, setPdfFormatOption, pdfPassword, setPdfPassword, assetsExportType, setAssetsExportType } =
+    useImageExportStore();
 
   const [vectorGradients, setVectorGradients] = useState<boolean>(false);
   const [outlineLinks, setOutlineLinks] = useState<boolean>(false);
@@ -68,6 +72,8 @@ const PdfExportOption = () => {
     if (!newValue) {
       setPdfPassword('');
     }
+    // Notify parent when password protection is toggled
+    onHeightChange();
   };
 
   const handleSetPassword = (event: JSX.TargetedEvent<HTMLInputElement>) => {

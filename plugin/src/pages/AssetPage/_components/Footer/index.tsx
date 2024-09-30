@@ -36,6 +36,8 @@ import { ExportAssetsHandler } from '@/types/events';
 const Footer = () => {
   const [isExpanded, setIsExpanded] = useState(false); // State to manage footer expansion
   const [contentHeight, setContentHeight] = useState('0px');
+  const [heightTrigger, setHeightTrigger] = useState(false);
+
   const contentRef = useRef<HTMLDivElement>(null);
 
   const { isLoading, setIsLoading } = useUtilsStore();
@@ -47,7 +49,7 @@ const Footer = () => {
     if (contentRef.current) {
       setContentHeight(isExpanded ? `${contentRef.current.scrollHeight}px` : '0px');
     }
-  }, [isExpanded, formatOption]);
+  }, [isExpanded, formatOption, heightTrigger]);
 
   const caseOptions = Object.values(CaseOption).map((value) => ({
     value,
@@ -58,6 +60,11 @@ const Footer = () => {
     value,
     text: value,
   }));
+
+  const handleHeightChange = () => {
+    // Update true or false to trigger height change
+    setHeightTrigger((prev) => !prev);
+  };
 
   function handleCaseChange(event: JSX.TargetedEvent<HTMLInputElement>) {
     const caseValue = event.currentTarget.value;
@@ -143,7 +150,11 @@ const Footer = () => {
               </div>
             </div>
             <VerticalSpace space="small" />
-            {formatOption === FormatOption.PDF ? <PdfExportOption /> : <ImageExportOption />}
+            {formatOption === FormatOption.PDF ? (
+              <PdfExportOption onHeightChange={handleHeightChange} />
+            ) : (
+              <ImageExportOption />
+            )}
           </Container>
           <VerticalSpace space="small" />
         </div>
