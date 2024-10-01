@@ -131,7 +131,7 @@ const PdfExportOption = ({ onHeightChange }: PdfExportOptionProps) => {
           <Dropdown onChange={handleAssetsExportChange} options={assetsExportTypes} value={assetsExportType} />
         </div>
       </div>
-      <VerticalSpace space="small" />
+      {/* <VerticalSpace space="small" />
       <Columns>
         <Toggle onValueChange={toggleVectorGradient} value={vectorGradients} disabled>
           <Text>Vector Gradients</Text>
@@ -139,7 +139,7 @@ const PdfExportOption = ({ onHeightChange }: PdfExportOptionProps) => {
         <Toggle onValueChange={toggleOutlineLinks} value={outlineLinks} disabled>
           <Text>Outline Links</Text>
         </Toggle>
-      </Columns>
+      </Columns> */}
     </Fragment>
   );
 };
