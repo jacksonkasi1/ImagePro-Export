@@ -15,7 +15,7 @@ import { useImageNodesStore } from '@/store/use-image-nodes-store';
 import { useImageExportStore } from '@/store/use-image-export-store';
 
 // ** import helpers
-import { handleExportComplete } from '@/helpers/handle-export-complete';
+import { handleExportComplete } from '@/helpers/export-files';
 
 // ** import types
 import { AssetsExportType, PdfFormatOption } from '@/types/enums';
