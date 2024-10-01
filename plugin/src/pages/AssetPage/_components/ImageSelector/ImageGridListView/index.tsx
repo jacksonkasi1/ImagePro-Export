@@ -34,7 +34,7 @@ const ImageGridListView = ({
 
   return (
     <HoverScrollbar className="overflow-visible h-80" thumbClassName="-mr-2">
-      <div className={cn('gap-2 h-full mr-2', isGridView ? 'grid grid-cols-2' : 'flex flex-col')}>
+      <div className={cn('gap-2 h-full mr-2', isGridView ? 'grid grid-cols-2 auto-rows-min' : 'flex flex-col')}>
         {isGridView ? (
           <GridView
             allNodes={allNodes}

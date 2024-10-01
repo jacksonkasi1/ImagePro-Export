@@ -63,10 +63,10 @@ const GridView = ({ allNodes, base64Images, selectedNodeIds, onToggleSelection }
             <div className={cn('flex flex-col gap-2 items-center mt-2')}>
               <Columns space="medium">
                 <div className="flex flex-col gap-1">
-                  <Text className={cn('truncate w-fit font-medium')}>{truncateText(image.name, 6)}</Text>
-                  <Text className="text-secondary-text">{truncateText(image.type, 6)}</Text>
+                  <Text className={cn('truncate w-fit font-medium cursor-pointer')}>{truncateText(image.name, 6)}</Text>
+                  <Text className="cursor-pointer text-secondary-text">{truncateText(image.type, 6)}</Text>
                 </div>
-                <Text className="text-secondary-text">
+                <Text className="cursor-pointer text-secondary-text">
                   {Math.round(image.dimensions.width)}x{Math.round(image.dimensions.height)}px
                 </Text>
               </Columns>
