@@ -1,4 +1,4 @@
-import { Fragment, h } from 'preact';
+import { h } from 'preact';
 
 // ** import figma ui components
 import { Text } from '@create-figma-plugin/ui';

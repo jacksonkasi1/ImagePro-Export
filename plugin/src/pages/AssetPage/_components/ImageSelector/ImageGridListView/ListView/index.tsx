@@ -1,4 +1,3 @@
-// index.tsx
 import { Fragment, h } from 'preact';
 
 // ** import child components
