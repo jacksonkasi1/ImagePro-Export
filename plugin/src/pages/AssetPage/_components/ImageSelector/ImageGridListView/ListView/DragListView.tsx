@@ -115,19 +115,15 @@ const DragListView = ({ allNodes, base64Images, selectedNodeIds, onToggleSelecti
                                   )}
                                 </div>
                                 {/* Image Details */}
-                                <div className="flex flex-row items-center justify-between w-full gap-2 cursor-pointer">
-                                  <div className="flex flex-col cursor-pointer">
-                                    <Text className={cn('truncate w-full font-medium cursor-pointer')}>
-                                      {truncateText(image.name, 17)}
-                                    </Text>
-                                  </div>
-                                  <div className="flex flex-col gap-2">
-                                    <Text className="cursor-pointer text-secondary-text">
-                                      {truncateText(image.type, 10)}
-                                    </Text>
-                                    <Text className="cursor-pointer text-secondary-text">
-                                      {Math.round(image.dimensions.width)}x{Math.round(image.dimensions.height)}px
-                                    </Text>
+                                <div className="flex flex-row items-center justify-between w-full gap-2">
+                                  <div className="flex flex-col">
+                                    <Text className={cn('truncate w-full font-medium')}>{truncateText(image.name, 17)}</Text>
+                                    <div className="flex flex-row items-center justify-between w-full gap-1">
+                                      <Text className="text-secondary-text">{truncateText(image.type, 10)}</Text>
+                                      <Text className="text-secondary-text">
+                                        {Math.round(image.dimensions.width)}x{Math.round(image.dimensions.height)}px
+                                      </Text>
+                                    </div>
                                   </div>
                                 </div>
                                 {/* Drag Handle (6 dots menu) */}
@@ -154,13 +150,13 @@ const DragListView = ({ allNodes, base64Images, selectedNodeIds, onToggleSelecti
                 'mt-2': selectedNodes.length > 0,
               })}
             >
-              {unselectedNodes.map((image, index) => {
+              {unselectedNodes.map((image) => {
                 return (
                   <Flipped flipId={image.id} key={image.id}>
                     <div
                       className={cn(
                         'relative rounded-lg flex items-center cursor-pointer px-2',
-                        'bg-secondary-bg opacity-70'
+                        'bg-secondary-bg'
                       )}
                       onClick={() => handleToggleSelection(image.id, false)}
                     >
@@ -188,12 +184,12 @@ const DragListView = ({ allNodes, base64Images, selectedNodeIds, onToggleSelecti
                         <div className="flex flex-row items-center justify-between w-full gap-2">
                           <div className="flex flex-col">
                             <Text className={cn('truncate w-full font-medium')}>{truncateText(image.name, 17)}</Text>
-                          </div>
-                          <div className="flex flex-col gap-2">
-                            <Text className="text-secondary-text">{truncateText(image.type, 10)}</Text>
-                            <Text className="text-secondary-text">
-                              {Math.round(image.dimensions.width)}x{Math.round(image.dimensions.height)}px
-                            </Text>
+                            <div className="flex flex-row items-center justify-between w-full gap-1">
+                              <Text className="text-secondary-text">{truncateText(image.type, 10)}</Text>
+                              <Text className="text-secondary-text">
+                                {Math.round(image.dimensions.width)}x{Math.round(image.dimensions.height)}px
+                              </Text>
+                            </div>
                           </div>
                         </div>
 
