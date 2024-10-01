@@ -9,9 +9,6 @@ import { render } from '@create-figma-plugin/ui';
 import Root from '@/pages';
 import '!./styles/output.css';
 
-// ** import types
-import { ExportCompleteHandler, FetchImageNodesHandler } from '@/types/events';
-
 // ** import store
 import { useUtilsStore } from '@/store/use-utils-store';
 import { useImageNodesStore } from '@/store/use-image-nodes-store';
@@ -20,29 +17,45 @@ import { useImageExportStore } from '@/store/use-image-export-store';
 // ** import helpers
 import { handleExportComplete } from '@/helpers/handle-export-complete';
 
+// ** import types
+import { AssetsExportType, PdfFormatOption } from '@/types/enums';
+import { ExportCompleteHandler, FetchImageNodesHandler } from '@/types/events';
+
 function Plugin() {
   const { setIsLoading } = useUtilsStore();
-  const { quality, exportMode, pdfFormatOption, pdfPassword } = useImageExportStore();
+  const { quality, exportMode, pdfFormatOption, pdfPassword, assetsExportType } = useImageExportStore();
 
   const { setAllNodes, setAllNodesCount, setSelectedNodeIds, setSelectedNodesCount } = useImageNodesStore();
 
-  // Create refs for quality, pdfFormatOption, and pdfPassword
-  const qualityRef = useRef(quality);
-  const pdfFormatOptionRef = useRef(pdfFormatOption);
-  const pdfPasswordRef = useRef(pdfPassword);
+  // Create a single ref object for all export settings
+  const exportSettingsRef = useRef<{
+    quality: number;
+    pdfFormatOption?: PdfFormatOption;
+    password?: string;
+    assetsExportType: AssetsExportType;
+  }>({
+    quality,
+    pdfFormatOption,
+    password: pdfPassword,
+    assetsExportType,
+  });
 
   // Sync refs with the latest state values
   useEffect(() => {
-    qualityRef.current = quality;
+    exportSettingsRef.current.quality = quality;
   }, [quality]);
 
   useEffect(() => {
-    pdfFormatOptionRef.current = pdfFormatOption;
+    exportSettingsRef.current.pdfFormatOption = pdfFormatOption;
   }, [pdfFormatOption]);
 
   useEffect(() => {
-    pdfPasswordRef.current = pdfPassword;
+    exportSettingsRef.current.password = pdfPassword;
   }, [pdfPassword]);
+
+  useEffect(() => {
+    exportSettingsRef.current.assetsExportType = assetsExportType;
+  }, [assetsExportType]);
 
   useEffect(() => {
     on<FetchImageNodesHandler>('FETCH_IMAGE_NODES', (image_nodes) => {
@@ -56,13 +69,11 @@ function Plugin() {
       handleExportComplete({
         data,
         setIsLoading,
-        quality: qualityRef.current, // Use ref for quality
         exportMode,
-        pdfFormatOption: pdfFormatOptionRef.current, // Use ref for pdfFormatOption
-        password: pdfPasswordRef.current, // Use ref for pdfPassword
+        exportSettings: exportSettingsRef.current, // Pass the common ref object
       });
     });
-  }, []);
+  }, [setAllNodes, setAllNodesCount, setSelectedNodeIds, setSelectedNodesCount, setIsLoading, exportMode]);
 
   return <Root />;
 }

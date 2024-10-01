@@ -7,27 +7,32 @@ import { arrayBufferToBase64, processFiles, renameFile, saveFile } from '@/helpe
 
 // ** import types
 import { ImageData } from '@/types/utils';
-import { ExportMode, PdfFormatOption } from '@/types/enums';
+import { ExportMode, PdfFormatOption, AssetsExportType } from '@/types/enums';
 
 interface ExportCompleteParams {
   data: ImageData[];
   setIsLoading: (isLoading: boolean) => void;
-  quality: number;
   exportMode: ExportMode;
-  pdfFormatOption?: PdfFormatOption;
-  password?: string;
+  exportSettings: {
+    quality: number;
+    pdfFormatOption?: PdfFormatOption;
+    password?: string;
+    assetsExportType: AssetsExportType;
+  };
 }
 
 // Refactored function with parallel processing
 export const handleExportComplete = async ({
   data,
   setIsLoading,
-  quality,
   exportMode,
-  pdfFormatOption,
-  password,
+  exportSettings,
 }: ExportCompleteParams) => {
+  const { quality, pdfFormatOption, password, assetsExportType } = exportSettings;
+
   if (!data) return;
+
+  console.log({ assetsExportType });
 
   try {
     let zip: JSZip | undefined;

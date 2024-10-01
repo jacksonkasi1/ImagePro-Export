@@ -30,7 +30,7 @@ import { useUtilsStore } from '@/store/use-utils-store';
 import notify from '@/lib/notify';
 
 // ** import types
-import { CaseOption, FormatOption } from '@/types/enums';
+import { AssetsExportType, CaseOption, FormatOption } from '@/types/enums';
 import { ExportAssetsHandler } from '@/types/events';
 
 const Footer = () => {
@@ -41,9 +41,16 @@ const Footer = () => {
   const contentRef = useRef<HTMLDivElement>(null);
 
   const { isLoading, setIsLoading } = useUtilsStore();
-  const { selectedNodeIds } = useImageNodesStore();
-  const { caseOption, exportScaleOption, setCaseOption, formatOption, setFormatOption, pdfFormatOption } =
-    useImageExportStore();
+  const { selectedNodeIds, selectedNodesOrder } = useImageNodesStore();
+  const {
+    caseOption,
+    exportScaleOption,
+    setCaseOption,
+    formatOption,
+    setFormatOption,
+    assetsExportType,
+    pdfFormatOption,
+  } = useImageExportStore();
 
   useEffect(() => {
     if (contentRef.current) {
@@ -89,8 +96,16 @@ const Footer = () => {
   }
 
   const handleExport = async () => {
+    let nodeIdsToExport: string[] = [];
+
+    if (assetsExportType === AssetsExportType.SINGLE) {
+      nodeIdsToExport = selectedNodesOrder; // follow nodes position order
+    } else {
+      nodeIdsToExport = selectedNodeIds; // not follow nodes position order
+    }
+
     try {
-      if (selectedNodeIds.length === 0) {
+      if (nodeIdsToExport.length === 0) {
         console.warn(formatWarningMessage('Please select at least one image to export.'));
         notify.warn('Please select at least one image to export.');
         return;
@@ -100,7 +115,7 @@ const Footer = () => {
       notify.loading('Exporting assets...');
 
       emit<ExportAssetsHandler>('EXPORT_ASSETS', {
-        selectedNodeIds,
+        selectedNodeIds: nodeIdsToExport,
         formatOption,
         exportScaleOption,
         caseOption,
