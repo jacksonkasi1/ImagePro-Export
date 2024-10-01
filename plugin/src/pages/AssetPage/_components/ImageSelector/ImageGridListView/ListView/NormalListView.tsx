@@ -6,22 +6,27 @@ import { Text } from '@create-figma-plugin/ui';
 // ** import custom ui components
 import { Checkbox } from '@/components/ui/checkbox';
 
-// ** import types
-import { NodeData } from '@/types/node';
-
 // ** import utils
 import { cn, truncateText } from '@/lib/utils';
 
-interface ListViewProps {
+// ** import types
+import { NodeData } from '@/types/node';
+
+interface NormalListViewProps {
   allNodes: NodeData[];
   base64Images: { [key: string]: string };
   selectedNodeIds: string[];
   onToggleSelection: (id: string, currentChecked: boolean) => void;
 }
 
-const ListView = ({ allNodes, base64Images, selectedNodeIds, onToggleSelection }: ListViewProps) => {
+const NormalListView = ({ allNodes, base64Images, selectedNodeIds, onToggleSelection }: NormalListViewProps) => {
+  const handleToggleSelection = (id: string, isSelected: boolean) => {
+    const newSelected = !isSelected; // Toggle the current state
+    onToggleSelection(id, newSelected);
+  };
+
   return (
-    <Fragment>
+    <div className={'flex flex-col gap-2 '}>
       {allNodes.map((image, index) => {
         const isSelected = selectedNodeIds.includes(image.id);
 
@@ -32,13 +37,13 @@ const ListView = ({ allNodes, base64Images, selectedNodeIds, onToggleSelection }
               'relative rounded-lg flex items-center cursor-pointer px-2',
               isSelected ? 'bg-selected-bg' : 'bg-secondary-bg'
             )}
-            onClick={() => onToggleSelection(image.id, isSelected)}
+            onClick={() => handleToggleSelection(image.id, isSelected)}
           >
             <div className="flex items-center w-full gap-2 cursor-pointer">
               {/* Checkbox */}
               <Checkbox
                 value={isSelected}
-                onValueChange={() => onToggleSelection(image.id, isSelected)}
+                onValueChange={() => handleToggleSelection(image.id, isSelected)}
                 className="self-center"
               />
               {/* Image Preview */}
@@ -51,13 +56,15 @@ const ListView = ({ allNodes, base64Images, selectedNodeIds, onToggleSelection }
               </div>
 
               {/* Image Details */}
-              <div className="flex flex-row items-center justify-between w-full gap-2">
-                <div className="flex flex-col">
-                  <Text className={cn('truncate w-full font-medium')}>{truncateText(image.name, 17)}</Text>
+              <div className="flex flex-row items-center justify-between w-full gap-2 cursor-pointer">
+                <div className="flex flex-col ">
+                  <Text className={cn('truncate w-full font-medium cursor-pointer')}>
+                    {truncateText(image.name, 17)}
+                  </Text>
                 </div>
-                <div className="flex flex-col gap-2">
-                  <Text className="text-secondary-text">{truncateText(image.type, 10)}</Text>
-                  <Text className="text-secondary-text">
+                <div className="flex flex-col gap-2 cursor-pointer">
+                  <Text className="cursor-pointer text-secondary-text">{truncateText(image.type, 10)}</Text>
+                  <Text className="cursor-pointer text-secondary-text">
                     {Math.round(image.dimensions.width)}x{Math.round(image.dimensions.height)}px
                   </Text>
                 </div>
@@ -66,8 +73,8 @@ const ListView = ({ allNodes, base64Images, selectedNodeIds, onToggleSelection }
           </div>
         );
       })}
-    </Fragment>
+    </div>
   );
 };
 
-export default ListView;
+export default NormalListView;

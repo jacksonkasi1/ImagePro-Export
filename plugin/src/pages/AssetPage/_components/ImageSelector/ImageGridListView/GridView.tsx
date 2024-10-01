@@ -20,6 +20,11 @@ interface GridViewProps {
 }
 
 const GridView = ({ allNodes, base64Images, selectedNodeIds, onToggleSelection }: GridViewProps) => {
+  const handleToggleSelection = (id: string, isSelected: boolean) => {
+    const newSelected = !isSelected; // Toggle the current state
+    onToggleSelection(id, newSelected);
+  };
+
   return (
     <Fragment>
       {allNodes.map((image, index) => {
@@ -32,12 +37,12 @@ const GridView = ({ allNodes, base64Images, selectedNodeIds, onToggleSelection }
               'relative rounded-lg flex flex-col items-center cursor-pointer h-fit p-2',
               isSelected ? 'bg-selected-bg' : 'bg-secondary-bg'
             )}
-            onClick={() => onToggleSelection(image.id, isSelected)}
+            onClick={() => handleToggleSelection(image.id, isSelected)}
           >
             {/* Checkbox */}
             <Checkbox
               value={isSelected}
-              onValueChange={() => onToggleSelection(image.id, isSelected)}
+              onValueChange={() => handleToggleSelection(image.id, isSelected)}
               className="absolute cursor-pointer top-3 left-3"
             />
             {/* Image Preview */}

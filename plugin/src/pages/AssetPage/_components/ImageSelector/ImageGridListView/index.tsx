@@ -29,12 +29,12 @@ const ImageGridListView = ({
 
   // Unified handler for toggling selection
   const handleToggleSelection = (id: string, currentChecked: boolean) => {
-    onSelectImage(id, !currentChecked);
+    onSelectImage(id, currentChecked);
   };
 
   return (
     <HoverScrollbar className="overflow-visible h-80" thumbClassName="-mr-2">
-      <div className={cn('gap-2 h-full mr-2', isGridView ? 'grid grid-cols-2 auto-rows-min' : 'flex flex-col')}>
+      <div className={cn('gap-2 h-full mr-2', isGridView ? 'grid grid-cols-2 auto-rows-min' : '')}>
         {isGridView ? (
           <GridView
             allNodes={allNodes}
