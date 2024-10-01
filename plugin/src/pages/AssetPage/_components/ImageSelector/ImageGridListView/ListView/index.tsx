@@ -1,18 +1,12 @@
 // index.tsx
 import { Fragment, h } from 'preact';
 
-// ** import components
-import HoverScrollbar from '@/components/ui/hover-scrollbar';
-
 // ** import child components
 import NormalListView from './NormalListView';
 import DragListView from './DragListView';
 
 // ** import store
 import { useImageExportStore } from '@/store/use-image-export-store';
-
-// ** import utils
-import { cn } from '@/lib/utils';
 
 // ** import types
 import { NodeData } from '@/types/node';

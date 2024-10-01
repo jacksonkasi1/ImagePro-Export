@@ -1,13 +1,16 @@
-// index.tsx
 import { h } from 'preact';
-import HoverScrollbar from '@/components/ui/hover-scrollbar';
-import { cn } from '@/lib/utils';
 
-// ** Import child components
+// ** import custom ui components
+import HoverScrollbar from '@/components/ui/hover-scrollbar';
+
+// ** import child components
 import GridView from './GridView';
 import ListView from './ListView';
 
-// ** Import types
+// ** import utils
+import { cn } from '@/lib/utils';
+
+// ** import types
 import { NodeData } from '@/types/node';
 
 interface ImageGridListViewProps {

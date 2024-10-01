@@ -1,8 +1,8 @@
 import { h } from 'preact';
 
 // ** import third-party lib
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { Flipper, Flipped } from 'react-flip-toolkit';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 
 // ** import figma ui components
 import { Text } from '@create-figma-plugin/ui';
