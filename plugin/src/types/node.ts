@@ -51,4 +51,7 @@ export interface ImageNodesState {
 
   selectedNodesCount: number;
   setSelectedNodesCount: (count: number) => void;
+
+  selectedNodesOrder: string[];
+  setSelectedNodesOrder: (order: string[]) => void;
 }
