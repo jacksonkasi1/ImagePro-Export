@@ -50,7 +50,7 @@ router.post("/merge-upload", (req: Request, res: Response) => {
       // Convert colorMode to lowercase
       colorMode = colorMode ? colorMode.toLowerCase() : null;
 
-      if (colorMode) {
+      if (colorMode && ["grayscale", "cmyk"].includes(colorMode)) {
         outputFile = await convertToColorMode(outputFile, colorMode);
       }
 
