@@ -24,7 +24,7 @@ import { cn } from '@/lib/utils';
 import { AssetsExportType } from '@/types/enums';
 
 const ImageSelector = () => {
-  const { allNodes, allNodesCount, selectedNodeIds, setSelectedNodeIds, setSelectedNodesCount, setSelectedNodesOrder } =
+  const { allNodes, allNodesCount, selectedNodeIds, setSelectedNodeIds, setSelectedNodesCount, setSelectedNodesOrder, selectedNodesOrder } =
     useImageNodesStore();
 
   const { assetsExportType } = useImageExportStore();
@@ -52,8 +52,12 @@ const ImageSelector = () => {
   }, [selectedNodeIds, setSelectedNodesCount]);
 
   useEffect(() => {
-    setViewType(isSingleExport ? 'list' : 'grid');
-  }, [assetsExportType]);
+    if (!isSingleExport && selectedNodesOrder.length) {
+      setViewType('list');
+    } else {
+      setViewType(isSingleExport ? 'list' : 'grid');
+    }
+  }, [assetsExportType, selectedNodesOrder]);
 
   // Handle Select All Checkbox
   const handleSelectAll = (checked: boolean) => {
