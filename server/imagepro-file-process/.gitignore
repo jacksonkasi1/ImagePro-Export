@@ -2,3 +2,5 @@ node_modules
 uploads/*
 public/assets/*
 dist
+package-lock.json
+.env

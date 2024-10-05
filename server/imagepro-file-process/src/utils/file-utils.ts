@@ -7,7 +7,11 @@ import { FileFilterCallback } from "multer";
  * @param file File being uploaded
  * @param cb Callback function for filtering
  */
-export const uploadPdfFile = (_req: Express.Request, file: Express.Multer.File, cb: FileFilterCallback): void => {
+export const uploadPdfFile = (
+  _req: Express.Request,
+  file: Express.Multer.File,
+  cb: FileFilterCallback,
+): void => {
   if (file.mimetype !== "application/pdf") {
     return cb(new Error("Only PDF files are allowed."));
   }
@@ -32,17 +36,51 @@ export const removeFile = async (filePath: string): Promise<void> => {
  * @returns Sanitized file name
  */
 export const sanitizeFileName = (originalName: string): string => {
-    return originalName
-      .replace(/\s+/g, "_")        // Replace spaces with underscores
-      .replace(/[^a-zA-Z0-9_\-]/g, "");  // Remove special characters
+  return originalName
+    .replace(/\s+/g, "_") // Replace spaces with underscores
+    .replace(/[^a-zA-Z0-9_\-]/g, ""); // Remove special characters
 };
 
 /**
  * Validate that only PDF files are uploaded (multiple file upload)
  */
-export const uploadMultiplePdfFiles = (_req: Express.Request, file: Express.Multer.File, cb: FileFilterCallback): void => {
+export const uploadMultiplePdfFiles = (
+  _req: Express.Request,
+  file: Express.Multer.File,
+  cb: FileFilterCallback,
+): void => {
   if (file.mimetype !== "application/pdf") {
     return cb(new Error("Only PDF files are allowed."));
+  }
+  cb(null, true);
+};
+
+
+/**
+ * Filters uploaded files to allow only PDFs and specific image types
+ * @param _req Express Request object
+ * @param file Uploaded file
+ * @param cb Callback to accept or reject the file
+ */
+export const uploadAllowedFile = (
+  _req: Express.Request,
+  file: Express.Multer.File,
+  cb: FileFilterCallback,
+): void => {
+  const allowedMimeTypes = [
+    "application/pdf",
+    "image/webp",
+    "image/svg+xml",
+    "image/png",
+    "image/jpeg",
+    "image/avif",
+  ];
+  if (!allowedMimeTypes.includes(file.mimetype)) {
+    return cb(
+      new Error(
+        "Only PDF and image files (webp, svg, png, jpg/jpeg, avif) are allowed.",
+      ),
+    );
   }
   cb(null, true);
 };
