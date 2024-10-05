@@ -8,7 +8,8 @@ import mergeRouter from "./pdf-opt/merge";
 import pdfProcessRouter from "./pdf-opt/process";
 
 // ** import files upload routes **
-import uploadRouter from "./upload-opt/upload";
+import uploadFileRouter from "./upload-opt/upload";
+import deleteFilesRouter from "./upload-opt/delete-files";
 
 const router = Router();
 
@@ -20,6 +21,7 @@ router.use("/pdf-opt", mergeRouter);
 router.use("/pdf-opt", pdfProcessRouter);
 
 // Files upload routes
-router.use("/upload-opt", uploadRouter);
+router.use("/upload-opt", uploadFileRouter);
+router.use("/upload-opt", deleteFilesRouter);
 
 export default router;
