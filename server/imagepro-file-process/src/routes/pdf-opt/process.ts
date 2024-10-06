@@ -7,6 +7,7 @@ import { convertToColorMode, applyPassword } from '../../utils/pdf-utils';
 // ** import types
 import { UploadedPdf } from '../../types/pdf';
 import { sendFileAndCleanup } from '../../utils/response-utils';
+import { uploadPdfFile } from '../../utils/file-utils';
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ const router = express.Router();
 const upload = multer({
   dest: 'uploads/',
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  fileFilter: uploadPdfFile,
 });
 
 // POST /api/pdf-opt/process
