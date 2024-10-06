@@ -17,21 +17,24 @@ import {
   VerticalSpace,
 } from '@create-figma-plugin/ui';
 
+// ** import custom icons
+import HistoryIcon from '@/assets/Icons/HistoryIcon';
+
 // ** import sub-component
 import PdfExportOption from './PdfExportOption';
 import ImageExportOption from './ImageExportOption';
 
 // ** import store
-import { useImageExportStore } from '@/store/use-image-export-store';
-import { useImageNodesStore } from '@/store/use-image-nodes-store';
 import { useUtilsStore } from '@/store/use-utils-store';
+import { useImageNodesStore } from '@/store/use-image-nodes-store';
+import { useImageExportStore } from '@/store/use-image-export-store';
 
 // ** import lib
 import notify from '@/lib/notify';
 
 // ** import types
-import { AssetsExportType, CaseOption, FormatOption } from '@/types/enums';
 import { ExportAssetsHandler } from '@/types/events';
+import { AssetsExportType, CaseOption, FormatOption } from '@/types/enums';
 
 const FilesFooter = () => {
   const [isExpanded, setIsExpanded] = useState(false); // State to manage footer expansion
@@ -40,7 +43,7 @@ const FilesFooter = () => {
 
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const { isLoading, setIsLoading } = useUtilsStore();
+  const { currentPage, isLoading, setIsLoading } = useUtilsStore();
   const { selectedNodeIds, selectedNodesOrder } = useImageNodesStore();
   const {
     caseOption,
@@ -179,10 +182,16 @@ const FilesFooter = () => {
         {/* Footer Bottom */}
         <Container space="small">
           <div className="flex items-center justify-between h-12 gap-2">
+            {/* History Button */}
+            {currentPage === 'upload' && (
+              <button className="flex items-center gap-1 px-2 py-1 transition-colors ease-in-out rounded cursor-pointer duration-250 text-primary-text hover:bg-selected-bg">
+                <HistoryIcon width={20} height={20} /> History
+              </button>
+            )}
             {/* Case Option */}
             <Dropdown onChange={handleCaseChange} options={caseOptions} value={caseOption} />
             <Button loading={isLoading} onClick={handleExport} disabled={isLoading}>
-              Export
+              {currentPage === 'asset' ? 'Export' : 'Compress'}
             </Button>
           </div>
         </Container>
