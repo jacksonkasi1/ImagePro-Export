@@ -1,5 +1,7 @@
-import multer from "multer";
 import { Router, Request, Response } from "express";
+
+// ** import third-party lib
+import multer from "multer";
 
 // ** import environment variables
 import { env } from "../../config/env";

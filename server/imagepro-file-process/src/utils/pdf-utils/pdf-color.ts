@@ -1,10 +1,16 @@
 import path from "path";
 import { promises as fs } from "fs";
 
-import { v4 as uuidv4 } from 'uuid'; 
+// ** import third-party lib
+import { v4 as uuidv4 } from 'uuid';
 
-import { convertPdf } from "./pdf-convert";
+// ** import utils
 import { sanitizeFileName } from "../../utils/file-utils";
+
+// ** import sub-utils
+import { convertPdf } from "./pdf-convert";
+
+// ** import types
 import { UploadedPdf } from "../../types/pdf";
 
 /**

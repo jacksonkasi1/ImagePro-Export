@@ -2,8 +2,10 @@ import path from "path";
 import { promises as fs } from "fs";
 import { exec } from "child_process";
 
+// ** import third-party lib
 import { v4 as uuidv4 } from 'uuid';
 
+// ** import types
 import { UploadedPdf } from "../../types/pdf";
 
 /**

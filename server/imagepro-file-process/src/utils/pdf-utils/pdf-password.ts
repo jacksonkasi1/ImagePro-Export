@@ -1,11 +1,16 @@
 import path from "path";
 import { promises as fs } from "fs";
 
+// ** import third-party lib
 import { v4 as uuidv4 } from 'uuid';
 
+// ** import sub-utils
 import { applyEncryption } from "./pdf-convert";
+
+// ** import utils
 import { sanitizeFileName } from "../../utils/file-utils";
 
+// ** import types
 import { UploadedPdf } from "../../types/pdf";
 
 /**
