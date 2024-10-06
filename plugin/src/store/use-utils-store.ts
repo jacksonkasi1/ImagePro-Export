@@ -11,5 +11,5 @@ export const useUtilsStore = create<UtilsState>((set) => ({
   setSearchQuery: (searchQuery: string) => set(() => ({ searchQuery })),
 
   currentPage: 'asset',
-  setCurrentPage: (tabPage: string) => set(() => ({ currentPage: tabPage })),
+  setCurrentPage: (tabPage: 'asset' | 'upload' | 'ai') => set(() => ({ currentPage: tabPage })),
 }));

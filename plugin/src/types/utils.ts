@@ -7,8 +7,8 @@ export interface UtilsState {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
 
-  currentPage: string;
-  setCurrentPage: (tabPage: string) => void;
+  currentPage: 'asset' | 'upload' | 'ai';
+  setCurrentPage: (tabPage: 'asset' | 'upload' | 'ai') => void;
 }
 
 export interface ImageData {
