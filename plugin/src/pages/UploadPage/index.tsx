@@ -4,10 +4,10 @@ import { Fragment, h } from 'preact';
 import { Divider } from '@create-figma-plugin/ui';
 
 // ** import component
+import SearchBox from '@/components/SearchBox';
 import FilesFooter from '@/components/files-footer';
 
 // ** import sub-component
-import SearchBox from './_components/SearchBox';
 import ImageSelector from './_components/ImageSelector';
 
 const UploadPage = () => {
