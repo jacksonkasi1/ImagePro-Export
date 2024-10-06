@@ -5,7 +5,7 @@ import { useEffect, useState } from 'preact/hooks';
 import DeleteIcon from '@/assets/Icons/DeleteIcon';
 
 // ** import figma ui components & icons
-import { Bold, Container, Text, VerticalSpace } from '@create-figma-plugin/ui';
+import { Bold, Container, IconList32, Text, VerticalSpace } from '@create-figma-plugin/ui';
 
 // ** import custom ui components
 import { Checkbox } from '@/components/ui/checkbox';
@@ -82,12 +82,9 @@ const ImageSelector = () => {
             </Bold>
           </Text>
         </Checkbox>
-        {/* Delete Button */}
-        <div>
-          <button className={cn('rounded-sm flex gap-1 text-primary-text cursor-default')}>
-            <DeleteIcon />
-          </button>
-        </div>
+
+        {/* View Icon - on invisible */}
+        <IconList32 className="-m-1 opacity-0" />
       </div>
       <VerticalSpace space="small" />
 
