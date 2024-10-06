@@ -8,7 +8,7 @@ import mergeRouter from "./pdf-opt/merge";
 import pdfProcessRouter from "./pdf-opt/process";
 
 // ** import files upload routes **
-import uploadFileRouter from "./upload-opt/upload";
+import uploadFileRouter from "./upload-opt/upload-file";
 import deleteFilesRouter from "./upload-opt/delete-files";
 
 const router = Router();
