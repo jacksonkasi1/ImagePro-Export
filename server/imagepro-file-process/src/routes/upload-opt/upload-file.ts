@@ -9,11 +9,11 @@ import { env } from "../../config/env";
 // ** import utils
 import { uploadFileToPinata } from "../../utils/pinata-utils";
 import { sendFileLinkAndCleanup } from "../../utils/response-utils";
-import {
-  sanitizeFileName,
-  removeFile,
-  uploadAllowedFile,
-} from "../../utils/file-utils";
+import { applyPassword, convertToColorMode } from "../../utils/pdf-utils";
+import { sanitizeFileName, removeFile, uploadAllowedFile} from "../../utils/file-utils";
+
+// ** import types
+import { UploadedPdf } from "../../types/pdf";
 
 const router = Router();
 
@@ -34,22 +34,40 @@ router.post(
   upload.single("file"),
   async (req: Request, res: Response) => {
     try {
+      const file = req.file;
+      let { password, colorMode } = req.body;
+
+      // Convert colorMode to lowercase
+      colorMode = colorMode ? colorMode.toLowerCase() : null;
+
       // Check if a file was uploaded
-      if (!req.file) {
+      if (!file) {
         return res.status(400).json({ error: "No file uploaded." });
       }
 
-      const filePath = req.file.path; // Path to the uploaded file
-      const fileName = sanitizeFileName(req.file.originalname); // Sanitize the file name
+      const filePath = file.path; // Path to the uploaded file
+      const fileName = sanitizeFileName(file.originalname); // Sanitize the file name
+
+      let outputFile: UploadedPdf = { outputPath: file.path, outputFilename: fileName };
+
+      // Convert color mode first if colorMode is provided
+      if (colorMode === 'cmyk' || colorMode === 'grayscale') {
+        outputFile = await convertToColorMode(outputFile, colorMode);
+      }
+
+      // Apply password protection if password is provided, using the result from the color mode conversion
+      if (password) {
+        outputFile = await applyPassword(outputFile, password);
+      }
 
       // Upload the file to Pinata
-      const response = await uploadFileToPinata(filePath, fileName);
+      const response = await uploadFileToPinata(outputFile.outputPath, outputFile.outputFilename);
 
       // Construct the file link from Pinata response
       const uploadedFileLink = `${env.PINATA_GATEWAY}/ipfs/${response.cid}`;
 
       // Send the file link in response and clean up local files
-      await sendFileLinkAndCleanup(res, uploadedFileLink, [filePath]);
+      await sendFileLinkAndCleanup(res, uploadedFileLink, [outputFile.outputPath, filePath]);
     } catch (error: any) {
       console.error("Server Error:", error);
 
