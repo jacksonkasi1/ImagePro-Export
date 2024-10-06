@@ -87,7 +87,7 @@ const ImageSelector = () => {
         {/* Delete Button */}
         <div>
           <button className={cn('rounded-sm text-primary-text cursor-default')}>
-            <DeleteIcon height={20} width={20} className={cn('opacity-0')} />
+            <DeleteIcon className={cn('opacity-0')} />
           </button>
         </div>
       </div>

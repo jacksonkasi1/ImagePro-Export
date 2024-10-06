@@ -35,8 +35,8 @@ interface DeleteIconProps {
 const DeleteIcon: preact.FunctionComponent<DeleteIconProps> = ({
   className,
   color = 'var(--figma-color-text-secondary)',
-  width = 24,
-  height = 24,
+  width = 20,
+  height = 20,
 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
