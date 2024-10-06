@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
 // ** import figma ui components & icons
-import { Bold, Container, Text, VerticalSpace } from '@create-figma-plugin/ui';
+import { Bold, Container, IconList32, Text, VerticalSpace } from '@create-figma-plugin/ui';
 
 // ** import custom ui components
 import { Checkbox } from '@/components/ui/checkbox';
@@ -22,15 +22,8 @@ import { cn } from '@/lib/utils';
 // ** import types
 
 const ImageSelector = () => {
-  const {
-    allNodes,
-    allNodesCount,
-    selectedNodeIds,
-    setSelectedNodeIds,
-    setSelectedNodesCount,
-    setSelectedNodesOrder,
-  } = useImageNodesStore();
-
+  const { allNodes, allNodesCount, selectedNodeIds, setSelectedNodeIds, setSelectedNodesCount, setSelectedNodesOrder } =
+    useImageNodesStore();
 
   const [base64Images, setBase64Images] = useState<Record<string, string>>({});
 
@@ -88,6 +81,12 @@ const ImageSelector = () => {
             </Bold>
           </Text>
         </Checkbox>
+        {/* View Type Toggle Buttons */}
+        <div>
+          <button className={cn('rounded-sm text-primary-text')}>
+            <IconList32 className="-m-1" />
+          </button>
+        </div>
       </div>
       <VerticalSpace space="small" />
 

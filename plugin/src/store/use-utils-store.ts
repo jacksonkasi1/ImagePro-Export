@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 // ** import types
 import { UtilsState } from '@/types/utils';
@@ -9,4 +9,7 @@ export const useUtilsStore = create<UtilsState>((set) => ({
 
   searchQuery: '',
   setSearchQuery: (searchQuery: string) => set(() => ({ searchQuery })),
+
+  currentPage: 'asset',
+  setCurrentPage: (tabPage: string) => set(() => ({ currentPage: tabPage })),
 }));
