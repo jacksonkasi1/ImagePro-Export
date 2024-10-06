@@ -1,8 +1,11 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
+// ** import custom icons
+import DeleteIcon from '@/assets/Icons/DeleteIcon';
+
 // ** import figma ui components & icons
-import { Bold, Container, IconList32, Text, VerticalSpace } from '@create-figma-plugin/ui';
+import { Bold, Container, Text, VerticalSpace } from '@create-figma-plugin/ui';
 
 // ** import custom ui components
 import { Checkbox } from '@/components/ui/checkbox';
@@ -81,10 +84,10 @@ const ImageSelector = () => {
             </Bold>
           </Text>
         </Checkbox>
-        {/* View Type Toggle Buttons */}
+        {/* Delete Button */}
         <div>
-          <button className={cn('rounded-sm text-primary-text')}>
-            <IconList32 className="-m-1" />
+          <button className={cn('rounded-sm text-primary-text cursor-default')}>
+            <DeleteIcon height={20} width={20} className={cn('opacity-0')} />
           </button>
         </div>
       </div>
