@@ -57,16 +57,16 @@ const NormalListView = ({ allNodes, base64Images, selectedNodeIds, onToggleSelec
 
               {/* Image Details */}
               <div className="flex flex-row items-center justify-between w-full gap-2 cursor-pointer">
-                <div className="flex flex-col ">
+                <div className="flex flex-col cursor-pointer">
                   <Text className={cn('truncate w-full font-medium cursor-pointer')}>
                     {truncateText(image.name, 17)}
                   </Text>
-                </div>
-                <div className="flex flex-col gap-2 cursor-pointer">
-                  <Text className="cursor-pointer text-secondary-text">{truncateText(image.type, 10)}</Text>
-                  <Text className="cursor-pointer text-secondary-text">
-                    {Math.round(image.dimensions.width)}x{Math.round(image.dimensions.height)}px
-                  </Text>
+                  <div className="flex flex-row items-center justify-between w-full gap-1">
+                    <Text className="cursor-pointer text-secondary-text">{truncateText(image.type, 10)}</Text>
+                    <Text className="cursor-pointer text-secondary-text">
+                      {Math.round(image.dimensions.width)}x{Math.round(image.dimensions.height)}px
+                    </Text>
+                  </div>
                 </div>
               </div>
             </div>
