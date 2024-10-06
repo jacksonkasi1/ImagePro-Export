@@ -48,9 +48,21 @@ const FilesFooter = () => {
 
   useEffect(() => {
     if (contentRef.current) {
-      setContentHeight(isExpanded ? `${contentRef.current.scrollHeight}px` : '0px');
+      if (isExpanded) {
+        if (isHistoryVisible) {
+          // Set a fixed height for HistoryFooterBody when expanded
+          setContentHeight('451px'); // Adjust the height as needed
+        } else {
+          // For other components, use the actual content height
+          setContentHeight(`${contentRef.current.scrollHeight}px`);
+        }
+      } else {
+        setContentHeight('0px');
+      }
     }
-  }, [isExpanded, formatOption, heightTrigger]);
+  }, [isExpanded, isHistoryVisible, formatOption, heightTrigger]);
+
+
 
   const caseOptions = Object.values(CaseOption).map((value) => ({
     value,
@@ -137,7 +149,7 @@ const FilesFooter = () => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-auto bg-primary-bg">
+    <div className="fixed bottom-0 left-0 right-0 bg-primary-bg">
       {/* Conditionally render FilesFooterBody or HistoryFooterBody based on isHistoryVisible */}
       {!isHistoryVisible ? (
         <FilesFooterBody

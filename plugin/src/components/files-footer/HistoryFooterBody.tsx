@@ -49,20 +49,25 @@ const HistoryFooterBody = ({
             <div
                 ref={contentRef}
                 style={{
-                    maxHeight: contentHeight,
+                    height: contentHeight,
                     overflow: 'hidden',
-                    transition: 'max-height 0.3s ease-in-out',
+                    transition: 'height 0.3s ease-in-out',
+                    display: 'flex',
+                    flexDirection: 'column',
                 }}
             >
                 <Divider />
                 <VerticalSpace space="small" />
-                <Container space="small">
-                    <Text>
-                        Here is the content related to history. You can load history-related data or any other UI elements here.
-                    </Text>
-                </Container>
+                <div className='flex-1'>
+                    <Container space="small" style={{ height: '100%' }}>
+                        <Text >
+                            Here is the content related to history. You can load history-related data or any other UI elements here.
+                        </Text>
+                    </Container>
+                </div>
                 <VerticalSpace space="small" />
             </div>
+
         </Fragment>
     );
 };
