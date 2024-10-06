@@ -12,6 +12,7 @@ import HistoryIcon from '@/assets/Icons/HistoryIcon';
 
 // ** import sub-components
 import FilesFooterBody from './FilesFooterBody';
+import HistoryFooterBody from './HistoryFooterBody';
 
 // ** import store
 import { useUtilsStore } from '@/store/use-utils-store';
@@ -27,6 +28,7 @@ import { AssetsExportType, CaseOption, FormatOption } from '@/types/enums';
 
 const FilesFooter = () => {
   const [isExpanded, setIsExpanded] = useState(false); // State to manage footer expansion
+  const [isHistoryVisible, setIsHistoryVisible] = useState(false); // Toggle between FilesFooterBody and HistoryFooterBody
   const [contentHeight, setContentHeight] = useState('0px');
   const [heightTrigger, setHeightTrigger] = useState(false);
 
@@ -113,16 +115,48 @@ const FilesFooter = () => {
     }
   };
 
+  // Handler function to toggle the expansion of FilesFooterBody
+  const handleFilesFooterToggle = () => {
+    if (isHistoryVisible) {
+      setIsHistoryVisible(false); // Switch back to FilesFooterBody
+    }
+    setIsExpanded((prev) => !prev); // Toggle FilesFooterBody expansion
+  };
+
+  // Handler function to toggle the visibility and expansion of HistoryFooterBody
+  const handleHistoryToggle = () => {
+    if (isHistoryVisible) {
+      // If HistoryFooterBody is already visible, close it
+      setIsHistoryVisible(false);
+      setIsExpanded(false); // Close the footer
+    } else {
+      // Switch to HistoryFooterBody and expand it
+      setIsHistoryVisible(true);
+      setIsExpanded(true); // Ensure it's expanded
+    }
+  };
+
   return (
     <div className="fixed bottom-0 left-0 right-0 z-auto bg-primary-bg">
-      <FilesFooterBody
-        isExpanded={isExpanded}
-        setIsExpanded={setIsExpanded}
-        handleFormatChange={handleFormatChange}
-        contentRef={contentRef}
-        contentHeight={contentHeight}
-        handleHeightChange={handleHeightChange}
-      />
+      {/* Conditionally render FilesFooterBody or HistoryFooterBody based on isHistoryVisible */}
+      {!isHistoryVisible ? (
+        <FilesFooterBody
+          isExpanded={isExpanded}
+          handleFilesFooterToggle={handleFilesFooterToggle}
+          handleFormatChange={handleFormatChange}
+          contentRef={contentRef}
+          contentHeight={contentHeight}
+          handleHeightChange={handleHeightChange}
+        />
+      ) : (
+        <HistoryFooterBody
+          isExpanded={isExpanded}
+          handleFilesFooterToggle={handleHistoryToggle}
+          contentRef={contentRef}
+          contentHeight={contentHeight}
+          handleHeightChange={handleHeightChange}
+        />
+      )}
 
       <Divider />
 
@@ -131,7 +165,10 @@ const FilesFooter = () => {
         <div className="flex items-center justify-between h-12 gap-2">
           {/* History Button */}
           {currentPage === 'upload' && (
-            <button className="flex items-center gap-1 px-2 py-1 transition-colors ease-in-out rounded cursor-pointer duration-250 text-primary-text hover:bg-selected-bg">
+            <button
+              className="flex items-center gap-1 px-2 py-1 transition-colors ease-in-out rounded cursor-pointer duration-250 text-primary-text hover:bg-selected-bg"
+              onClick={handleHistoryToggle} // Switch to HistoryFooterBody or close it if already open
+            >
               <HistoryIcon width={20} height={20} /> History
             </button>
           )}

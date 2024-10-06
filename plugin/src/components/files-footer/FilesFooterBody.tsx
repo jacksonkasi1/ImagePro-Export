@@ -25,7 +25,7 @@ import { FormatOption } from '@/types/enums';
 // Props for FilesFooterBody
 interface FilesFooterBodyProps {
   isExpanded: boolean;
-  setIsExpanded: (value: boolean) => void;
+  handleFilesFooterToggle: (value: boolean) => void;
   handleFormatChange: (event: JSX.TargetedEvent<HTMLInputElement>) => void;
   contentRef: React.RefObject<HTMLDivElement>;
   contentHeight: string;
@@ -34,7 +34,7 @@ interface FilesFooterBodyProps {
 
 const FilesFooterBody = ({
   isExpanded,
-  setIsExpanded,
+  handleFilesFooterToggle,
   handleFormatChange,
   contentRef,
   contentHeight,
@@ -54,7 +54,7 @@ const FilesFooterBody = ({
       <Container space="small">
         <div
           className="flex items-center justify-between h-10 cursor-pointer"
-          onClick={() => setIsExpanded(!isExpanded)} // Toggle expansion state
+          onClick={() => handleFilesFooterToggle(!isExpanded)} // Toggle expansion state
         >
           <Text>
             <Bold>Export</Bold>
