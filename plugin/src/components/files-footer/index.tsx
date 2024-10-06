@@ -33,7 +33,7 @@ import notify from '@/lib/notify';
 import { AssetsExportType, CaseOption, FormatOption } from '@/types/enums';
 import { ExportAssetsHandler } from '@/types/events';
 
-const Footer = () => {
+const FilesFooter = () => {
   const [isExpanded, setIsExpanded] = useState(false); // State to manage footer expansion
   const [contentHeight, setContentHeight] = useState('0px');
   const [heightTrigger, setHeightTrigger] = useState(false);
@@ -191,4 +191,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default FilesFooter;
