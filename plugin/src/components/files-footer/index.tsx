@@ -27,6 +27,9 @@ import { ExportAssetsHandler } from '@/types/events';
 import { AssetsExportType, CaseOption, FormatOption } from '@/types/enums';
 
 const FilesFooter = () => {
+
+  const transitionDuration = 300; // Duration in milliseconds
+
   const [isExpanded, setIsExpanded] = useState(false); // State to manage footer expansion
   const [isHistoryVisible, setIsHistoryVisible] = useState(false); // Toggle between FilesFooterBody and HistoryFooterBody
   const [contentHeight, setContentHeight] = useState('0px');
@@ -138,9 +141,13 @@ const FilesFooter = () => {
   // Handler function to toggle the visibility and expansion of HistoryFooterBody
   const handleHistoryToggle = () => {
     if (isHistoryVisible) {
-      // If HistoryFooterBody is already visible, close it
-      setIsHistoryVisible(false);
-      setIsExpanded(false); // Close the footer
+      // Close the footer
+      setIsExpanded(false);
+
+      // Wait for the height transition to finish before unmounting
+      setTimeout(() => {
+        setIsHistoryVisible(false);
+      }, transitionDuration);
     } else {
       // Switch to HistoryFooterBody and expand it
       setIsHistoryVisible(true);
