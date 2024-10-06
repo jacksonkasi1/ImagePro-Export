@@ -1,28 +1,17 @@
-import { Fragment, h, JSX } from 'preact';
+import { h, JSX } from 'preact';
 import { useState, useRef, useEffect } from 'preact/hooks';
 
 // ** import figma utils
 import { emit, formatWarningMessage } from '@create-figma-plugin/utilities';
 
 // ** import figma ui components & icons
-import {
-  Bold,
-  Container,
-  Text,
-  IconChevronUp32,
-  IconChevronDown32,
-  Divider,
-  Button,
-  Dropdown,
-  VerticalSpace,
-} from '@create-figma-plugin/ui';
+import { Container, Divider, Button, Dropdown } from '@create-figma-plugin/ui';
 
 // ** import custom icons
 import HistoryIcon from '@/assets/Icons/HistoryIcon';
 
-// ** import sub-component
-import PdfExportOption from './PdfExportOption';
-import ImageExportOption from './ImageExportOption';
+// ** import sub-components
+import FilesFooterBody from './FilesFooterBody';
 
 // ** import store
 import { useUtilsStore } from '@/store/use-utils-store';
@@ -62,11 +51,6 @@ const FilesFooter = () => {
   }, [isExpanded, formatOption, heightTrigger]);
 
   const caseOptions = Object.values(CaseOption).map((value) => ({
-    value,
-    text: value,
-  }));
-
-  const formatOptions = Object.values(FormatOption).map((value) => ({
     value,
     text: value,
   }));
@@ -131,71 +115,33 @@ const FilesFooter = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-auto bg-primary-bg">
-      <Fragment>
-        <Divider />
-        {/* Footer Top */}
-        <Container space="small">
-          <div
-            className={'h-10 flex items-center justify-between cursor-pointer'}
-            onClick={() => setIsExpanded(!isExpanded)} // Toggle expansion state
-          >
-            <Text>
-              <Bold>Export</Bold>
-            </Text>
-            <button className={'rounded-sm text-primary-text'}>
-              {isExpanded ? <IconChevronDown32 /> : <IconChevronUp32 />}
+      <FilesFooterBody
+        isExpanded={isExpanded}
+        setIsExpanded={setIsExpanded}
+        handleFormatChange={handleFormatChange}
+        contentRef={contentRef}
+        contentHeight={contentHeight}
+        handleHeightChange={handleHeightChange}
+      />
+
+      <Divider />
+
+      {/* Footer Bottom */}
+      <Container space="small">
+        <div className="flex items-center justify-between h-12 gap-2">
+          {/* History Button */}
+          {currentPage === 'upload' && (
+            <button className="flex items-center gap-1 px-2 py-1 transition-colors ease-in-out rounded cursor-pointer duration-250 text-primary-text hover:bg-selected-bg">
+              <HistoryIcon width={20} height={20} /> History
             </button>
-          </div>
-        </Container>
-
-        {/* Footer Middle -  Dynamic Export Options */}
-        <div
-          ref={contentRef}
-          style={{
-            maxHeight: contentHeight,
-            overflow: 'hidden',
-            transition: 'max-height 0.3s ease-in-out',
-          }}
-        >
-          <Divider />
-          <VerticalSpace space="small" />
-
-          <Container space="small">
-            <div className="grid items-center grid-cols-4 gap-2">
-              <Text>Format</Text>
-              <div className="col-span-3">
-                <Dropdown onChange={handleFormatChange} options={formatOptions} value={formatOption} />
-              </div>
-            </div>
-            <VerticalSpace space="small" />
-            {formatOption === FormatOption.PDF ? (
-              <PdfExportOption onHeightChange={handleHeightChange} />
-            ) : (
-              <ImageExportOption />
-            )}
-          </Container>
-          <VerticalSpace space="small" />
+          )}
+          {/* Case Option */}
+          <Dropdown onChange={handleCaseChange} options={caseOptions} value={caseOption} />
+          <Button loading={isLoading} onClick={handleExport} disabled={isLoading}>
+            {currentPage === 'asset' ? 'Export' : 'Compress'}
+          </Button>
         </div>
-
-        <Divider />
-
-        {/* Footer Bottom */}
-        <Container space="small">
-          <div className="flex items-center justify-between h-12 gap-2">
-            {/* History Button */}
-            {currentPage === 'upload' && (
-              <button className="flex items-center gap-1 px-2 py-1 transition-colors ease-in-out rounded cursor-pointer duration-250 text-primary-text hover:bg-selected-bg">
-                <HistoryIcon width={20} height={20} /> History
-              </button>
-            )}
-            {/* Case Option */}
-            <Dropdown onChange={handleCaseChange} options={caseOptions} value={caseOption} />
-            <Button loading={isLoading} onClick={handleExport} disabled={isLoading}>
-              {currentPage === 'asset' ? 'Export' : 'Compress'}
-            </Button>
-          </div>
-        </Container>
-      </Fragment>
+      </Container>
     </div>
   );
 };
