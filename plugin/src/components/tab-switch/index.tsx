@@ -12,6 +12,10 @@ const TabSwitch = () => {
       value: 'asset',
       label: 'Asset',
     },
+    {
+      value: 'upload',
+      label: 'Upload',
+    },
   ];
 
   function handleChange(event: JSX.TargetedEvent<HTMLInputElement>) {
