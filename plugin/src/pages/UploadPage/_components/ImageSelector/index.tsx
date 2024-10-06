@@ -22,8 +22,6 @@ import { useImageNodesStore } from '@/store/use-image-nodes-store';
 // ** import utils
 import { cn } from '@/lib/utils';
 
-// ** import types
-
 const ImageSelector = () => {
   const { allNodes, allNodesCount, selectedNodeIds, setSelectedNodeIds, setSelectedNodesCount, setSelectedNodesOrder } =
     useImageNodesStore();
@@ -86,8 +84,8 @@ const ImageSelector = () => {
         </Checkbox>
         {/* Delete Button */}
         <div>
-          <button className={cn('rounded-sm text-primary-text cursor-default')}>
-            <DeleteIcon className={cn('opacity-0')} />
+          <button className={cn('rounded-sm flex gap-1 text-primary-text cursor-default')}>
+            <DeleteIcon />
           </button>
         </div>
       </div>

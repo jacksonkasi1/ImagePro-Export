@@ -11,7 +11,7 @@ interface DeleteIconProps {
   className?: string;
 
   /**
-   * Optional color for the icon. Defaults to 'var(--figma-color-text-secondary)'.
+   * Optional color for the icon. Defaults to 'var(--figma-color-text)'.
    */
   color?: string;
 
@@ -27,33 +27,34 @@ interface DeleteIconProps {
 }
 
 /**
- * Icon component renders a customizable SVG icon.
+ * Icon component renders a customizable Delete (Trash) SVG icon.
  *
  * @param {DeleteIconProps} props - The properties passed to the component.
  * @returns {JSX.Element} The SVG icon element.
  */
 const DeleteIcon: preact.FunctionComponent<DeleteIconProps> = ({
   className,
-  color = 'var(--figma-color-text-secondary)',
-  width = 20,
-  height = 20,
+  color = 'var(--figma-color-text)',
+  width = 24,
+  height = 24,
 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={width}
     height={height}
+    viewBox="0 0 24 24"
     fill="none"
     stroke={color}
+    strokeWidth="1.5"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className={cn(className)}
-    viewBox="0 0 24 24"
-    style={{ margin: '2px' }}
+    className={cn(className, 'lucide lucide-trash-2')}
   >
-    <path d="M3 6L5 6 21 6"></path>
-    <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
-    <path d="M10 11L10 17"></path>
-    <path d="M14 11L14 17"></path>
+    <path d="M3 6h18" />
+    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+    <line x1="10" y1="11" x2="10" y2="17" />
+    <line x1="14" y1="11" x2="14" y2="17" />
   </svg>
 );
 

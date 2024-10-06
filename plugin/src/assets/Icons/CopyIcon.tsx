@@ -11,17 +11,17 @@ interface CopyIconProps {
   className?: string;
 
   /**
-   * Optional color for the icon. Defaults to 'currentColor'.
+   * Optional color for the icon. Defaults to 'var(--figma-color-text)'.
    */
   color?: string;
 
   /**
-   * Optional width for the SVG. Defaults to 20.
+   * Optional width for the SVG. Defaults to 24.
    */
   width?: number;
 
   /**
-   * Optional height for the SVG. Defaults to 20.
+   * Optional height for the SVG. Defaults to 24.
    */
   height?: number;
 }
@@ -34,24 +34,24 @@ interface CopyIconProps {
  */
 const CopyIcon: preact.FunctionComponent<CopyIconProps> = ({
   className,
-  color = 'currentColor',
-  width = 20,
-  height = 20,
+  color = 'var(--figma-color-text)',
+  width = 24,
+  height = 24,
 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={width}
     height={height}
+    viewBox="0 0 24 24"
     fill="none"
     stroke={color}
+    strokeWidth="1.5"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className={cn(className)}
-    viewBox="0 0 24 24"
-    style={{ margin: '2px' }}
+    className={cn(className, 'lucide lucide-copy')}
   >
-    <rect width="13" height="13" x="9" y="9" rx="2" ry="2"></rect>
-    <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
+    <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
   </svg>
 );
 

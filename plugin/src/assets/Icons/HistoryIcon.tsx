@@ -4,7 +4,7 @@ import { h } from 'preact';
 import { cn } from '@/lib/utils';
 
 // ** Define the props interface
-interface DownloadIconProps {
+interface HistoryIconProps {
   /**
    * Optional class names to apply to the SVG element.
    */
@@ -27,12 +27,12 @@ interface DownloadIconProps {
 }
 
 /**
- * Icon component renders a customizable Download SVG icon.
+ * Icon component renders a customizable History SVG icon.
  *
- * @param {DownloadIconProps} props - The properties passed to the component.
+ * @param {HistoryIconProps} props - The properties passed to the component.
  * @returns {JSX.Element} The SVG icon element.
  */
-const DownloadIcon: preact.FunctionComponent<DownloadIconProps> = ({
+const HistoryIcon: preact.FunctionComponent<HistoryIconProps> = ({
   className,
   color = 'var(--figma-color-text)',
   width = 24,
@@ -48,12 +48,12 @@ const DownloadIcon: preact.FunctionComponent<DownloadIconProps> = ({
     strokeWidth="1.5"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className={cn(className, 'lucide lucide-download')}
+    className={cn(className, 'lucide lucide-history')}
   >
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-    <path d="M7 10l5 5 5-5" />
-    <path d="M12 15V3" />
+    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+    <path d="M3 3v5h5" />
+    <path d="M12 7v5l4 2" />
   </svg>
 );
 
-export default DownloadIcon;
+export default HistoryIcon;
