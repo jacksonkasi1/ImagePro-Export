@@ -1,11 +1,10 @@
-import { Router } from "express";
 import multer from "multer";
-import { Request, Response } from "express";
+import { Router, Request, Response } from "express";
 
 // ** import utils
-import { mergePdfFiles, convertToColorMode, applyPassword } from "../../utils/pdf-utils";
 import { uploadMultiplePdfFiles } from "../../utils/file-utils";
 import { sendFileAndCleanup } from "../../utils/response-utils";
+import { mergePdfFiles, convertToColorMode, applyPassword } from "../../utils/pdf-utils";
 
 const router = Router();
 

@@ -1,6 +1,5 @@
-import { Router } from "express";
 import multer from "multer";
-import { Request, Response } from "express";
+import { Router, Request, Response } from "express";
 
 // ** import utils
 import { applyPassword } from "../../utils/pdf-utils";

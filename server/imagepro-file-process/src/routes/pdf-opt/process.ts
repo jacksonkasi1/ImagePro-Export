@@ -2,12 +2,12 @@ import express, { Request, Response } from 'express';
 import multer from 'multer';
 
 // ** import utils
+import { uploadPdfFile } from '../../utils/file-utils';
+import { sendFileAndCleanup } from '../../utils/response-utils';
 import { convertToColorMode, applyPassword } from '../../utils/pdf-utils';
 
 // ** import types
 import { UploadedPdf } from '../../types/pdf';
-import { sendFileAndCleanup } from '../../utils/response-utils';
-import { uploadPdfFile } from '../../utils/file-utils';
 
 const router = express.Router();
 
