@@ -25,7 +25,7 @@ const TabSwitch = () => {
 
     // Sanitize newValue to prevent XSS
     const sanitizedValue = newValue.replace(/[<>]/g, '');
-    setCurrentPage(sanitizedValue);
+    setCurrentPage(sanitizedValue as 'asset' | 'upload' | 'ai');
   }
 
   return <SegmentedControl onChange={handleChange} options={options} value={currentPage} />;
