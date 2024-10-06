@@ -12,4 +12,7 @@ export const useUtilsStore = create<UtilsState>((set) => ({
 
   currentPage: 'asset',
   setCurrentPage: (tabPage: 'asset' | 'upload' | 'ai') => set(() => ({ currentPage: tabPage })),
+
+  isHistoryVisible: false,
+  setIsHistoryVisible: (isHistoryVisible: boolean) => set(() => ({ isHistoryVisible })),
 }));

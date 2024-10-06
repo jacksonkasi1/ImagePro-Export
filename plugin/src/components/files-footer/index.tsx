@@ -27,17 +27,15 @@ import { ExportAssetsHandler } from '@/types/events';
 import { AssetsExportType, CaseOption, FormatOption } from '@/types/enums';
 
 const FilesFooter = () => {
-
   const transitionDuration = 300; // Duration in milliseconds
 
   const [isExpanded, setIsExpanded] = useState(false); // State to manage footer expansion
-  const [isHistoryVisible, setIsHistoryVisible] = useState(false); // Toggle between FilesFooterBody and HistoryFooterBody
   const [contentHeight, setContentHeight] = useState('0px');
   const [heightTrigger, setHeightTrigger] = useState(false);
 
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const { currentPage, isLoading, setIsLoading } = useUtilsStore();
+  const { currentPage, isLoading, setIsLoading, isHistoryVisible, setIsHistoryVisible } = useUtilsStore();
   const { selectedNodeIds, selectedNodesOrder } = useImageNodesStore();
   const {
     caseOption,
@@ -64,8 +62,6 @@ const FilesFooter = () => {
       }
     }
   }, [isExpanded, isHistoryVisible, formatOption, heightTrigger]);
-
-
 
   const caseOptions = Object.values(CaseOption).map((value) => ({
     value,

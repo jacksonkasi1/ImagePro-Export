@@ -9,6 +9,9 @@ export interface UtilsState {
 
   currentPage: 'asset' | 'upload' | 'ai';
   setCurrentPage: (tabPage: 'asset' | 'upload' | 'ai') => void;
+
+  isHistoryVisible: boolean;
+  setIsHistoryVisible: (isHistoryVisible: boolean) => void;
 }
 
 export interface ImageData {
