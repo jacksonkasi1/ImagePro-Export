@@ -34,6 +34,8 @@ const FilesFooter = () => {
   const [heightTrigger, setHeightTrigger] = useState(false);
 
   const contentRef = useRef<HTMLDivElement>(null);
+  const footerBottomRef = useRef<HTMLDivElement>(null);
+  const [footerBottomHeight, setFooterBottomHeight] = useState(48);
 
   const { currentPage, isLoading, setIsLoading, isHistoryVisible, setIsHistoryVisible } = useUtilsStore();
   const { selectedNodeIds, selectedNodesOrder } = useImageNodesStore();
@@ -48,11 +50,17 @@ const FilesFooter = () => {
   } = useImageExportStore();
 
   useEffect(() => {
+    // Measure the height of the Footer Bottom
+    if (footerBottomRef.current) {
+      setFooterBottomHeight(footerBottomRef.current.scrollHeight);
+    }
+
+    // Update content height
     if (contentRef.current) {
       if (isExpanded) {
         if (isHistoryVisible) {
           // Set a fixed height for HistoryFooterBody when expanded
-          setContentHeight('451px'); // Adjust the height as needed
+          setContentHeight('500px'); // Adjust the height as needed
         } else {
           // For other components, use the actual content height
           setContentHeight(`${contentRef.current.scrollHeight}px`);
@@ -173,10 +181,18 @@ const FilesFooter = () => {
         />
       )}
 
-      <Divider />
+      {!isHistoryVisible && <Divider />}
 
       {/* Footer Bottom */}
-      <Container space="small">
+      <Container
+        ref={footerBottomRef}
+        space="small"
+        style={{
+          height: isExpanded && isHistoryVisible ? '0px' : `${footerBottomHeight}px`,
+          overflow: 'hidden',
+          transition: `height ${transitionDuration}ms ease-in-out`,
+        }}
+      >
         <div className="flex items-center justify-between h-12 gap-2">
           {/* History Button */}
           {currentPage === 'upload' && (
