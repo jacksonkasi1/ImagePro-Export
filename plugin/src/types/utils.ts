@@ -20,6 +20,11 @@ export interface ImageData {
   imageData: number[];
   formatOption: FormatOption;
   caseOption: string;
+  dimensions: {
+    width: number;
+    height: number;
+  };
+  type: string;
 }
 
 export interface HistoryItem {

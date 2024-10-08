@@ -5,7 +5,7 @@ import { emit } from '@create-figma-plugin/utilities';
 import { getScaleValues } from '@/helpers/common';
 
 // ** import types
-import { FormatOption } from '@/types/enums';
+import { ImageData } from '@/types/utils';
 import { ExportCompleteHandler } from '@/types/events';
 import { ExportRequestData, ExportSettingsImage, ExportSettingsPDF, ExportSettingsSVG } from '@/types/export-settings';
 
@@ -13,13 +13,7 @@ export const handleExportRequest = async (data: ExportRequestData) => {
   const { selectedNodeIds, formatOption, exportScaleOption, caseOption } = data;
 
   const scales: number[] = getScaleValues(exportScaleOption);
-  const images: Array<{
-    nodeName: string;
-    scale: number;
-    imageData: number[];
-    formatOption: FormatOption;
-    caseOption: string;
-  }> = [];
+  const images: Array<ImageData> = [];
 
   for (const nodeId of selectedNodeIds) {
     let node: SceneNode | null;
@@ -66,6 +60,11 @@ export const handleExportRequest = async (data: ExportRequestData) => {
             imageData: Array.from(imageData),
             formatOption,
             caseOption,
+            dimensions: {
+              width: node.width,
+              height: node.height,
+            },
+            type: node.type,
           });
         } catch (error) {
           console.error('Failed to export node with ID:', nodeId, 'with scale', scale, error);
