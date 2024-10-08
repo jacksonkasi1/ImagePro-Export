@@ -9,6 +9,9 @@ import { render } from '@create-figma-plugin/ui';
 import Root from '@/pages';
 import '!./styles/output.css';
 
+// ** import hooks
+import { useStorageManager } from '@/hooks/useStorageManager';
+
 // ** import store
 import { useUtilsStore } from '@/store/use-utils-store';
 import { useImageNodesStore } from '@/store/use-image-nodes-store';
@@ -22,6 +25,8 @@ import { AssetsExportType, PdfFormatOption } from '@/types/enums';
 import { ExportCompleteHandler, FetchImageNodesHandler } from '@/types/events';
 
 function Plugin() {
+  useStorageManager(); // Initialize storage synchronization
+
   const { setIsLoading, currentPage } = useUtilsStore();
   const { quality, exportMode, pdfFormatOption, pdfPassword, assetsExportType } = useImageExportStore();
 

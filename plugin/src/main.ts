@@ -41,6 +41,22 @@ const initializePlugin = async () => {
 
 void initializePlugin();
 
+// Store the data in Figma's clientStorage
+on('SET_DATA', async ({ handle, data }) => {
+  await figma.clientStorage.setAsync(handle, data);
+});
+
+// Retrieve the data from Figma's clientStorage
+on('GET_DATA', async ({ handle }) => {
+  const data = await figma.clientStorage.getAsync(handle);
+  emit('RECEIVE_DATA', { data });
+});
+
+// Delete the data from Figma's clientStorage
+on('DELETE_DATA', async ({ handle }) => {
+  await figma.clientStorage.deleteAsync(handle);
+});
+
 // ** Notification handler **
 on<NotificationHandler>('NOTIFY', (message, type, timeout = 3000) => {
   let options: NotificationOptions = { timeout };
@@ -80,4 +96,3 @@ on<SearchNodesHandler>('SEARCH_NODES', async (query) => {
 on<ExportAssetsHandler>('EXPORT_ASSETS', async (data) => {
   await handleExportRequest(data);
 });
-
