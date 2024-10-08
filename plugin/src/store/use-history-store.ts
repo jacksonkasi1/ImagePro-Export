@@ -1,3 +1,4 @@
+// ** import sync store
 import { createSyncedStore } from '@/storage/create-synced-store';
 
 // ** import types
@@ -5,7 +6,7 @@ import { HistoryItem } from '@/types/utils';
 
 interface HistoryState {
   history: HistoryItem[];
-  addHistoryItem: (item: HistoryItem) => void;
+  addHistoryItem: (item: Omit<HistoryItem, 'id'>) => void;
   removeHistoryItem: (cid: string) => void;
   clearHistory: () => void;
   getHistoryItem: (cid: string) => HistoryItem | undefined;
@@ -14,8 +15,9 @@ interface HistoryState {
 export const useHistoryStore = createSyncedStore<HistoryState>('historyStore', (set, get) => ({
   history: [],
 
-  addHistoryItem: (item: HistoryItem) => {
-    set({ history: [...get().history, item] });
+  addHistoryItem: (item) => {
+    const newId = get().history.length > 0 ? get().history[get().history.length - 1].id + 1 : 1;
+    set({ history: [...get().history, { ...item, id: newId }] });
   },
 
   removeHistoryItem: (cid: string) => {

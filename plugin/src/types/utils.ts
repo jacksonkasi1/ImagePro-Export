@@ -23,6 +23,7 @@ export interface ImageData {
 }
 
 export interface HistoryItem {
+  id: number;
   name: string;
   type: string;
   cid: string;
