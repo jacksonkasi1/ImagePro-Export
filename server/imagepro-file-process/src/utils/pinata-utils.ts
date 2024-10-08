@@ -1,4 +1,5 @@
 import { promises as fs } from "fs";
+import { File } from "node:buffer";
 
 // ** import third-party lib
 import { PinataSDK } from "pinata";
@@ -22,20 +23,17 @@ const pinata = new PinataSDK({
  */
 export const uploadFileToPinata = async (
   filePath: string,
-  fileName: string,
+  fileName: string
 ) => {
   const fileBuffer = await fs.readFile(filePath);
   const stats = await fs.stat(filePath);
 
-  const fileObject = {
-    name: fileName,
-    size: stats.size,
+  const file = new File([fileBuffer], fileName, {
     type: "application/octet-stream",
     lastModified: stats.mtimeMs,
-    arrayBuffer: async () => fileBuffer.buffer,
-  };
+  });
 
-  return await pinata.upload.file(fileObject);
+  return await pinata.upload.file(file);
 };
 
 /**
@@ -44,4 +42,41 @@ export const uploadFileToPinata = async (
  */
 export const deleteFilesFromPinata = async (cids: string[]) => {
   return await pinata.files.delete(cids);
+};
+
+/**
+ * Generates a signed URL for a file in Pinata with an expiration time in days
+ * @param cid Content Identifier of the file
+ * @param days Number of days the signed URL should be valid for
+ * @param gateway Optional custom gateway, defaults to the configured Pinata gateway
+ * @returns Signed URL
+ */
+export const generateSignedURL = async (cid: string, days: number, gateway?: string) => {
+  const expiresInSeconds = days * 24 * 60 * 60; // Convert days to seconds
+
+  return await pinata.gateways.createSignedURL({
+    cid,
+    expires: expiresInSeconds,
+    gateway: gateway || env.PINATA_GATEWAY, // Use provided gateway or default to configured one
+  });
+};
+
+
+/**
+ * Downloads a file from Pinata using CID
+ * @param cid Content Identifier of the file
+ * @returns Object containing file data and contentType
+ */
+export const downloadFileFromPinata = async (cid: string) => {
+  try {
+    const file = await pinata.gateways.get(cid);
+
+    if (!file.data) {
+      throw new Error("File not found.");
+    }
+
+    return file;
+  } catch (error: any) {
+    throw new Error(`Error downloading file: ${error?.message}`);
+  }
 };

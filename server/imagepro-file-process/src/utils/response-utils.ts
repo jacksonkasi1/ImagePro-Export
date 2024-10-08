@@ -48,16 +48,16 @@ export const cleanUpFiles = async (filePaths: string[]): Promise<void> => {
 };
 
 /**
- * Sends JSON response with file link and cleans up specified files.
+ * Sends a generic JSON response and cleans up specified files.
  * @param res Express Response object
- * @param fileLink URL of the uploaded file
+ * @param jsonResponse JSON data to send in the response
  * @param filesToRemove Array of file paths to delete
  */
-export const sendFileLinkAndCleanup = async (
+export const sendJsonResponseAndCleanup = async (
   res: Response,
-  fileLink: string,
+  jsonResponse: object,
   filesToRemove: string[]
 ) => {
-  res.json({ link: fileLink });
+  res.json(jsonResponse);
   await cleanUpFiles(filesToRemove);
 };
