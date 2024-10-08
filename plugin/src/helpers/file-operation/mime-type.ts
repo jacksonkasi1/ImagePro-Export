@@ -1,3 +1,8 @@
+/**
+ * Utility function to get the MIME type based on the file format.
+ * @param formatOption The file format option (JPG, PNG, WEBP, PDF, SVG).
+ * @returns The corresponding MIME type.
+ */
 export const getMimeType = (format?: string): string => {
   switch (format?.toLowerCase()) {
     case 'jpg':

@@ -5,6 +5,7 @@ import { ExportMode, PdfFormatOption, AssetsExportType } from '@/types/enums';
 // ** import export handlers
 import { handleSinglePdfExport } from './handle-single-pdf-export';
 import { handleOtherExports } from './handle-other-exports';
+import { handleUploadFiles } from './handle-upload-files';
 
 interface ExportCompleteParams {
   data: ImageData[];
@@ -15,6 +16,7 @@ interface ExportCompleteParams {
     pdfFormatOption?: PdfFormatOption;
     password?: string;
     assetsExportType: AssetsExportType;
+    enableUpload: boolean;
   };
 }
 
@@ -24,7 +26,7 @@ export const handleExportComplete = async ({
   exportMode,
   exportSettings,
 }: ExportCompleteParams) => {
-  const { assetsExportType } = exportSettings;
+  const { assetsExportType, enableUpload } = exportSettings;
 
   if (!data || data.length === 0) {
     setIsLoading(false);
@@ -32,7 +34,9 @@ export const handleExportComplete = async ({
   }
 
   try {
-    if (assetsExportType === AssetsExportType.SINGLE) {
+    if (enableUpload) {
+      await handleUploadFiles({ data, exportSettings });
+    } else if (assetsExportType === AssetsExportType.SINGLE) {
       await handleSinglePdfExport({ data, exportMode, exportSettings });
     } else {
       await handleOtherExports({ data, exportMode, exportSettings });

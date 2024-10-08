@@ -22,7 +22,7 @@ import { AssetsExportType, PdfFormatOption } from '@/types/enums';
 import { ExportCompleteHandler, FetchImageNodesHandler } from '@/types/events';
 
 function Plugin() {
-  const { setIsLoading } = useUtilsStore();
+  const { setIsLoading, currentPage } = useUtilsStore();
   const { quality, exportMode, pdfFormatOption, pdfPassword, assetsExportType } = useImageExportStore();
 
   const { setAllNodes, setAllNodesCount, setSelectedNodeIds, setSelectedNodesCount } = useImageNodesStore();
@@ -33,11 +33,13 @@ function Plugin() {
     pdfFormatOption?: PdfFormatOption;
     password?: string;
     assetsExportType: AssetsExportType;
+    enableUpload: boolean;
   }>({
     quality,
     pdfFormatOption,
     password: pdfPassword,
     assetsExportType,
+    enableUpload: currentPage === 'upload',
   });
 
   // Sync refs with the latest state values
@@ -56,6 +58,10 @@ function Plugin() {
   useEffect(() => {
     exportSettingsRef.current.assetsExportType = assetsExportType;
   }, [assetsExportType]);
+
+  useEffect(() => {
+    exportSettingsRef.current.enableUpload = currentPage === 'upload';
+  }, [currentPage]);
 
   useEffect(() => {
     on<FetchImageNodesHandler>('FETCH_IMAGE_NODES', (image_nodes) => {
