@@ -1,4 +1,5 @@
 import { promises as fs } from "fs";
+import { File } from "node:buffer";
 
 // ** import third-party lib
 import { PinataSDK } from "pinata";
@@ -27,15 +28,12 @@ export const uploadFileToPinata = async (
   const fileBuffer = await fs.readFile(filePath);
   const stats = await fs.stat(filePath);
 
-  const fileObject = {
-    name: fileName,
-    size: stats.size,
+  const file = new File([fileBuffer], fileName, {
     type: "application/octet-stream",
     lastModified: stats.mtimeMs,
-    arrayBuffer: async () => fileBuffer.buffer,
-  };
+  });
 
-  return await pinata.upload.file(fileObject);
+  return await pinata.upload.file(file);
 };
 
 /**
