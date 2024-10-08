@@ -7,9 +7,11 @@ import grayscaleRouter from "./pdf-opt/grayscale";
 import mergeRouter from "./pdf-opt/merge";
 import pdfProcessRouter from "./pdf-opt/process";
 
-// ** import files upload routes **
+// ** import files routes **
 import uploadFileRouter from "./upload-opt/upload-file";
 import deleteFilesRouter from "./upload-opt/delete-files";
+import downloadFileRouter from "./upload-opt/download-file";
+import getFileUrlRouter from "./upload-opt/get-file-url";
 
 const router = Router();
 
@@ -23,5 +25,7 @@ router.use("/pdf-opt", pdfProcessRouter);
 // Files upload routes
 router.use("/upload-opt", uploadFileRouter);
 router.use("/upload-opt", deleteFilesRouter);
+router.use("/upload-opt", downloadFileRouter);
+router.use("/upload-opt", getFileUrlRouter);
 
 export default router;

@@ -60,3 +60,23 @@ export const generateSignedURL = async (cid: string, days: number, gateway?: str
     gateway: gateway || env.PINATA_GATEWAY, // Use provided gateway or default to configured one
   });
 };
+
+
+/**
+ * Downloads a file from Pinata using CID
+ * @param cid Content Identifier of the file
+ * @returns Object containing file data and contentType
+ */
+export const downloadFileFromPinata = async (cid: string) => {
+  try {
+    const file = await pinata.gateways.get(cid);
+
+    if (!file.data) {
+      throw new Error("File not found.");
+    }
+
+    return file;
+  } catch (error: any) {
+    throw new Error(`Error downloading file: ${error?.message}`);
+  }
+};
