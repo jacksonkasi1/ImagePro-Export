@@ -1,6 +1,9 @@
 // ** import figma-plugin utilities
 import { emit, on } from '@create-figma-plugin/utilities';
 
+// ** import types
+import { GetDataHandler, ReceiveDataHandler, SetDataHandler } from '@/types/events';
+
 // ** import third-party libraries
 import { create, StateCreator, StoreApi } from 'zustand';
 
@@ -19,7 +22,7 @@ export function createSyncedStore<T extends object>(
       );
 
       // Emit a SET_DATA event to the plugin code
-      emit('SET_DATA', { handle: storageKey, data: dataToStore });
+      emit<SetDataHandler>('SET_DATA', { handle: storageKey, data: dataToStore });
     });
 
     return initialState;
@@ -28,7 +31,7 @@ export function createSyncedStore<T extends object>(
   // Sync with clientStorage when the store is initialized
   const syncWithClientStorage = () => {
     // Emit a GET_DATA event to the plugin code
-    emit('GET_DATA', { handle: storageKey });
+    emit<GetDataHandler>('GET_DATA', { handle: storageKey });
 
     const onReceiveData = ({ data }: { data: any }) => {
       if (data) {
@@ -36,7 +39,7 @@ export function createSyncedStore<T extends object>(
       }
     };
 
-    on('RECEIVE_DATA', onReceiveData);
+    on<ReceiveDataHandler>('RECEIVE_DATA', onReceiveData);
   };
 
   // Call syncWithClientStorage immediately
