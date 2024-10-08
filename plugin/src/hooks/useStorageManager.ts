@@ -9,8 +9,8 @@ import { StoreApi } from 'zustand';
 // ** import types
 import { ReceiveDataHandler } from '@/types/events';
 
-// ** import your stores that need synchronization
-// import {  } from '@/store/';
+// ** import stores that need synchronization
+import { useHistoryStore } from '@/store/use-history-store';
 
 interface SyncedStore {
   storageKey: string;
@@ -20,7 +20,7 @@ interface SyncedStore {
 export const useStorageManager = () => {
   useEffect(() => {
     const stores: SyncedStore[] = [
-      // { storageKey: 'utilsStore', storeApi: useUtilsStore },
+        { storageKey: 'historyStore', storeApi: useHistoryStore },
       // Add other stores here with their corresponding storage keys
       // { storageKey: 'anotherStore', storeApi: useAnotherStore },
     ];

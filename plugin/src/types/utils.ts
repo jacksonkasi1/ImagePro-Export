@@ -21,3 +21,13 @@ export interface ImageData {
   formatOption: FormatOption;
   caseOption: string;
 }
+
+export interface HistoryItem {
+  name: string;
+  type: string;
+  cid: string;
+  dimensions: {
+    width: number;
+    height: number;
+  };
+}
