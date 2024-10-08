@@ -3,14 +3,11 @@ import { Router, Request, Response } from "express";
 // ** import third-party lib
 import multer from "multer";
 
-// ** import environment variables
-import { env } from "../../config/env";
-
 // ** import utils
 import { uploadFileToPinata } from "../../utils/pinata-utils";
-import { sendFileLinkAndCleanup } from "../../utils/response-utils";
+import { sendJsonResponseAndCleanup } from "../../utils/response-utils";
 import { applyPassword, convertToColorMode } from "../../utils/pdf-utils";
-import { sanitizeFileName, removeFile, uploadAllowedFile} from "../../utils/file-utils";
+import { sanitizeFileName, removeFile, uploadAllowedFile } from "../../utils/file-utils";
 
 // ** import types
 import { UploadedPdf } from "../../types/pdf";
@@ -25,7 +22,7 @@ const upload = multer({
 
 /**
  * @route POST /upload-opt/files-upload
- * @desc Upload a file to Pinata Storage and return the file link
+ * @desc Upload a file to Pinata Storage and return the file CID in JSON response
  * @param req Express request object
  * @param res Express response object
  */
@@ -55,7 +52,7 @@ router.post(
         outputFile = await convertToColorMode(outputFile, colorMode);
       }
 
-      // Apply password protection if password is provided, using the result from the color mode conversion
+      // Apply password protection if password is provided
       if (password) {
         outputFile = await applyPassword(outputFile, password);
       }
@@ -63,11 +60,8 @@ router.post(
       // Upload the file to Pinata
       const response = await uploadFileToPinata(outputFile.outputPath, outputFile.outputFilename);
 
-      // Construct the file link from Pinata response
-      const uploadedFileLink = `${env.PINATA_GATEWAY}/ipfs/${response.cid}`;
-
-      // Send the file link in response and clean up local files
-      await sendFileLinkAndCleanup(res, uploadedFileLink, [outputFile.outputPath, filePath]);
+      // Return the CID in JSON response and clean up local files
+      await sendJsonResponseAndCleanup(res, { cid: response.cid }, [outputFile.outputPath, filePath]);
     } catch (error: any) {
       console.error("Server Error:", error);
 

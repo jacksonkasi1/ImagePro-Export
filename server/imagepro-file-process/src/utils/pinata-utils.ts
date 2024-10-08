@@ -23,7 +23,7 @@ const pinata = new PinataSDK({
  */
 export const uploadFileToPinata = async (
   filePath: string,
-  fileName: string,
+  fileName: string
 ) => {
   const fileBuffer = await fs.readFile(filePath);
   const stats = await fs.stat(filePath);
@@ -42,4 +42,21 @@ export const uploadFileToPinata = async (
  */
 export const deleteFilesFromPinata = async (cids: string[]) => {
   return await pinata.files.delete(cids);
+};
+
+/**
+ * Generates a signed URL for a file in Pinata with an expiration time in days
+ * @param cid Content Identifier of the file
+ * @param days Number of days the signed URL should be valid for
+ * @param gateway Optional custom gateway, defaults to the configured Pinata gateway
+ * @returns Signed URL
+ */
+export const generateSignedURL = async (cid: string, days: number, gateway?: string) => {
+  const expiresInSeconds = days * 24 * 60 * 60; // Convert days to seconds
+
+  return await pinata.gateways.createSignedURL({
+    cid,
+    expires: expiresInSeconds,
+    gateway: gateway || env.PINATA_GATEWAY, // Use provided gateway or default to configured one
+  });
 };
