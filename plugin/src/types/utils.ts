@@ -32,6 +32,7 @@ export interface HistoryItem {
   name: string;
   type: string;
   cid: string;
+  thumbnail_cid: string | null;
   dimensions: {
     width: number;
     height: number;
