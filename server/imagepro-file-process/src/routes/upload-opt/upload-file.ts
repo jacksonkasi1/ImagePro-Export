@@ -83,8 +83,8 @@ router.post(
       // If thumbnail is requested and the file is not a PDF, generate the thumbnail
       if (thumbnail && !isPdf) {
         const optimizedImage = await getOptimizedImageFromPinata(response.cid, {
-          width: 200,
-          height: 200,
+          width: 80,
+          height: 80,
           format: "webp",
         });
 
