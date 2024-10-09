@@ -17,20 +17,20 @@ import { config } from '@/config';
 
 interface NormalListViewProps {
   history: HistoryItem[];
-  selectedNodeIds: string[];
-  onToggleSelection: (id: string, currentChecked: boolean) => void;
+  selectedNodeIds: number[];
+  onToggleSelection: (id: number, currentChecked: boolean) => void;
 }
 
 const NormalListView = ({ history, selectedNodeIds, onToggleSelection }: NormalListViewProps) => {
-  const handleToggleSelection = (cid: string, isSelected: boolean) => {
+  const handleToggleSelection = (id: number, isSelected: boolean) => {
     const newSelected = !isSelected; // Toggle the current state
-    onToggleSelection(cid, newSelected);
+    onToggleSelection(id, newSelected);
   };
 
   return (
     <div className={'flex flex-col gap-2 '}>
       {history.map((item, index) => {
-        const isSelected = selectedNodeIds.includes(item.cid);
+        const isSelected = selectedNodeIds.includes(item.id);
 
         const thumbnail_img = item.thumbnail_cid
           ? `${config.PINATA_GATEWAY}/files/${item.thumbnail_cid}`
@@ -38,18 +38,18 @@ const NormalListView = ({ history, selectedNodeIds, onToggleSelection }: NormalL
 
         return (
           <div
-            key={`${item.cid}_${index}`}
+            key={`${item.id}_${index}`}
             className={cn(
               'relative rounded-lg flex items-center cursor-pointer px-2',
               isSelected ? 'bg-selected-bg' : 'bg-secondary-bg'
             )}
-            onClick={() => handleToggleSelection(item.cid, isSelected)}
+            onClick={() => handleToggleSelection(item.id, isSelected)}
           >
             <div className="flex items-center w-full gap-2 cursor-pointer">
               {/* Checkbox */}
               <Checkbox
                 value={isSelected}
-                onValueChange={() => handleToggleSelection(item.cid, isSelected)}
+                onValueChange={() => handleToggleSelection(item.id, isSelected)}
                 className="self-center"
               />
               {/* Image Preview */}

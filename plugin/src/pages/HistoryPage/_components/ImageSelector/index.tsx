@@ -5,7 +5,7 @@ import { useEffect, useState } from 'preact/hooks';
 import DeleteIcon from '@/assets/Icons/DeleteIcon';
 
 // ** import figma ui components & icons
-import { Bold, Container, IconList32, Text, VerticalSpace } from '@create-figma-plugin/ui';
+import { Bold, Container, Text, VerticalSpace } from '@create-figma-plugin/ui';
 
 // ** import custom ui components
 import { Checkbox } from '@/components/ui/checkbox';
@@ -22,7 +22,7 @@ import { useHistoryStore } from '@/store/use-history-store';
 const ImageSelector = () => {
   const { history, removeHistoryItem } = useHistoryStore.getState();
 
-  const [selectedNodeIds, setSelectedNodeIds] = useState<string[]>([]);
+  const [selectedNodeIds, setSelectedNodeIds] = useState<number[]>([]);
 
   const allNodesCount = history.length;
 
@@ -30,7 +30,7 @@ const ImageSelector = () => {
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
       // Select all nodes
-      const allIds = history.map((item) => item.cid);
+      const allIds = history.map((item) => item.id);
       setSelectedNodeIds(allIds);
     } else {
       // Deselect all nodes
@@ -38,8 +38,8 @@ const ImageSelector = () => {
     }
   };
 
-  const handleSelectImage = (id: string, checked: boolean) => {
-    setSelectedNodeIds((prev: string[]) => {
+  const handleSelectImage = (id: number, checked: boolean) => {
+    setSelectedNodeIds((prev: number[]) => {
       if (checked) {
         return [...prev, id];
       } else {
@@ -63,7 +63,7 @@ const ImageSelector = () => {
         </Checkbox>
 
         {/* Delete Icon */}
-        <button onClick={() => selectedNodeIds.forEach((cid) => removeHistoryItem(cid))}>
+        <button onClick={() => selectedNodeIds.forEach((id) => removeHistoryItem(id))}>
           <DeleteIcon className="-m-1" />
         </button>
       </div>

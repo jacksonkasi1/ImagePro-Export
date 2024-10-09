@@ -7,9 +7,9 @@ import { HistoryItem } from '@/types/utils';
 interface HistoryState {
   history: HistoryItem[];
   addHistoryItem: (item: Omit<HistoryItem, 'id'>) => void;
-  removeHistoryItem: (cid: string) => void;
+  removeHistoryItem: (id: number) => void;
   clearHistory: () => void;
-  getHistoryItem: (cid: string) => HistoryItem | undefined;
+  getHistoryItem: (id: number) => HistoryItem | undefined;
 }
 
 export const useHistoryStore = createSyncedStore<HistoryState>('historyStore', (set, get) => ({
@@ -20,15 +20,15 @@ export const useHistoryStore = createSyncedStore<HistoryState>('historyStore', (
     set({ history: [...get().history, { ...item, id: newId }] });
   },
 
-  removeHistoryItem: (cid: string) => {
-    set({ history: get().history.filter((item) => item.cid !== cid) });
+  removeHistoryItem: (id: number) => {
+    set({ history: get().history.filter((item) => item.id !== id) });
   },
 
   clearHistory: () => {
     set({ history: [] });
   },
 
-  getHistoryItem: (cid: string) => {
-    return get().history.find((item) => item.cid === cid);
+  getHistoryItem: (id: number) => {
+    return get().history.find((item) => item.id === id);
   },
 }));

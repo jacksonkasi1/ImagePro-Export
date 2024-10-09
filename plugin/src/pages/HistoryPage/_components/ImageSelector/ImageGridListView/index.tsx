@@ -11,13 +11,13 @@ import { HistoryItem } from '@/types/utils';
 
 interface ImageGridListViewProps {
   history: HistoryItem[];
-  selectedNodeIds: string[];
-  onSelectImage: (id: string, checked: boolean) => void;
+  selectedNodeIds: number[];
+  onSelectImage: (id: number, checked: boolean) => void;
 }
 
 const ImageGridListView = ({ history, selectedNodeIds, onSelectImage }: ImageGridListViewProps) => {
   // Unified handler for toggling selection
-  const handleToggleSelection = (id: string, currentChecked: boolean) => {
+  const handleToggleSelection = (id: number, currentChecked: boolean) => {
     onSelectImage(id, currentChecked);
   };
 
