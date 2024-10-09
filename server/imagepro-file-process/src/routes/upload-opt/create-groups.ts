@@ -15,8 +15,6 @@ router.post(
   "/create-groups",
   async (req: Request, res: Response) => {
     try {
-        console.log(req.body);
-
       const { groups } = req.body;
 
       // Validate groups
