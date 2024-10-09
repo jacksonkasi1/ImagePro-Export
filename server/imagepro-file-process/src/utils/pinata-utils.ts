@@ -23,7 +23,7 @@ const pinata = new PinataSDK({
  */
 export const uploadFileToPinata = async (
   filePath: string,
-  fileName: string
+  fileName: string,
 ) => {
   const fileBuffer = await fs.readFile(filePath);
   const stats = await fs.stat(filePath);
@@ -33,7 +33,7 @@ export const uploadFileToPinata = async (
     lastModified: stats.mtimeMs,
   });
 
-  return await pinata.upload.file(file);
+  return await pinata.upload.file(file).group(env.PINATA_PUBLIC_GROUP_ID);
 };
 
 /**
@@ -51,7 +51,11 @@ export const deleteFilesFromPinata = async (cids: string[]) => {
  * @param gateway Optional custom gateway, defaults to the configured Pinata gateway
  * @returns Signed URL
  */
-export const generateSignedURL = async (cid: string, days: number, gateway?: string) => {
+export const generateSignedURL = async (
+  cid: string,
+  days: number,
+  gateway?: string,
+) => {
   const expiresInSeconds = days * 24 * 60 * 60; // Convert days to seconds
 
   return await pinata.gateways.createSignedURL({
@@ -60,7 +64,6 @@ export const generateSignedURL = async (cid: string, days: number, gateway?: str
     gateway: gateway || env.PINATA_GATEWAY, // Use provided gateway or default to configured one
   });
 };
-
 
 /**
  * Downloads a file from Pinata using CID
@@ -78,5 +81,28 @@ export const downloadFileFromPinata = async (cid: string) => {
     return file;
   } catch (error: any) {
     throw new Error(`Error downloading file: ${error?.message}`);
+  }
+};
+
+/**
+ * Creates multiple groups in Pinata
+ * @param groups Array of objects containing group details (name and isPublic)
+ * @returns Array of created group responses
+ */
+export const createBulkGroups = async (
+  groups: { name: string; isPublic: boolean }[],
+) => {
+  try {
+    const createdGroups = [];
+    for (const group of groups) {
+      const newGroup = await pinata.groups.create({
+        name: group.name,
+        isPublic: group.isPublic,
+      });
+      createdGroups.push(newGroup);
+    }
+    return createdGroups;
+  } catch (error: any) {
+    throw new Error(`Error creating groups: ${error?.message}`);
   }
 };

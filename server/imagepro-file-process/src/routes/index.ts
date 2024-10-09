@@ -12,6 +12,7 @@ import uploadFileRouter from "./upload-opt/upload-file";
 import deleteFilesRouter from "./upload-opt/delete-files";
 import downloadFileRouter from "./upload-opt/download-file";
 import getFileUrlRouter from "./upload-opt/get-file-url";
+// import createGroupsRouter from "./upload-opt/create-groups";
 
 const router = Router();
 
@@ -27,5 +28,6 @@ router.use("/upload-opt", uploadFileRouter);
 router.use("/upload-opt", deleteFilesRouter);
 router.use("/upload-opt", downloadFileRouter);
 router.use("/upload-opt", getFileUrlRouter);
+// router.use("/upload-opt", createGroupsRouter);
 
 export default router;
