@@ -25,7 +25,7 @@ const pinata = new PinataSDK({
 export const uploadFileToPinata = async (
   filePath: string,
   fileName: string,
-  groupId?: string // Group ID is optional
+  groupId?: string, // Group ID is optional
 ) => {
   const fileBuffer = await fs.readFile(filePath);
   const stats = await fs.stat(filePath);
@@ -113,4 +113,31 @@ export const createBulkGroups = async (
   } catch (error: any) {
     throw new Error(`Error creating groups: ${error?.message}`);
   }
+};
+
+/**
+ * Fetches an optimized image from Pinata using the provided CID.
+ * @param cid Content Identifier of the image file
+ * @param optimizeOptions Options for optimizing the image (width, height, format, etc.)
+ * @returns The optimized image data and its content type
+ */
+export const getOptimizedImageFromPinata = async (
+  cid: string,
+  optimizeOptions: {
+    width?: number;
+    height?: number;
+    format?: "auto" | "webp";
+    quality?: number;
+    fit?: "scaleDown" | "contain" | "cover" | "crop" | "pad";
+    gravity?: "auto" | "side" | string;
+  },
+) => {
+  return await pinata.gateways.get(cid).optimizeImage({
+    width: optimizeOptions.width || 500,
+    height: optimizeOptions.height || 500,
+    format: optimizeOptions.format || "auto",
+    quality: optimizeOptions.quality || 80,
+    fit: optimizeOptions.fit || "contain",
+    gravity: optimizeOptions.gravity || "auto",
+  });
 };
