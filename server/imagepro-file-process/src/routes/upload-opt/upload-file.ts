@@ -4,14 +4,10 @@ import { Router, Request, Response } from "express";
 import multer from "multer";
 
 // ** import utils
-import { uploadFileToPinata } from "../../utils/pinata-utils";
+import { uploadFileToPinata, getOptimizedImageFromPinata } from "../../utils/pinata-utils";
 import { sendJsonResponseAndCleanup } from "../../utils/response-utils";
 import { applyPassword, convertToColorMode } from "../../utils/pdf-utils";
-import {
-  sanitizeFileName,
-  removeFile,
-  uploadAllowedFile,
-} from "../../utils/file-utils";
+import { sanitizeFileName, removeFile, uploadAllowedFile } from "../../utils/file-utils";
 
 // ** import config
 import { env } from "../../config/env";
@@ -29,6 +25,7 @@ const upload = multer({
 
 const groupId = env.PINATA_PUBLIC_GROUP_ID; // Pinata public group id, to get file without signed URL
 
+
 /**
  * @route POST /upload-opt/files-upload
  * @desc Upload a file to Pinata Storage and return the file CID in JSON response
@@ -41,10 +38,11 @@ router.post(
   async (req: Request, res: Response) => {
     try {
       const file = req.file;
-      let { password, colorMode } = req.body;
+      let { password, colorMode, thumbnail } = req.body;
 
       // Convert colorMode to lowercase
       colorMode = colorMode ? colorMode.toLowerCase() : null;
+      thumbnail = thumbnail === "true"; // Ensure thumbnail is treated as boolean
 
       // Check if a file was uploaded
       if (!file) {
@@ -59,13 +57,17 @@ router.post(
         outputFilename: fileName,
       };
 
-      // Convert color mode first if colorMode is provided
-      if (colorMode === "cmyk" || colorMode === "grayscale") {
+      // Check if it's a PDF based on password or colorMode (CMYK or grayscale)
+      const isPdf =
+        password || colorMode === "cmyk" || colorMode === "grayscale";
+
+      // Convert color mode first if colorMode is provided and it's a PDF
+      if (isPdf && (colorMode === "cmyk" || colorMode === "grayscale")) {
         outputFile = await convertToColorMode(outputFile, colorMode);
       }
 
-      // Apply password protection if password is provided
-      if (password) {
+      // Apply password protection if password is provided and it's a PDF
+      if (isPdf && password) {
         outputFile = await applyPassword(outputFile, password);
       }
 
@@ -76,20 +78,41 @@ router.post(
         groupId,
       );
 
-      // Return the CID in JSON response and clean up local files
-      await sendJsonResponseAndCleanup(res, { cid: response.cid }, [
-        outputFile.outputPath,
-        filePath,
-      ]);
+      let thumbnailCid: string | null = null;
+
+      // If thumbnail is requested and the file is not a PDF, generate the thumbnail
+      if (thumbnail && !isPdf) {
+        const optimizedImage = await getOptimizedImageFromPinata(response.cid, {
+          width: 200,
+          height: 200,
+          format: "webp",
+        });
+
+        const thumbnailFileName = `thumbnail_${fileName}`;
+
+        const thumbnailUploadResponse = await uploadFileToPinata(
+          optimizedImage.data,
+          thumbnailFileName,
+          groupId,
+          optimizedImage.contentType || "image/png",
+        );
+
+        thumbnailCid = thumbnailUploadResponse.cid;
+      }
+
+      // Return the CID and thumbnail in JSON response, and clean up local files
+      await sendJsonResponseAndCleanup(
+        res,
+        { cid: response.cid, thumbnail_cid: thumbnailCid },
+        [outputFile.outputPath, filePath],
+      );
     } catch (error: any) {
       console.error("Server Error:", error);
 
-      // Clean up uploaded file in case of error
       if (req.file?.path) {
         await removeFile(req.file.path);
       }
 
-      // Return a 500 error response
       res
         .status(500)
         .json({ error: error.message || "Internal Server Error." });
