@@ -37,4 +37,5 @@ export interface HistoryItem {
     width: number;
     height: number;
   };
+  file_type: 'pdf' | 'image';
 }

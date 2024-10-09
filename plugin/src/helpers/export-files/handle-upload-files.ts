@@ -53,20 +53,25 @@ export const handleUploadFiles = async ({ data, exportSettings }: UploadFilesPar
     if (!response.ok) throw new Error(`File upload failed for ${file.nodeName}`);
 
     const result = await response.json();
+
+    // Determine file type based on formatOption
+    const fileType: 'image' | 'pdf' = ['JPG', 'PNG', 'WEBP'].includes(file.formatOption) ? 'image' : 'pdf';
+
     return {
       nodeName: file.nodeName,
       cid: result.cid,
       thumbnail_cid: result.thumbnail_cid,
       dimensions: file.dimensions,
       type: file.type,
+      file_type: fileType,
     };
   });
 
   // Wait for all uploads to finish and map CIDs to nodeNames
   const uploadResults = await Promise.all(uploadPromises);
 
-  // Add the uploaded files to history with thumbnail_cid
-  uploadResults.forEach(({ nodeName, cid, thumbnail_cid, dimensions, type }) => {
-    addHistoryItem({ name: nodeName, type, cid, dimensions, thumbnail_cid });
+  // Add the uploaded files to history with thumbnail_cid and file_type
+  uploadResults.forEach(({ nodeName, cid, thumbnail_cid, dimensions, type, file_type }) => {
+    addHistoryItem({ name: nodeName, type, cid, dimensions, thumbnail_cid, file_type });
   });
 };
