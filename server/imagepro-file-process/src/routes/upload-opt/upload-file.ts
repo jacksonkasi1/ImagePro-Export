@@ -7,7 +7,14 @@ import multer from "multer";
 import { uploadFileToPinata } from "../../utils/pinata-utils";
 import { sendJsonResponseAndCleanup } from "../../utils/response-utils";
 import { applyPassword, convertToColorMode } from "../../utils/pdf-utils";
-import { sanitizeFileName, removeFile, uploadAllowedFile } from "../../utils/file-utils";
+import {
+  sanitizeFileName,
+  removeFile,
+  uploadAllowedFile,
+} from "../../utils/file-utils";
+
+// ** import config
+import { env } from "../../config/env";
 
 // ** import types
 import { UploadedPdf } from "../../types/pdf";
@@ -19,6 +26,8 @@ const upload = multer({
   limits: { fileSize: 20 * 1024 * 1024 }, // Limit file size to 20 MB
   fileFilter: uploadAllowedFile, // Only allow certain file types (PDF, images)
 });
+
+const groupId = env.PINATA_PUBLIC_GROUP_ID; // Pinata public group id, to get file without signed URL
 
 /**
  * @route POST /upload-opt/files-upload
@@ -45,10 +54,13 @@ router.post(
       const filePath = file.path; // Path to the uploaded file
       const fileName = sanitizeFileName(file.originalname); // Sanitize the file name
 
-      let outputFile: UploadedPdf = { outputPath: file.path, outputFilename: fileName };
+      let outputFile: UploadedPdf = {
+        outputPath: file.path,
+        outputFilename: fileName,
+      };
 
       // Convert color mode first if colorMode is provided
-      if (colorMode === 'cmyk' || colorMode === 'grayscale') {
+      if (colorMode === "cmyk" || colorMode === "grayscale") {
         outputFile = await convertToColorMode(outputFile, colorMode);
       }
 
@@ -57,11 +69,18 @@ router.post(
         outputFile = await applyPassword(outputFile, password);
       }
 
-      // Upload the file to Pinata
-      const response = await uploadFileToPinata(outputFile.outputPath, outputFile.outputFilename);
+      // Upload the file to Pinata, with groupId if provided
+      const response = await uploadFileToPinata(
+        outputFile.outputPath,
+        outputFile.outputFilename,
+        groupId,
+      );
 
       // Return the CID in JSON response and clean up local files
-      await sendJsonResponseAndCleanup(res, { cid: response.cid }, [outputFile.outputPath, filePath]);
+      await sendJsonResponseAndCleanup(res, { cid: response.cid }, [
+        outputFile.outputPath,
+        filePath,
+      ]);
     } catch (error: any) {
       console.error("Server Error:", error);
 
@@ -71,9 +90,11 @@ router.post(
       }
 
       // Return a 500 error response
-      res.status(500).json({ error: error.message || "Internal Server Error." });
+      res
+        .status(500)
+        .json({ error: error.message || "Internal Server Error." });
     }
-  }
+  },
 );
 
 export default router;

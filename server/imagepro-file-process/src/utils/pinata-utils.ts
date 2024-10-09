@@ -19,11 +19,13 @@ const pinata = new PinataSDK({
  * Uploads a file to Pinata
  * @param filePath Path to the file
  * @param fileName Name of the file
+ * @param groupId Optional Pinata group ID to assign the file to
  * @returns Pinata upload response
  */
 export const uploadFileToPinata = async (
   filePath: string,
   fileName: string,
+  groupId?: string // Group ID is optional
 ) => {
   const fileBuffer = await fs.readFile(filePath);
   const stats = await fs.stat(filePath);
@@ -33,7 +35,13 @@ export const uploadFileToPinata = async (
     lastModified: stats.mtimeMs,
   });
 
-  return await pinata.upload.file(file).group(env.PINATA_PUBLIC_GROUP_ID);
+  // If groupId is provided, upload with group; otherwise, upload without a group
+  const upload = pinata.upload.file(file);
+  if (groupId) {
+    return await upload.group(groupId);
+  } else {
+    return await upload;
+  }
 };
 
 /**
