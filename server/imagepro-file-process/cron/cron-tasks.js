@@ -61,3 +61,19 @@ cron.schedule('0 0 * * 0', () => {
     }
   });
 });
+
+
+// Task to make an API call every 2 hours
+cron.schedule('0 */2 * * *', () => {
+  console.log('Running API call task every 2 hours.');
+
+  axios.get('https://jacksonkasi-imagepro-file-process.hf.space/')
+    .then(response => {
+      console.log('API call successful:', response.data);
+      fs.appendFileSync(LOG_FILE, `✅ API call successful at ${new Date().toISOString()} with response: ${response.data}\n`);
+    })
+    .catch(error => {
+      console.error('Error during API call:', error);
+      fs.appendFileSync(LOG_FILE, `🏥 API call failed at ${new Date().toISOString()} with error: ${error.message}\n`);
+    });
+});
