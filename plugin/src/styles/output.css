@@ -952,6 +952,26 @@ video {
   height: 100%;
 }
 
+.h-\[300px\] {
+  height: 300px;
+}
+
+.h-\[340px\] {
+  height: 340px;
+}
+
+.h-\[310px\] {
+  height: 310px;
+}
+
+.h-\[110px\] {
+  height: 110px;
+}
+
+.h-\[210px\] {
+  height: 210px;
+}
+
 .max-h-0 {
   max-height: 0px;
 }
@@ -1004,6 +1024,10 @@ video {
 
 .min-h-screen {
   min-height: 100vh;
+}
+
+.min-h-full {
+  min-height: 100%;
 }
 
 .\!w-fit {
