@@ -36,6 +36,7 @@ export const handleUploadFiles = async ({ data, exportSettings }: UploadFilesPar
 
     if (pdfFormatOption) formData.append('colorMode', pdfFormatOption);
     if (password) formData.append('password', password);
+    formData.append('thumbnail', 'true'); // Generate thumbnail for Image files
 
     return formData;
   };
