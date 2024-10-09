@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 
 // ** import custom icons
 import DeleteIcon from '@/assets/Icons/DeleteIcon';
@@ -13,11 +13,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 // ** import sub-components
 import ImageGridListView from './ImageGridListView';
 
-// ** import helpers
-import { config } from '@/config';
-
 // ** import store
 import { useHistoryStore } from '@/store/use-history-store';
+
+// ** import utils
+import { cn } from '@/lib/utils';
 
 const ImageSelector = () => {
   const { history, removeHistoryItem } = useHistoryStore.getState();
@@ -52,7 +52,7 @@ const ImageSelector = () => {
     <Container space="small" style={{ height: '100%' }}>
       <VerticalSpace space="small" />
 
-      <div className={'flex items-center justify-between'}>
+      <div className="flex items-center justify-between">
         {/* Select All Checkbox */}
         <Checkbox value={selectedNodeIds.length === allNodesCount} onValueChange={handleSelectAll}>
           <Text>
@@ -63,8 +63,21 @@ const ImageSelector = () => {
         </Checkbox>
 
         {/* Delete Icon */}
-        <button onClick={() => selectedNodeIds.forEach((id) => removeHistoryItem(id))}>
-          <DeleteIcon className="-m-1" />
+        <button
+          onClick={() => selectedNodeIds.forEach((id) => removeHistoryItem(id))}
+          disabled={selectedNodeIds.length === 0}
+          className={cn('-m-1', {
+            'cursor-not-allowed opacity-50': selectedNodeIds.length === 0,
+            'text-danger hover:text-danger-hover': selectedNodeIds.length > 0,
+          })}
+        >
+          <DeleteIcon
+            color={
+              selectedNodeIds.length === 0
+                ? 'var(--figma-color-text)'
+                : 'var(--figma-color-bg-danger)'
+            }
+          />
         </button>
       </div>
       <VerticalSpace space="small" />
