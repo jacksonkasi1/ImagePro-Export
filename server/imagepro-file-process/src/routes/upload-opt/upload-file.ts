@@ -51,15 +51,15 @@ router.post(
 
       const filePath = file.path; // Path to the uploaded file
       const fileName = sanitizeFileName(file.originalname); // Sanitize the file name
+      const mimeType = file.mimetype
 
       let outputFile: UploadedPdf = {
         outputPath: file.path,
         outputFilename: fileName,
       };
 
-      // Check if it's a PDF based on password or colorMode (CMYK or grayscale)
-      const isPdf =
-        password || colorMode === "cmyk" || colorMode === "grayscale";
+      // Check if it's a PDF based on mimeType
+      const isPdf = mimeType === "application/pdf";
 
       // Convert color mode first if colorMode is provided and it's a PDF
       if (isPdf && (colorMode === "cmyk" || colorMode === "grayscale")) {
