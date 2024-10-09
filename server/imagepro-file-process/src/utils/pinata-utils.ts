@@ -17,25 +17,39 @@ const pinata = new PinataSDK({
 
 /**
  * Uploads a file to Pinata
- * @param filePath Path to the file
+ * @param filePathOrBuffer Path to the file or Buffer containing the file data
  * @param fileName Name of the file
  * @param groupId Optional Pinata group ID to assign the file to
+ * @param contentType Optional content type of the file
  * @returns Pinata upload response
  */
 export const uploadFileToPinata = async (
-  filePath: string,
+  filePathOrBuffer: string | Buffer,
   fileName: string,
-  groupId?: string // Group ID is optional
+  groupId?: string,
+  contentType?: string,
 ) => {
-  const fileBuffer = await fs.readFile(filePath);
-  const stats = await fs.stat(filePath);
+  let fileBuffer: Buffer;
+  let lastModified = Date.now();
+
+  if (typeof filePathOrBuffer === "string") {
+    // It's a file path
+    fileBuffer = await fs.readFile(filePathOrBuffer);
+    const stats = await fs.stat(filePathOrBuffer);
+    lastModified = stats.mtimeMs;
+  } else if (filePathOrBuffer instanceof Buffer) {
+    fileBuffer = filePathOrBuffer;
+  } else {
+    throw new Error(
+      "Invalid input: filePathOrBuffer must be a string or Buffer",
+    );
+  }
 
   const file = new File([fileBuffer], fileName, {
-    type: "application/octet-stream",
-    lastModified: stats.mtimeMs,
+    type: contentType || "application/octet-stream",
+    lastModified,
   });
 
-  // If groupId is provided, upload with group; otherwise, upload without a group
   const upload = pinata.upload.file(file);
   if (groupId) {
     return await upload.group(groupId);
@@ -113,4 +127,44 @@ export const createBulkGroups = async (
   } catch (error: any) {
     throw new Error(`Error creating groups: ${error?.message}`);
   }
+};
+
+/**
+ * Fetches an optimized image from Pinata using the provided CID.
+ * @param cid Content Identifier of the image file
+ * @param optimizeOptions Options for optimizing the image
+ * @returns The optimized image data and its content type
+ */
+export const getOptimizedImageFromPinata = async (
+  cid: string,
+  optimizeOptions: {
+    width?: number;
+    height?: number;
+    format?: "auto" | "webp";
+    quality?: number;
+    fit?: "scaleDown" | "contain" | "cover" | "crop" | "pad";
+    gravity?: "auto" | "side" | string;
+  },
+) => {
+  const response = await pinata.gateways
+    .get(cid)
+    .optimizeImage(optimizeOptions);
+
+  // Convert data to Buffer
+  let dataBuffer: Buffer;
+
+  if (typeof response.data === "string") {
+    dataBuffer = Buffer.from(response.data, "binary");
+  } else if (response.data instanceof Blob) {
+    dataBuffer = Buffer.from(await response.data.arrayBuffer());
+  } else if (Buffer.isBuffer(response.data)) {
+    dataBuffer = response.data;
+  } else {
+    throw new Error("Unsupported data type for optimized image");
+  }
+
+  return {
+    data: dataBuffer,
+    contentType: response.contentType,
+  };
 };
