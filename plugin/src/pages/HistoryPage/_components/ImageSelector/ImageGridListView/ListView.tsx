@@ -17,7 +17,7 @@ import { cn, truncateText } from '@/lib/utils';
 import notify from '@/lib/notify';
 
 // ** import helpers
-import { downloadFile } from '@/helpers/file-operation';
+import { downloadFile } from '@/helpers/cloud-operation';
 import { copyToClipboard } from '@/helpers/other';
 
 // ** import types
@@ -53,11 +53,9 @@ const NormalListView = ({ history, selectedNodeIds, onToggleSelection }: NormalL
             ? `${config.PINATA_GATEWAY}/files/${item.thumbnail_cid}`
             : config.PDF_LOGO;
 
-          const file_url = item.cid ? `${config.PINATA_GATEWAY}/files/${item.cid}` : '';
-
           // Handle Download action
           const handleDownload = () => {
-            downloadFile(file_url, item.name, setIsLoading);
+            downloadFile(item.cid, item.name, setIsLoading);
           };
 
           // Handle Copy action
