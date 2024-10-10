@@ -10,9 +10,11 @@ import { Text } from '@create-figma-plugin/ui';
 
 // ** import custom ui components
 import { Checkbox } from '@/components/ui/checkbox';
+import IconButton from '@/components/ui/icon-button';
 
-// ** import utils
+// ** import utils & lib
 import { cn, truncateText } from '@/lib/utils';
+import notify from '@/lib/notify';
 
 // ** import helpers
 import { downloadFile } from '@/helpers/file-operation';
@@ -63,10 +65,10 @@ const NormalListView = ({ history, selectedNodeIds, onToggleSelection }: NormalL
             const fileLink = `${config.PINATA_GATEWAY}/files/${item.cid}`;
             copyToClipboard(fileLink)
               .then(() => {
-                console.log('Link copied to clipboard:', fileLink);
+                notify.success('Link copied to clipboard.');
               })
-              .catch((error) => {
-                console.error('Failed to copy link:', error);
+              .catch(() => {
+                notify.error('Failed to copy link.');
               });
           };
 
@@ -111,14 +113,14 @@ const NormalListView = ({ history, selectedNodeIds, onToggleSelection }: NormalL
               {/* Copy & Download */}
               <div className="flex flex-row items-center justify-around w-full gap-2 cursor-pointer">
                 {/* Copy */}
-                <button onClick={handleCopy}>
-                  <CopyIcon className='size-5'   />
-                </button>
+                <IconButton animate onClick={handleCopy}>
+                  <CopyIcon className="size-5" />
+                </IconButton>
 
                 {/* Download */}
-                <button onClick={handleDownload} disabled={isLoading}>
-                  <DownloadIcon className='size-5'  />
-                </button>
+                <IconButton animate onClick={handleDownload} loading={isLoading}>
+                  <DownloadIcon className="size-5" />
+                </IconButton>
               </div>
             </div>
           );

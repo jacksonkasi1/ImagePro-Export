@@ -9,6 +9,7 @@ import { Bold, Container, Divider, SearchTextbox, Text, useInitialFocus, Vertica
 
 // ** import custom ui components
 import { Checkbox } from '@/components/ui/checkbox';
+import IconButton from '@/components/ui/icon-button';
 
 // ** import sub-components
 import ImageGridListView from './ImageGridListView';
@@ -81,7 +82,7 @@ const ImageSelector = () => {
           </Checkbox>
 
           {/* Delete Icon */}
-          <button
+          <IconButton animate
             onClick={() => selectedNodeIds.forEach((id) => removeHistoryItem(id))}
             disabled={selectedNodeIds.length === 0}
             className={cn('-m-1', {
@@ -92,7 +93,7 @@ const ImageSelector = () => {
             <DeleteIcon
               color={selectedNodeIds.length === 0 ? 'var(--figma-color-text)' : 'var(--figma-color-bg-danger)'}
             />
-          </button>
+          </IconButton>
         </div>
         <VerticalSpace space="small" />
 
