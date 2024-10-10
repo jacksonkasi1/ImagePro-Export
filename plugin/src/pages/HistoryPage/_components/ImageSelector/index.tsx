@@ -61,30 +61,30 @@ const ImageSelector = () => {
   const handleDelete = async () => {
     setIsDeleting(true); // Start loading
     try {
-      const selectedCids = selectedItems
+      const selectedFileIds = selectedItems
         .map((id) => {
           const selectedItem = history.find((item) => item.id === id);
-          return selectedItem ? selectedItem.cid : '';
+          return selectedItem ? selectedItem.file_id : '';
         })
         .filter(Boolean);
 
-      const selectedThumbnailCids = selectedItems
+      const selectedThumbnailIds = selectedItems
         .map((id) => {
           const selectedItem = history.find((item) => item.id === id);
-          return selectedItem?.thumbnail_cid || '';
+          return selectedItem?.thumbnail_id || '';
         })
         .filter(Boolean);
 
-      const cidsToDelete = [...selectedCids, ...selectedThumbnailCids].filter(Boolean);
+      const idsToDelete = [...selectedFileIds, ...selectedThumbnailIds].filter(Boolean);
 
-      if (cidsToDelete.length === 0) {
-        notify.error('No valid CIDs found to delete.');
+      if (idsToDelete.length === 0) {
+        notify.error('No valid IDs found to delete.');
         setIsDeleting(false); // Stop loading
         return;
       }
 
       // Call API to delete the files
-      const result = await deleteFiles(cidsToDelete);
+      const result = await deleteFiles(idsToDelete);
 
       if (result.success) {
         notify.success('Files deleted successfully.');

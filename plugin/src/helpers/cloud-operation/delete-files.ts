@@ -2,18 +2,18 @@
 import { config } from '@/config';
 
 /**
- * Utility function to delete files by CIDs from Pinata.
+ * Utility function to delete files by IDs from Pinata.
  *
- * @param {string[]} cids - The list of CIDs to delete.
- * @returns {Promise<{ success: boolean, deletedCids: string[] }>} - The API response.
+ * @param {string[]} ids - The list of IDs to delete.
+ * @returns {Promise<{ success: boolean, deletedIds: string[] }>} - The API response.
  */
-export const deleteFiles = async (cids: string[]): Promise<{ success: boolean; deletedCids: string[] }> => {
+export const deleteFiles = async (ids: string[]): Promise<{ success: boolean; deletedIds: string[] }> => {
   const response = await fetch(`${config.FILE_SERVER}/api/upload-opt/delete-files`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ cids }),
+    body: JSON.stringify({ ids }),
   });
 
   if (!response.ok) {
