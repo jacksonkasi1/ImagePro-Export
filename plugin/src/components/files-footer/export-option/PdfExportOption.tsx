@@ -1,5 +1,5 @@
 import { Fragment, h, JSX } from 'preact';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 
 // ** import figma ui components & icons
 import {
@@ -24,6 +24,7 @@ import { useImageExportStore } from '@/store/use-image-export-store';
 
 // ** import types
 import { AssetsExportType, PdfFormatOption } from '@/types/enums';
+import { useUtilsStore } from '@/store/use-utils-store';
 
 // Mapping PdfFormatOption values to their respective display labels
 const pdfFormatOptions = [
@@ -44,10 +45,18 @@ interface PdfExportOptionProps {
 const PdfExportOption = ({ onHeightChange }: PdfExportOptionProps) => {
   const { pdfFormatOption, setPdfFormatOption, pdfPassword, setPdfPassword, assetsExportType, setAssetsExportType } =
     useImageExportStore();
+  const { currentPage } = useUtilsStore();
 
   const [vectorGradients, setVectorGradients] = useState<boolean>(false);
   const [outlineLinks, setOutlineLinks] = useState<boolean>(false);
   const [requirePassword, setRequirePassword] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Note: As of now merge pdf not implemented
+    if (currentPage === 'upload') {
+      setAssetsExportType(AssetsExportType.MULTI);
+    }
+  }, [currentPage]);
 
   const handlePdfFormatChange = (event: JSX.TargetedEvent<HTMLInputElement>) => {
     const formatValue = event.currentTarget.value as PdfFormatOption;
@@ -128,7 +137,12 @@ const PdfExportOption = ({ onHeightChange }: PdfExportOptionProps) => {
       <div className="grid items-center grid-cols-4 gap-2">
         <Text>Asset Export</Text>
         <div className="col-span-3">
-          <Dropdown onChange={handleAssetsExportChange} options={assetsExportTypes} value={assetsExportType} />
+          <Dropdown
+            onChange={handleAssetsExportChange}
+            options={assetsExportTypes}
+            value={assetsExportType}
+            disabled={currentPage !== 'ai'}
+          />
         </div>
       </div>
       {/* <VerticalSpace space="small" />
