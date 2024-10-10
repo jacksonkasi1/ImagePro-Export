@@ -852,6 +852,21 @@ video {
   height: 1.5rem;
 }
 
+.size-5 {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.size-2 {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+.\!size-2 {
+  width: 0.5rem !important;
+  height: 0.5rem !important;
+}
+
 .h-0 {
   height: 0px;
 }

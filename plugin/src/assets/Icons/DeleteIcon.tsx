@@ -46,7 +46,7 @@ const DeleteIcon: preact.FunctionComponent<DeleteIconProps> = ({
     stroke={color}
     strokeLinecap="round"
     strokeLinejoin="round"
-    className={cn(className, 'size-6')}
+    className={cn('size-6', className)}
     width={width}
     height={height}
   >
