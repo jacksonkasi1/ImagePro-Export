@@ -62,7 +62,7 @@ const ImageSelector = () => {
         clearOnEscapeKeyDown
         name="searchQuery"
         onInput={handleSearch}
-        placeholder="Search..."
+        placeholder="Search"
         value={searchQuery}
       />
       <Divider />
