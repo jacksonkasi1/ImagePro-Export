@@ -78,7 +78,8 @@ router.post(
         groupId,
       );
 
-      let thumbnailCid: string | null = null;
+      let thumbnail_cid: string | null = null;
+      let thumbnail_id: string | null = null;
 
       // If thumbnail is requested and the file is not a PDF, generate the thumbnail
       if (thumbnail && !isPdf) {
@@ -97,13 +98,14 @@ router.post(
           optimizedImage.contentType || "image/png",
         );
 
-        thumbnailCid = thumbnailUploadResponse.cid;
+        thumbnail_cid = thumbnailUploadResponse.cid;
       }
 
-      // Return the CID and thumbnail in JSON response, and clean up local files
+      // Return the CID and thumbnail with file id in JSON response, and clean up local files
       await sendJsonResponseAndCleanup(
         res,
-        { cid: response.cid, thumbnail_cid: thumbnailCid },
+        { cid: response.cid, thumbnail_cid, file_id: response.id, thumbnail_id },
+
         [outputFile.outputPath, filePath],
       );
     } catch (error: any) {
