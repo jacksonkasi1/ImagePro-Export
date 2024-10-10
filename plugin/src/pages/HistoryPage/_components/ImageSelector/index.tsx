@@ -19,37 +19,89 @@ import { useHistoryStore } from '@/store/use-history-store';
 
 // ** import utils
 import { cn } from '@/lib/utils';
+import notify from '@/lib/notify';
+
+// ** import helpers
+import { deleteFiles } from '@/helpers/cloud-operation';
 
 const ImageSelector = () => {
   const { history, removeHistoryItem } = useHistoryStore.getState();
 
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedNodeIds, setSelectedNodeIds] = useState<number[]>([]);
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false); // Loading state for delete button
 
-  const allNodesCount = history.length;
+  const allItemsCount = history.length;
 
   const filteredHistory = history.filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
   // Handle Select All Checkbox
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      // Select all nodes
+      // Select all items
       const allIds = history.map((item) => item.id);
-      setSelectedNodeIds(allIds);
+      setSelectedItems(allIds);
     } else {
-      // Deselect all nodes
-      setSelectedNodeIds([]);
+      // Deselect all items
+      setSelectedItems([]);
     }
   };
 
   const handleSelectImage = (id: number, checked: boolean) => {
-    setSelectedNodeIds((prev: number[]) => {
+    setSelectedItems((prev: number[]) => {
       if (checked) {
         return [...prev, id];
       } else {
-        return prev.filter((imageId) => imageId !== id);
+        return prev.filter((itemId) => itemId !== id);
       }
     });
+  };
+
+  // Handle file deletion
+  const handleDelete = async () => {
+    setIsDeleting(true); // Start loading
+    try {
+      const selectedCids = selectedItems
+        .map((id) => {
+          const selectedItem = history.find((item) => item.id === id);
+          return selectedItem ? selectedItem.cid : '';
+        })
+        .filter(Boolean);
+
+      const selectedThumbnailCids = selectedItems
+        .map((id) => {
+          const selectedItem = history.find((item) => item.id === id);
+          return selectedItem?.thumbnail_cid || '';
+        })
+        .filter(Boolean);
+
+      const cidsToDelete = [...selectedCids, ...selectedThumbnailCids].filter(Boolean);
+
+      if (cidsToDelete.length === 0) {
+        notify.error('No valid CIDs found to delete.');
+        setIsDeleting(false); // Stop loading
+        return;
+      }
+
+      // Call API to delete the files
+      const result = await deleteFiles(cidsToDelete);
+
+      if (result.success) {
+        notify.success('Files deleted successfully.');
+
+        // Remove the deleted items from the store
+        selectedItems.forEach((id) => removeHistoryItem(id));
+
+        // Clear the selected items
+        setSelectedItems([]);
+      } else {
+        notify.error('Failed to delete files.');
+      }
+    } catch (error: any) {
+      notify.error(`Error deleting files: ${error.message}`);
+    } finally {
+      setIsDeleting(false); // Stop loading
+    }
   };
 
   const handleSearch = (e: any) => {
@@ -73,25 +125,29 @@ const ImageSelector = () => {
 
         <div className="flex items-center justify-between">
           {/* Select All Checkbox */}
-          <Checkbox value={selectedNodeIds.length === allNodesCount} onValueChange={handleSelectAll}>
+          <Checkbox value={selectedItems.length === allItemsCount} onValueChange={handleSelectAll}>
             <Text>
               <Bold>
-                Selected: {selectedNodeIds.length}/{allNodesCount} exportable assets
+                Selected: {selectedItems.length}/{allItemsCount} exportable assets
               </Bold>
             </Text>
           </Checkbox>
 
           {/* Delete Icon */}
-          <IconButton animate
-            onClick={() => selectedNodeIds.forEach((id) => removeHistoryItem(id))}
-            disabled={selectedNodeIds.length === 0}
+          <IconButton
+            animate
+            onClick={handleDelete}
+            disabled={selectedItems.length === 0 || isDeleting} // Disable button when deleting
             className={cn('-m-1', {
-              'cursor-not-allowed opacity-50': selectedNodeIds.length === 0,
-              'text-danger hover:text-danger-hover': selectedNodeIds.length > 0,
+              'cursor-not-allowed opacity-50': selectedItems.length === 0 || isDeleting,
+              'text-danger hover:text-danger-hover': selectedItems.length > 0 && !isDeleting,
             })}
+            loading={isDeleting} // Show loading state on button
           >
             <DeleteIcon
-              color={selectedNodeIds.length === 0 ? 'var(--figma-color-text)' : 'var(--figma-color-bg-danger)'}
+              color={
+                selectedItems.length === 0 || isDeleting ? 'var(--figma-color-text)' : 'var(--figma-color-bg-danger)'
+              }
             />
           </IconButton>
         </div>
@@ -100,7 +156,7 @@ const ImageSelector = () => {
         {/* Image Grid/List View */}
         <ImageGridListView
           history={filteredHistory}
-          selectedNodeIds={selectedNodeIds}
+          selectedNodeIds={selectedItems}
           onSelectImage={handleSelectImage}
         />
       </Container>
