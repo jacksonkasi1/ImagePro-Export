@@ -8,8 +8,12 @@ import { config } from '@/config';
 import { ImageData } from '@/types/utils';
 import { AssetsExportType, PdfFormatOption } from '@/types/enums';
 
-// ** import hooks
+// ** import hooks & store
 import { useHistoryStore } from '@/store/use-history-store';
+import { useUtilsStore } from '@/store/use-utils-store';
+
+// ** import lib
+import notify from '@/lib/notify';
 
 interface UploadFilesParams {
   data: ImageData[];
@@ -24,6 +28,7 @@ interface UploadFilesParams {
 export const handleUploadFiles = async ({ data, exportSettings }: UploadFilesParams) => {
   const { pdfFormatOption, password } = exportSettings;
 
+  const { toggleHistory } = useUtilsStore.getState();
   const addHistoryItem = useHistoryStore.getState().addHistoryItem; // Use the addHistoryItem function from the store
 
   const formDataForFile = async (file: ImageData): Promise<FormData> => {
@@ -36,43 +41,53 @@ export const handleUploadFiles = async ({ data, exportSettings }: UploadFilesPar
 
     if (pdfFormatOption) formData.append('colorMode', pdfFormatOption);
     if (password) formData.append('password', password);
-    formData.append('thumbnail', 'true'); // Generate thumbnail for Image files
+    formData.append('thumbnail', 'true'); // Generate thumbnail for image files
 
     return formData;
   };
 
-  // Parallel file uploads
-  const uploadPromises = data.map(async (file) => {
-    const formData = await formDataForFile(file);
+  try {
+    // Parallel file uploads
+    const uploadPromises = data.map(async (file) => {
+      const formData = await formDataForFile(file);
 
-    // Upload each file individually
-    const response = await fetch(`${config.FILE_SERVER}/api/upload-opt/files-upload`, {
-      method: 'POST',
-      body: formData,
+      // Upload each file individually
+      const response = await fetch(`${config.FILE_SERVER}/api/upload-opt/files-upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error(`File upload failed for ${file.nodeName}`);
+
+      const result = await response.json();
+
+      // Determine file type based on formatOption
+      const fileType: 'image' | 'pdf' = ['JPG', 'PNG', 'WEBP'].includes(file.formatOption) ? 'image' : 'pdf';
+
+      return {
+        nodeName: file.nodeName,
+        cid: result.cid,
+        thumbnail_cid: result.thumbnail_cid,
+        dimensions: file.dimensions,
+        type: file.type,
+        file_type: fileType,
+      };
     });
 
-    if (!response.ok) throw new Error(`File upload failed for ${file.nodeName}`);
+    // Wait for all uploads to finish and map CIDs to nodeNames
+    const uploadResults = await Promise.all(uploadPromises);
 
-    const result = await response.json();
+    // Add the uploaded files to history with thumbnail_cid and file_type
+    uploadResults.forEach(({ nodeName, cid, thumbnail_cid, dimensions, type, file_type }) => {
+      addHistoryItem({ name: nodeName, type, cid, dimensions, thumbnail_cid, file_type });
+    });
 
-    // Determine file type based on formatOption
-    const fileType: 'image' | 'pdf' = ['JPG', 'PNG', 'WEBP'].includes(file.formatOption) ? 'image' : 'pdf';
+    // Notify success and toggle history view
+    notify.success('Files uploaded and added to history successfully!');
+    toggleHistory();
 
-    return {
-      nodeName: file.nodeName,
-      cid: result.cid,
-      thumbnail_cid: result.thumbnail_cid,
-      dimensions: file.dimensions,
-      type: file.type,
-      file_type: fileType,
-    };
-  });
-
-  // Wait for all uploads to finish and map CIDs to nodeNames
-  const uploadResults = await Promise.all(uploadPromises);
-
-  // Add the uploaded files to history with thumbnail_cid and file_type
-  uploadResults.forEach(({ nodeName, cid, thumbnail_cid, dimensions, type, file_type }) => {
-    addHistoryItem({ name: nodeName, type, cid, dimensions, thumbnail_cid, file_type });
-  });
+  } catch (error: any) {
+    // Notify error on any failure
+    notify.error(error.message || 'An error occurred during the file upload process.');
+  }
 };
