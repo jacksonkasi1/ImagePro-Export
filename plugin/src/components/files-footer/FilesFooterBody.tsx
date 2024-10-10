@@ -1,4 +1,5 @@
 import { h, Fragment, JSX } from 'preact';
+import { useState, useEffect } from 'preact/hooks';
 
 // ** import figma ui components & icons
 import {
@@ -17,8 +18,8 @@ import PdfExportOption from './export-option/PdfExportOption';
 import ImageExportOption from './export-option/ImageExportOption';
 
 // ** import store
-import { useUtilsStore } from '@/store/use-utils-store';
 import { useImageExportStore } from '@/store/use-image-export-store';
+import { useUtilsStore } from '@/store/use-utils-store';
 
 // ** import types
 import { FormatOption } from '@/types/enums';
@@ -41,16 +42,26 @@ const FilesFooterBody = ({
   contentHeight,
   handleHeightChange,
 }: FilesFooterBodyProps) => {
-  const { formatOption } = useImageExportStore();
+  const { formatOption, setFormatOption } = useImageExportStore();
   const { currentPage } = useUtilsStore();
+  const [formatOptions, setFormatOptions] = useState(
+    Object.values(FormatOption).map((value) => ({ value, text: value }))
+  );
 
-  // Filter formatOptions based on currentPage
-  const formatOptions = Object.values(FormatOption)
-    .filter((value) => !(currentPage === 'upload' && value === FormatOption.SVG)) // Remove SVG when on 'upload' page
-    .map((value) => ({
-      value,
-      text: value,
-    }));
+  useEffect(() => {
+    // Update formatOptions based on currentPage
+    let updatedOptions = Object.values(FormatOption).map((value) => ({ value, text: value }));
+
+    if (currentPage === 'upload') {
+      // Remove SVG option when on 'upload' page
+      updatedOptions = updatedOptions.filter((option) => option.value !== FormatOption.SVG);
+    }
+
+    setFormatOptions(updatedOptions);
+
+    // Fallback to first format option
+    setFormatOption(updatedOptions[0].value as FormatOption);
+  }, [currentPage, setFormatOption]);
 
   return (
     <Fragment>
@@ -70,7 +81,7 @@ const FilesFooterBody = ({
         </div>
       </Container>
 
-      {/* Footer Middle -  Dynamic Export Options */}
+      {/* Footer Middle - Dynamic Export Options */}
       <div
         ref={contentRef}
         style={{
