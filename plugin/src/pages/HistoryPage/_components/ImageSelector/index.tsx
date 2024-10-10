@@ -1,11 +1,11 @@
-import { h } from 'preact';
+import { Fragment, h } from 'preact';
 import { useState } from 'preact/hooks';
 
 // ** import custom icons
 import DeleteIcon from '@/assets/Icons/DeleteIcon';
 
 // ** import figma ui components & icons
-import { Bold, Container, Text, VerticalSpace } from '@create-figma-plugin/ui';
+import { Bold, Container, Divider, SearchTextbox, Text, useInitialFocus, VerticalSpace } from '@create-figma-plugin/ui';
 
 // ** import custom ui components
 import { Checkbox } from '@/components/ui/checkbox';
@@ -22,9 +22,12 @@ import { cn } from '@/lib/utils';
 const ImageSelector = () => {
   const { history, removeHistoryItem } = useHistoryStore.getState();
 
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedNodeIds, setSelectedNodeIds] = useState<number[]>([]);
 
   const allNodesCount = history.length;
+
+  const filteredHistory = history.filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
   // Handle Select All Checkbox
   const handleSelectAll = (checked: boolean) => {
@@ -48,43 +51,59 @@ const ImageSelector = () => {
     });
   };
 
+  const handleSearch = (e: any) => {
+    setSearchQuery(e.target.value);
+  };
+
   return (
-    <Container space="small" style={{ height: '100%' }}>
-      <VerticalSpace space="small" />
+    <Fragment>
+      <SearchTextbox
+        {...useInitialFocus()}
+        clearOnEscapeKeyDown
+        name="searchQuery"
+        onInput={handleSearch}
+        placeholder="Search..."
+        value={searchQuery}
+      />
+      <Divider />
 
-      <div className="flex items-center justify-between">
-        {/* Select All Checkbox */}
-        <Checkbox value={selectedNodeIds.length === allNodesCount} onValueChange={handleSelectAll}>
-          <Text>
-            <Bold>
-              Selected: {selectedNodeIds.length}/{allNodesCount} exportable assets
-            </Bold>
-          </Text>
-        </Checkbox>
+      <Container space="small" style={{ height: '100%' }}>
+        <VerticalSpace space="small" />
 
-        {/* Delete Icon */}
-        <button
-          onClick={() => selectedNodeIds.forEach((id) => removeHistoryItem(id))}
-          disabled={selectedNodeIds.length === 0}
-          className={cn('-m-1', {
-            'cursor-not-allowed opacity-50': selectedNodeIds.length === 0,
-            'text-danger hover:text-danger-hover': selectedNodeIds.length > 0,
-          })}
-        >
-          <DeleteIcon
-            color={
-              selectedNodeIds.length === 0
-                ? 'var(--figma-color-text)'
-                : 'var(--figma-color-bg-danger)'
-            }
-          />
-        </button>
-      </div>
-      <VerticalSpace space="small" />
+        <div className="flex items-center justify-between">
+          {/* Select All Checkbox */}
+          <Checkbox value={selectedNodeIds.length === allNodesCount} onValueChange={handleSelectAll}>
+            <Text>
+              <Bold>
+                Selected: {selectedNodeIds.length}/{allNodesCount} exportable assets
+              </Bold>
+            </Text>
+          </Checkbox>
 
-      {/* Image Grid/List View */}
-      <ImageGridListView history={history} selectedNodeIds={selectedNodeIds} onSelectImage={handleSelectImage} />
-    </Container>
+          {/* Delete Icon */}
+          <button
+            onClick={() => selectedNodeIds.forEach((id) => removeHistoryItem(id))}
+            disabled={selectedNodeIds.length === 0}
+            className={cn('-m-1', {
+              'cursor-not-allowed opacity-50': selectedNodeIds.length === 0,
+              'text-danger hover:text-danger-hover': selectedNodeIds.length > 0,
+            })}
+          >
+            <DeleteIcon
+              color={selectedNodeIds.length === 0 ? 'var(--figma-color-text)' : 'var(--figma-color-bg-danger)'}
+            />
+          </button>
+        </div>
+        <VerticalSpace space="small" />
+
+        {/* Image Grid/List View */}
+        <ImageGridListView
+          history={filteredHistory}
+          selectedNodeIds={selectedNodeIds}
+          onSelectImage={handleSelectImage}
+        />
+      </Container>
+    </Fragment>
   );
 };
 
