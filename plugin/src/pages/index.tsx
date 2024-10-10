@@ -5,12 +5,23 @@ import TabSwitch from '@/components/tab-switch';
 
 // ** import pages
 import AssetPage from './AssetPage';
+import UploadPage from './UploadPage';
+
+// ** import store
+import { useUtilsStore } from '@/store/use-utils-store';
+
+const pages = {
+  asset: <AssetPage />,
+  upload: <UploadPage />,
+};
 
 const Root = () => {
+  const { currentPage } = useUtilsStore();
+
   return (
     <Fragment>
       <TabSwitch />
-      <AssetPage />
+      {pages[currentPage as keyof typeof pages]}
     </Fragment>
   );
 };

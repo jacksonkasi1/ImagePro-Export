@@ -27,8 +27,14 @@ const HoverScrollbar = ({ children, className, thumbClassName, ...rest }: HoverS
     const contentHeight = contentRef.current.scrollHeight;
     const scrollTop = contentRef.current.scrollTop;
 
+
     // Calculate thumb height based on the container and content height ratio
-    const calculatedThumbHeight = (containerHeight / contentHeight) * containerHeight;
+    let calculatedThumbHeight = (containerHeight / contentHeight) * containerHeight;
+
+    // Ensure the thumb's height does not exceed 98% of the container's height
+    const maxThumbHeight = containerHeight * 0.98;
+    calculatedThumbHeight = Math.min(calculatedThumbHeight, maxThumbHeight);
+
     const calculatedThumbTop = (scrollTop / contentHeight) * containerHeight;
 
     setThumbHeight(calculatedThumbHeight);

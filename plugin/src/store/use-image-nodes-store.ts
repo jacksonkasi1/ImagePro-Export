@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 // ** import types
 import { NodeData } from '@/types/node';
@@ -19,4 +19,7 @@ export const useImageNodesStore = create<ImageNodesState>((set) => ({
 
   selectedNodesCount: 0,
   setSelectedNodesCount: (count: number) => set({ selectedNodesCount: count }),
+
+  selectedNodesOrder: [],
+  setSelectedNodesOrder: (order: string[]) => set({ selectedNodesOrder: order }),
 }));

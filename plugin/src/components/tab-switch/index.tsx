@@ -1,16 +1,22 @@
 import { JSX, h } from 'preact';
-import { useState } from 'preact/hooks';
 
 // ** import custom ui components
 import { SegmentedControl, SegmentedControlOption } from '@/components/ui/segmented-control';
 
+// ** import store
+import { useUtilsStore } from '@/store/use-utils-store';
+
 const TabSwitch = () => {
-  const [value, setValue] = useState<string>('asset');
+  const { currentPage, setCurrentPage } = useUtilsStore();
 
   const options: Array<SegmentedControlOption> = [
     {
       value: 'asset',
       label: 'Asset',
+    },
+    {
+      value: 'upload',
+      label: 'Upload',
     },
   ];
 
@@ -19,10 +25,10 @@ const TabSwitch = () => {
 
     // Sanitize newValue to prevent XSS
     const sanitizedValue = newValue.replace(/[<>]/g, '');
-    setValue(sanitizedValue);
+    setCurrentPage(sanitizedValue as 'asset' | 'upload' | 'ai');
   }
 
-  return <SegmentedControl onChange={handleChange} options={options} value={value} />;
+  return <SegmentedControl onChange={handleChange} options={options} value={currentPage} />;
 };
 
 export default TabSwitch;

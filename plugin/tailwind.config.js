@@ -19,6 +19,8 @@ export default {
 
         // Additional colors
         'f-border': 'var(--figma-color-border)', // Light: #e6e6e6,  Dark: #444444
+        'danger': 'var(--figma-color-bg-danger)', // Light: #f24822, Dark: #e03e1a
+        'danger-hover': 'var(--figma-color-bg-danger-hover)', // Light: #dc3412, Dark: #c4381c
 
         // Additional colors for scrollbar
         'scrollbar-thumb': 'var(--figma-color-border)',

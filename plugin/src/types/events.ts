@@ -30,3 +30,24 @@ export interface NotificationHandler extends EventHandler {
   name: 'NOTIFY';
   handler: (message: string, type: 'success' | 'warn' | 'error' | 'loading', timeout?: number) => void;
 }
+
+// Type for the data operations in clientStorage
+export interface SetDataHandler extends EventHandler {
+  name: 'SET_DATA';
+  handler: (payload: { handle: string; data: any }) => Promise<void>;
+}
+
+export interface GetDataHandler extends EventHandler {
+  name: 'GET_DATA';
+  handler: (payload: { handle: string }) => Promise<void>;
+}
+
+export interface DeleteDataHandler extends EventHandler {
+  name: 'DELETE_DATA';
+  handler: (payload: { handle: string }) => Promise<void>;
+}
+
+export interface ReceiveDataHandler extends EventHandler {
+  name: 'RECEIVE_DATA';
+  handler: (payload: { data: any, handle: string }) => void; // 'data' can be of any type
+}

@@ -1,4 +1,4 @@
-import { FormatOption } from "./enums";
+import { FormatOption } from './enums';
 
 export interface UtilsState {
   isLoading: boolean;
@@ -6,6 +6,19 @@ export interface UtilsState {
 
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+
+  currentPage: 'asset' | 'upload' | 'ai';
+  setCurrentPage: (tabPage: 'asset' | 'upload' | 'ai') => void;
+
+  isHistoryVisible: boolean;
+  setIsHistoryVisible: (isHistoryVisible: boolean) => void;
+
+  isExpanded: boolean;
+  setIsExpanded: (isExpanded: boolean) => void;
+
+  toggleHistory: () => void;
+  toggleExpansion: () => void;
+
 }
 
 export interface ImageData {
@@ -14,4 +27,24 @@ export interface ImageData {
   imageData: number[];
   formatOption: FormatOption;
   caseOption: string;
+  dimensions: {
+    width: number;
+    height: number;
+  };
+  type: string;
+}
+
+export interface HistoryItem {
+  id: number;
+  name: string;
+  type: string;
+  cid: string;
+  thumbnail_cid: string | null;
+  file_id: string;
+  thumbnail_id: string | null;
+  dimensions: {
+    width: number;
+    height: number;
+  };
+  file_type: 'pdf' | 'image';
 }

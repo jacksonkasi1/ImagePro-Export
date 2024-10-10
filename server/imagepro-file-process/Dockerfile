@@ -1,18 +1,17 @@
 # Stage 1: Build
-FROM node:18-alpine AS builder
+FROM node:18 AS builder
 
-# Install Ghostscript and pnpm
-RUN apk add --no-cache ghostscript \
+# Install Ghostscript, PDFtk, and pnpm
+RUN apt-get update && apt-get install -y ghostscript pdftk \
     && npm install -g pnpm
 
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and pnpm-lock.yaml (if it exists)
-COPY package.json ./ 
-COPY pnpm-lock.yaml ./ 
+# Copy package.json and pnpm-lock.yaml
+COPY package.json pnpm-lock.yaml ./
 
-# Install dependencies using pnpm
+# Install dependencies
 RUN pnpm install
 
 # Copy the rest of the application code
@@ -22,10 +21,10 @@ COPY . .
 RUN pnpm run build
 
 # Stage 2: Run
-FROM node:18-alpine
+FROM node:18
 
-# Install Ghostscript and pnpm
-RUN apk add --no-cache ghostscript \
+# Install Ghostscript, PDFtk, and pnpm
+RUN apt-get update && apt-get install -y ghostscript pdftk \
     && npm install -g pnpm
 
 # Set working directory
@@ -35,19 +34,22 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/public ./public
 
-# Copy package.json and pnpm-lock.yaml
-COPY package.json ./ 
-COPY pnpm-lock.yaml ./ 
+# Copy cron tasks
+COPY --from=builder /app/cron ./cron
 
-# Install only production dependencies
+# Copy package.json and pnpm-lock.yaml
+COPY package.json pnpm-lock.yaml ./
+
+# Install only production dependencies using pnpm
 RUN pnpm install --prod
 
-# Create the uploads directory and set permissions
-RUN mkdir -p /app/uploads && chmod -R 777 /app/uploads
+# Create necessary directories
+RUN mkdir -p /app/uploads /app/public/assets /app/logs \
+# Todo: Need to fix the permission issue
+    && chmod -R 777 /app/uploads /app/public/assets /app/logs
 
 # Expose port
-EXPOSE 7860,7861
+EXPOSE 7860
 
-
-# Start the server
-CMD ["node", "dist/index.js", "--host", "0.0.0.0", "--port", "7860"]
+# Start both server and cron tasks
+CMD ["sh", "-c", "node dist/index.js --host 0.0.0.0 --port 7860 & node cron/cron-tasks.js"]

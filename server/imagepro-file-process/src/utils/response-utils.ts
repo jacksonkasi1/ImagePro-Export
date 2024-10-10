@@ -17,13 +17,16 @@ export const sendFileAndCleanup = async (
   res.download(filePath, fileName, async (err) => {
     if (err) {
       console.error("Error sending file:", err);
-      res.status(500).json({ error: "Error sending the file." });
+      if (!res.headersSent) {
+        res.status(500).json({ error: "Error sending the file." });
+      }
     }
 
     // Clean up all files in filesToRemove array
     await cleanUpFiles(filesToRemove);
   });
 };
+
 
 /**
  * Utility function to clean up multiple files
@@ -34,8 +37,27 @@ export const cleanUpFiles = async (filePaths: string[]): Promise<void> => {
     try {
       await fs.unlink(filePath);
       console.log(`Successfully deleted file: ${filePath}`);
-    } catch (error) {
-      console.error(`Error deleting file ${filePath}:`, error);
+    } catch (error: any) {
+      if (error.code === 'ENOENT') {
+        console.warn(`⚠️  File not found, skipping: ${filePath}`);
+      } else {
+        console.error(`Error deleting file ${filePath}:`, error);
+      }
     }
   }
+};
+
+/**
+ * Sends a generic JSON response and cleans up specified files.
+ * @param res Express Response object
+ * @param jsonResponse JSON data to send in the response
+ * @param filesToRemove Array of file paths to delete
+ */
+export const sendJsonResponseAndCleanup = async (
+  res: Response,
+  jsonResponse: object,
+  filesToRemove: string[]
+) => {
+  res.json(jsonResponse);
+  await cleanUpFiles(filesToRemove);
 };

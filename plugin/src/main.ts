@@ -8,7 +8,15 @@ import { handleExportRequest } from '@/core/handlers/export-handler';
 
 // ** import types
 import { NodeData } from '@/types/node';
-import { ExportAssetsHandler, FetchImageNodesHandler, NotificationHandler, SearchNodesHandler } from '@/types/events';
+import {
+  DeleteDataHandler,
+  ExportAssetsHandler,
+  FetchImageNodesHandler,
+  GetDataHandler,
+  NotificationHandler,
+  SearchNodesHandler,
+  SetDataHandler,
+} from '@/types/events';
 
 export default function () {
   showUI({
@@ -40,6 +48,22 @@ const initializePlugin = async () => {
 };
 
 void initializePlugin();
+
+// Store the data in Figma's clientStorage
+on<SetDataHandler>('SET_DATA', async ({ handle, data }) => {
+  await figma.clientStorage.setAsync(handle, data);
+});
+
+// Retrieve the data from Figma's clientStorage
+on<GetDataHandler>('GET_DATA', async ({ handle }) => {
+  const data = await figma.clientStorage.getAsync(handle);
+  emit('RECEIVE_DATA', { data });
+});
+
+// Delete the data from Figma's clientStorage
+on<DeleteDataHandler>('DELETE_DATA', async ({ handle }) => {
+  await figma.clientStorage.deleteAsync(handle);
+});
 
 // ** Notification handler **
 on<NotificationHandler>('NOTIFY', (message, type, timeout = 3000) => {
@@ -80,4 +104,3 @@ on<SearchNodesHandler>('SEARCH_NODES', async (query) => {
 on<ExportAssetsHandler>('EXPORT_ASSETS', async (data) => {
   await handleExportRequest(data);
 });
-

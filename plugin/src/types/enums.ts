@@ -29,6 +29,11 @@ export enum ExportMode {
 
 export enum PdfFormatOption {
   RGB = 'RGB',
-  CYMK = 'CYMK',
+  CMYK = 'CMYK',
   Grayscale = 'Grayscale',
+}
+
+export enum AssetsExportType {
+  SINGLE = 'Single PDF file',
+  MULTI = 'Multiple PDF files',
 }
