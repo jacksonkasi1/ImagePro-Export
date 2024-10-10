@@ -15,6 +15,56 @@ const pinata = new PinataSDK({
   pinataGateway: env.PINATA_GATEWAY,
 });
 
+export type ContentType =
+  | "application/json"
+  | "application/xml"
+  | "text/plain"
+  | "text/html"
+  | "text/css"
+  | "text/javascript"
+  | "application/javascript"
+  | "image/jpeg"
+  | "image/webp"
+  | "image/png"
+  | "image/gif"
+  | "image/svg+xml"
+  | "audio/mpeg"
+  | "audio/ogg"
+  | "video/mp4"
+  | "application/pdf"
+  | "application/octet-stream"
+  | string;
+
+/**
+ * Get the file extension based on content type
+ * @param contentType MIME type of the file
+ * @returns The file extension as a string
+ */
+export const getExtensionFromContentType = (
+  contentType: ContentType,
+): string => {
+  const mimeTypes: { [key in ContentType]?: string } = {
+    "application/json": "json",
+    "application/xml": "xml",
+    "text/plain": "txt",
+    "text/html": "html",
+    "text/css": "css",
+    "text/javascript": "js",
+    "application/javascript": "js",
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "image/webp": "webp",
+    "image/gif": "gif",
+    "image/svg+xml": "svg",
+    "audio/mpeg": "mp3",
+    "audio/ogg": "ogg",
+    "video/mp4": "mp4",
+    "application/pdf": "pdf",
+    "application/octet-stream": "bin",
+  };
+  return mimeTypes[contentType] || "bin";
+};
+
 /**
  * Uploads a file to Pinata
  * @param filePathOrBuffer Path to the file or Buffer containing the file data
@@ -90,17 +140,20 @@ export const generateSignedURL = async (
 /**
  * Downloads a file from Pinata using CID
  * @param cid Content Identifier of the file
- * @returns Object containing file data and contentType
+ * @returns Object containing file data (Buffer) and contentType
  */
 export const downloadFileFromPinata = async (cid: string) => {
   try {
     const file = await pinata.gateways.get(cid);
 
-    if (!file.data) {
-      throw new Error("File not found.");
+    // Convert Blob to Buffer if needed
+    if (file.data instanceof Blob) {
+      const arrayBuffer = await file.data.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      return { data: buffer, contentType: file.contentType as ContentType };
     }
 
-    return file;
+    throw new Error("Invalid file format or file not found.");
   } catch (error: any) {
     throw new Error(`Error downloading file: ${error?.message}`);
   }
