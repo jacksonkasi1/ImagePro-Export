@@ -33,11 +33,23 @@ interface NormalListViewProps {
 }
 
 const NormalListView = ({ history, selectedNodeIds, onToggleSelection }: NormalListViewProps) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [loadingStates, setLoadingStates] = useState<{ [key: number]: boolean }>({});
 
   const handleToggleSelection = (id: number, isSelected: boolean) => {
     const newSelected = !isSelected; // Toggle the current state
     onToggleSelection(id, newSelected);
+  };
+
+  const handleDownload = async (itemId: number, cid: string, name: string) => {
+    setLoadingStates((prev) => ({ ...prev, [itemId]: true }));
+
+    try {
+      await downloadFile(cid, name);
+    } catch (error) {
+      notify.error('Failed to download the file.');
+    } finally {
+      setLoadingStates((prev) => ({ ...prev, [itemId]: false }));
+    }
   };
 
   return (
@@ -52,11 +64,6 @@ const NormalListView = ({ history, selectedNodeIds, onToggleSelection }: NormalL
           const thumbnail_img = item.thumbnail_cid
             ? `${config.PINATA_GATEWAY}/files/${item.thumbnail_cid}`
             : config.PDF_LOGO;
-
-          // Handle Download action
-          const handleDownload = () => {
-            downloadFile(item.cid, item.name, setIsLoading);
-          };
 
           // Handle Copy action
           const handleCopy = () => {
@@ -78,6 +85,7 @@ const NormalListView = ({ history, selectedNodeIds, onToggleSelection }: NormalL
                 isSelected ? 'bg-selected-bg' : 'bg-secondary-bg'
               )}
             >
+              {/* File Details */}
               <div
                 className="flex items-center w-full gap-2 cursor-pointer"
                 onClick={() => handleToggleSelection(item.id, isSelected)}
@@ -94,13 +102,13 @@ const NormalListView = ({ history, selectedNodeIds, onToggleSelection }: NormalL
                 </div>
 
                 {/* Image Details */}
-                <div className="flex flex-row items-center justify-between w-full gap-2 cursor-pointer">
+                <div className="flex flex-row items-center justify-start flex-grow w-full gap-2 cursor-pointer">
                   <div className="flex flex-col cursor-pointer">
                     <Text className={cn('truncate w-full font-medium cursor-pointer')}>
                       {truncateText(item.name, 17)}
                     </Text>
                     <div className="flex flex-row items-center justify-between w-full gap-1">
-                      <Text className="cursor-pointer text-secondary-text">{truncateText(item.type, 6)}</Text>
+                      <Text className="cursor-pointer text-secondary-text">{truncateText(item.type, 3)}</Text>
                       <Text className="cursor-pointer text-secondary-text">
                         {Math.round(item.dimensions.width)}x{Math.round(item.dimensions.height)}px
                       </Text>
@@ -109,14 +117,18 @@ const NormalListView = ({ history, selectedNodeIds, onToggleSelection }: NormalL
                 </div>
               </div>
               {/* Copy & Download */}
-              <div className="flex flex-row items-center justify-center w-full gap-2">
+              <div className="flex flex-row items-center justify-end w-full gap-2">
                 {/* Copy */}
                 <IconButton animate onClick={handleCopy}>
                   <CopyIcon className="size-5" />
                 </IconButton>
 
                 {/* Download */}
-                <IconButton animate onClick={handleDownload} loading={isLoading}>
+                <IconButton
+                  animate
+                  onClick={() => handleDownload(item.id, item.cid, item.name)}
+                  loading={loadingStates[item.id]}
+                >
                   <DownloadIcon className="size-5" />
                 </IconButton>
               </div>
