@@ -114,8 +114,6 @@ export const uploadFileToPinata = async (
  */
 export const deleteFilesFromPinata = async (cids: string[]) => {
   try {
-    console.log(`Deleting files from Pinata: ${cids}`);
-
     return await pinata.files.delete(cids);
   } catch (error: any) {
     throw new Error(`Error deleting files: ${error?.message}`);
