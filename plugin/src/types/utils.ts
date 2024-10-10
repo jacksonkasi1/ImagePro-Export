@@ -12,6 +12,13 @@ export interface UtilsState {
 
   isHistoryVisible: boolean;
   setIsHistoryVisible: (isHistoryVisible: boolean) => void;
+
+  isExpanded: boolean;
+  setIsExpanded: (isExpanded: boolean) => void;
+
+  toggleHistory: () => void;
+  toggleExpansion: () => void;
+
 }
 
 export interface ImageData {

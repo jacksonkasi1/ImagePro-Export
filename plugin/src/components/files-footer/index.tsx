@@ -29,16 +29,16 @@ import { AssetsExportType, CaseOption, FormatOption } from '@/types/enums';
 const FilesFooter = () => {
   const transitionDuration = 300; // Duration in milliseconds
 
-  const [isExpanded, setIsExpanded] = useState(false); // State to manage footer expansion
   const [contentHeight, setContentHeight] = useState('0px');
   const [heightTrigger, setHeightTrigger] = useState(false);
+  const [footerBottomHeight, setFooterBottomHeight] = useState(48);
 
   const contentRef = useRef<HTMLDivElement>(null);
   const footerBottomRef = useRef<HTMLDivElement>(null);
-  const [footerBottomHeight, setFooterBottomHeight] = useState(48);
 
-  const { currentPage, isLoading, setIsLoading, isHistoryVisible, setIsHistoryVisible } = useUtilsStore();
   const { selectedNodeIds, selectedNodesOrder } = useImageNodesStore();
+  const { currentPage, isLoading, setIsLoading, isHistoryVisible, isExpanded, toggleHistory, toggleExpansion } =
+    useUtilsStore();
   const {
     caseOption,
     exportScaleOption,
@@ -134,38 +134,13 @@ const FilesFooter = () => {
     }
   };
 
-  // Handler function to toggle the expansion of FilesFooterBody
-  const handleFilesFooterToggle = () => {
-    if (isHistoryVisible) {
-      setIsHistoryVisible(false); // Switch back to FilesFooterBody
-    }
-    setIsExpanded((prev) => !prev); // Toggle FilesFooterBody expansion
-  };
-
-  // Handler function to toggle the visibility and expansion of HistoryFooterBody
-  const handleHistoryToggle = () => {
-    if (isHistoryVisible) {
-      // Close the footer
-      setIsExpanded(false);
-
-      // Wait for the height transition to finish before unmounting
-      setTimeout(() => {
-        setIsHistoryVisible(false);
-      }, transitionDuration);
-    } else {
-      // Switch to HistoryFooterBody and expand it
-      setIsHistoryVisible(true);
-      setIsExpanded(true); // Ensure it's expanded
-    }
-  };
-
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-primary-bg">
       {/* Conditionally render FilesFooterBody or HistoryFooterBody based on isHistoryVisible */}
       {!isHistoryVisible ? (
         <FilesFooterBody
           isExpanded={isExpanded}
-          handleFilesFooterToggle={handleFilesFooterToggle}
+          handleFilesFooterToggle={toggleExpansion}
           handleFormatChange={handleFormatChange}
           contentRef={contentRef}
           contentHeight={contentHeight}
@@ -174,7 +149,7 @@ const FilesFooter = () => {
       ) : (
         <HistoryFooterBody
           isExpanded={isExpanded}
-          handleFilesFooterToggle={handleHistoryToggle}
+          handleFilesFooterToggle={toggleHistory}
           contentRef={contentRef}
           contentHeight={contentHeight}
           handleHeightChange={handleHeightChange}
@@ -198,7 +173,7 @@ const FilesFooter = () => {
           {currentPage === 'upload' && (
             <button
               className="flex items-center gap-1 px-2 py-1 transition-colors ease-in-out rounded cursor-pointer duration-250 text-primary-text hover:bg-selected-bg"
-              onClick={handleHistoryToggle} // Switch to HistoryFooterBody or close it if already open
+              onClick={toggleHistory} // Switch to HistoryFooterBody or close it if already open
             >
               <HistoryIcon width={20} height={20} /> History
             </button>
