@@ -1,4 +1,9 @@
 import { h } from 'preact';
+import { useState } from 'preact/hooks';
+
+// ** import icons
+import CopyIcon from '@/assets/Icons/CopyIcon';
+import DownloadIcon from '@/assets/Icons/DownloadIcon';
 
 // ** import figma ui components
 import { Text } from '@create-figma-plugin/ui';
@@ -8,6 +13,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 
 // ** import utils
 import { cn, truncateText } from '@/lib/utils';
+
+// ** import helpers
+import { downloadFile } from '@/helpers/file-operation';
+import { copyToClipboard } from '@/helpers/other';
 
 // ** import types
 import { HistoryItem } from '@/types/utils';
@@ -22,6 +31,8 @@ interface NormalListViewProps {
 }
 
 const NormalListView = ({ history, selectedNodeIds, onToggleSelection }: NormalListViewProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleToggleSelection = (id: number, isSelected: boolean) => {
     const newSelected = !isSelected; // Toggle the current state
     onToggleSelection(id, newSelected);
@@ -40,16 +51,37 @@ const NormalListView = ({ history, selectedNodeIds, onToggleSelection }: NormalL
             ? `${config.PINATA_GATEWAY}/files/${item.thumbnail_cid}`
             : config.PDF_LOGO;
 
+          const file_url = item.cid ? `${config.PINATA_GATEWAY}/files/${item.cid}` : '';
+
+          // Handle Download action
+          const handleDownload = () => {
+            downloadFile(file_url, item.name, setIsLoading);
+          };
+
+          // Handle Copy action
+          const handleCopy = () => {
+            const fileLink = `${config.PINATA_GATEWAY}/files/${item.cid}`;
+            copyToClipboard(fileLink)
+              .then(() => {
+                console.log('Link copied to clipboard:', fileLink);
+              })
+              .catch((error) => {
+                console.error('Failed to copy link:', error);
+              });
+          };
+
           return (
             <div
               key={`${item.id}_${index}`}
               className={cn(
-                'relative rounded-lg flex items-center cursor-pointer px-2',
+                'relative rounded-lg flex justify-between items-center px-2',
                 isSelected ? 'bg-selected-bg' : 'bg-secondary-bg'
               )}
-              onClick={() => handleToggleSelection(item.id, isSelected)}
             >
-              <div className="flex items-center w-full gap-2 cursor-pointer">
+              <div
+                className="flex items-center w-full gap-2 cursor-pointer"
+                onClick={() => handleToggleSelection(item.id, isSelected)}
+              >
                 {/* Checkbox */}
                 <Checkbox
                   value={isSelected}
@@ -75,6 +107,18 @@ const NormalListView = ({ history, selectedNodeIds, onToggleSelection }: NormalL
                     </div>
                   </div>
                 </div>
+              </div>
+              {/* Copy & Download */}
+              <div className="flex flex-row items-center justify-around w-full gap-2 cursor-pointer">
+                {/* Copy */}
+                <button onClick={handleCopy}>
+                  <CopyIcon  width={20} height={20} />
+                </button>
+
+                {/* Download */}
+                <button onClick={handleDownload} disabled={isLoading}>
+                  <DownloadIcon width={20} height={20} />
+                </button>
               </div>
             </div>
           );
