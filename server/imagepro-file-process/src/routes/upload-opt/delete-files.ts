@@ -7,28 +7,28 @@ const router = Router();
 
 /**
  * @route POST /upload-opt/delete-files
- * @desc Delete multiple files from Pinata using CIDs
- * @body { cids: string[] }
+ * @desc Delete multiple files from Pinata using File IDs
+ * @body { ids: string[] }
  */
 router.post(
   "/delete-files",
   async (req: Request, res: Response) => {
     try {
-      const { cids } = req.body;
+      const { ids } = req.body;
 
       // Validate cids
-      if (!cids || !Array.isArray(cids)) {
-        return res.status(400).json({ error: "CIDs must be an array." });
+      if (!ids || !Array.isArray(ids)) {
+        return res.status(400).json({ error: "IDs must be an array." });
       }
-      if (cids.length === 0 || cids.length > 1000) {
-        return res.status(400).json({ error: "You can delete between 1 and 1000 CIDs." });
+      if (ids.length === 0 || ids.length > 1000) {
+        return res.status(400).json({ error: "You can delete between 1 and 1000 IDs." });
       }
 
       // Delete files from Pinata
-      await deleteFilesFromPinata(cids);
+      await deleteFilesFromPinata(ids);
 
       // Respond with success and deleted CIDs
-      res.json({ success: true, deletedCids: cids });
+      res.json({ success: true, deletedCids: ids });
     } catch (error: any) {
       console.error("Server Error:", error);
       res.status(500).json({ error: error.message || "Internal Server Error." });
