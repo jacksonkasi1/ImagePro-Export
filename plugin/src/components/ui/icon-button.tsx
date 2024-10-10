@@ -52,7 +52,7 @@ export const IconButton: preact.FunctionComponent<IconButtonProps> = ({
       {...props} // ** Spread standard button attributes
       disabled={loading || props.disabled} // ** Disable button when loading or explicitly disabled
       className={cn(
-        'flex items-center justify-center p-2 rounded cursor-pointer',
+        'flex items-center justify-center p-1 rounded cursor-pointer',
         animationClasses, // ** Apply animation classes if animate is true
         variant === 'hover' ? 'hover:bg-gray-100 dark:hover:bg-btn-bg-dark' : '',
         loading ? 'cursor-not-allowed opacity-70' : '', // ** Loading styles
@@ -65,7 +65,9 @@ export const IconButton: preact.FunctionComponent<IconButtonProps> = ({
           <Spinner className="size-5" />
         </div>
       ) : (
-        <span className={isActive ? 'text-current font-bold' : 'text-current'}>{children}</span>
+        <span className={cn(
+            'cursor-pointer',
+            isActive ? 'text-current font-bold' : 'text-current')}>{children}</span>
       )}
     </button>
   );
