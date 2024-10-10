@@ -40,19 +40,17 @@ const DownloadIcon: preact.FunctionComponent<DownloadIconProps> = ({
 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={width}
-    height={height}
-    viewBox="0 0 24 24"
     fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
     stroke={color}
-    strokeWidth="1.5"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className={cn(className, 'lucide lucide-download')}
+    className={cn(className, 'size-6')}
+    width={width}
+    height={height}
   >
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-    <path d="M7 10l5 5 5-5" />
-    <path d="M12 15V3" />
+    <path d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
   </svg>
 );
 
