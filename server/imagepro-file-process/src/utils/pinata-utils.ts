@@ -113,8 +113,15 @@ export const uploadFileToPinata = async (
  * @param cids(cid) Array of Content Identifiers of the files
  */
 export const deleteFilesFromPinata = async (cids: string[]) => {
-  return await pinata.files.delete(cids);
+  try {
+    console.log(`Deleting files from Pinata: ${cids}`);
+
+    return await pinata.files.delete(cids);
+  } catch (error: any) {
+    throw new Error(`Error deleting files: ${error?.message}`);
+  }
 };
+
 
 /**
  * Generates a signed URL for a file in Pinata with an expiration time in days
@@ -138,13 +145,13 @@ export const generateSignedURL = async (
 };
 
 /**
- * Downloads a file from Pinata using CID
- * @param cid Content Identifier of the file
+ * Downloads a file from Pinata using ID
+ * @param id Content Identifier of the file
  * @returns Object containing file data (Buffer) and contentType
  */
-export const downloadFileFromPinata = async (cid: string) => {
+export const downloadFileFromPinata = async (id: string) => {
   try {
-    const file = await pinata.gateways.get(cid);
+    const file = await pinata.gateways.get(id);
 
     // Convert Blob to Buffer if needed
     if (file.data instanceof Blob) {
