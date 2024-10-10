@@ -40,6 +40,8 @@ export interface HistoryItem {
   type: string;
   cid: string;
   thumbnail_cid: string | null;
+  file_id: string;
+  thumbnail_id: string | null;
   dimensions: {
     width: number;
     height: number;

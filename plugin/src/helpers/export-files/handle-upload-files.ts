@@ -65,12 +65,11 @@ export const handleUploadFiles = async ({ data, exportSettings }: UploadFilesPar
       const fileType: 'image' | 'pdf' = ['JPG', 'PNG', 'WEBP'].includes(file.formatOption) ? 'image' : 'pdf';
 
       return {
+        ...result, // Spread result to include cid, thumbnail_cid, file_id, and thumbnail_id
         nodeName: file.nodeName,
-        cid: result.cid,
-        thumbnail_cid: result.thumbnail_cid,
         dimensions: file.dimensions,
         type: file.type,
-        file_type: fileType,
+        file_type: fileType, 
       };
     });
 
@@ -78,14 +77,13 @@ export const handleUploadFiles = async ({ data, exportSettings }: UploadFilesPar
     const uploadResults = await Promise.all(uploadPromises);
 
     // Add the uploaded files to history with thumbnail_cid and file_type
-    uploadResults.forEach(({ nodeName, cid, thumbnail_cid, dimensions, type, file_type }) => {
-      addHistoryItem({ name: nodeName, type, cid, dimensions, thumbnail_cid, file_type });
+    uploadResults.forEach((result) => {
+      addHistoryItem({ ...result, name: result.nodeName });
     });
 
     // Notify success and toggle history view
     notify.success('Files uploaded and added to history successfully!');
     toggleHistory();
-
   } catch (error: any) {
     // Notify error on any failure
     notify.error(error.message || 'An error occurred during the file upload process.');
