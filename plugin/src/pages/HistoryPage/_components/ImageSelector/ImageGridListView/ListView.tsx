@@ -111,7 +111,7 @@ const NormalListView = ({ history, selectedNodeIds, onToggleSelection }: NormalL
                 </div>
               </div>
               {/* Copy & Download */}
-              <div className="flex flex-row items-center justify-around w-full gap-2 cursor-pointer">
+              <div className="flex flex-row items-center justify-center w-full gap-2">
                 {/* Copy */}
                 <IconButton animate onClick={handleCopy}>
                   <CopyIcon className="size-5" />
