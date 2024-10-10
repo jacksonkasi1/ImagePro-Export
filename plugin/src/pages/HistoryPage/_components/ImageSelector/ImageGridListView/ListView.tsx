@@ -64,7 +64,7 @@ const NormalListView = ({ history, selectedNodeIds, onToggleSelection }: NormalL
                     {truncateText(item.name, 17)}
                   </Text>
                   <div className="flex flex-row items-center justify-between w-full gap-1">
-                    <Text className="cursor-pointer text-secondary-text">{truncateText(item.type, 10)}</Text>
+                    <Text className="cursor-pointer text-secondary-text">{truncateText(item.type, 6)}</Text>
                     <Text className="cursor-pointer text-secondary-text">
                       {Math.round(item.dimensions.width)}x{Math.round(item.dimensions.height)}px
                     </Text>

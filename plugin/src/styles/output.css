@@ -1530,6 +1530,14 @@ video {
   background-color: var(--figma-color-bg-brand);
 }
 
+.bg-danger {
+  background-color: var(--figma-color-bg-danger);
+}
+
+.bg-danger-hover {
+  background-color: var(--figma-color-bg-danger-hover);
+}
+
 .bg-emerald-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(52 211 153 / var(--tw-bg-opacity));
@@ -1623,14 +1631,6 @@ video {
 .bg-yellow-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(250 204 21 / var(--tw-bg-opacity));
-}
-
-.bg-danger {
-  background-color: var(--figma-color-bg-danger);
-}
-
-.bg-danger-hover {
-  background-color: var(--figma-color-bg-danger-hover);
 }
 
 .fill-current {
@@ -1769,6 +1769,14 @@ video {
   color: rgb(37 99 235 / var(--tw-text-opacity));
 }
 
+.text-danger {
+  color: var(--figma-color-bg-danger);
+}
+
+.text-danger-hover {
+  color: var(--figma-color-bg-danger-hover);
+}
+
 .text-gray-400 {
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));
@@ -1809,14 +1817,6 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.text-danger {
-  color: var(--figma-color-bg-danger);
-}
-
-.text-danger-hover {
-  color: var(--figma-color-bg-danger-hover);
 }
 
 .underline {
@@ -2241,6 +2241,10 @@ video {
   background-color: var(--figma-color-bg-tertiary);
 }
 
+.hover\:bg-danger-hover:hover {
+  background-color: var(--figma-color-bg-danger-hover);
+}
+
 .hover\:bg-gray-100:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
@@ -2259,16 +2263,12 @@ video {
   background-color: var(--figma-color-bg-selected);
 }
 
-.hover\:bg-danger-hover:hover {
-  background-color: var(--figma-color-bg-danger-hover);
+.hover\:text-danger-hover:hover {
+  color: var(--figma-color-bg-danger-hover);
 }
 
 .hover\:text-primary-text:hover {
   color: var(--figma-color-text);
-}
-
-.hover\:text-danger-hover:hover {
-  color: var(--figma-color-bg-danger-hover);
 }
 
 .hover\:opacity-90:hover {
