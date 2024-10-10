@@ -23,7 +23,7 @@ const ImageGridListView = ({ history, selectedNodeIds, onSelectImage }: ImageGri
 
   return (
     <HoverScrollbar className="overflow-visible" thumbClassName="-mr-2" style={{ height: '410px' }}>
-      <div className="gap-2 mr-2 h-fit">
+      <div className="h-full gap-2 mr-2">
         <ListView history={history} selectedNodeIds={selectedNodeIds} onToggleSelection={handleToggleSelection} />
       </div>
     </HoverScrollbar>
