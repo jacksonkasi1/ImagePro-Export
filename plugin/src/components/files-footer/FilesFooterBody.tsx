@@ -17,6 +17,7 @@ import PdfExportOption from './export-option/PdfExportOption';
 import ImageExportOption from './export-option/ImageExportOption';
 
 // ** import store
+import { useUtilsStore } from '@/store/use-utils-store';
 import { useImageExportStore } from '@/store/use-image-export-store';
 
 // ** import types
@@ -41,11 +42,15 @@ const FilesFooterBody = ({
   handleHeightChange,
 }: FilesFooterBodyProps) => {
   const { formatOption } = useImageExportStore();
+  const { currentPage } = useUtilsStore();
 
-  const formatOptions = Object.values(FormatOption).map((value) => ({
-    value,
-    text: value,
-  }));
+  // Filter formatOptions based on currentPage
+  const formatOptions = Object.values(FormatOption)
+    .filter((value) => !(currentPage === 'upload' && value === FormatOption.SVG)) // Remove SVG when on 'upload' page
+    .map((value) => ({
+      value,
+      text: value,
+    }));
 
   return (
     <Fragment>

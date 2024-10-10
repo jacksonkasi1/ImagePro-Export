@@ -20,11 +20,11 @@ import { formatWarningMessage } from '@create-figma-plugin/utilities';
 import notify from '@/lib/notify';
 
 // ** import store
+import { useUtilsStore } from '@/store/use-utils-store';
 import { useImageExportStore } from '@/store/use-image-export-store';
 
 // ** import types
 import { AssetsExportType, PdfFormatOption } from '@/types/enums';
-import { useUtilsStore } from '@/store/use-utils-store';
 
 // Mapping PdfFormatOption values to their respective display labels
 const pdfFormatOptions = [
