@@ -1,6 +1,11 @@
 // ** import helpers
 import { compressImage } from '@/helpers/file-operation/compress-image';
-import { config } from '@/config'; // Import base URL from config
+
+// import sub-helpers
+import { getMimeType } from './mime-type';
+
+// ** import config
+import { config } from '@/config';
 
 // ** import types
 import { FormatOption, PdfFormatOption } from '@/types/enums';
@@ -28,10 +33,11 @@ export const processFiles = async ({
   pdfFormatOption = PdfFormatOption.RGB, // Default to RGB
   password,
 }: ProcessFilesParams): Promise<Blob> => {
+  console.log({ formatOption });
 
   // Create a blob from the imageData
   const blob = new Blob([new Uint8Array(imageData)], {
-    type: `image/png`,
+    type: getMimeType(formatOption),
   });
 
   // Handle image compression for JPG, PNG, and WEBP formats
@@ -44,7 +50,6 @@ export const processFiles = async ({
 
   // Handle PDF processing if the format is PDF
   if (formatOption === 'PDF') {
-
     // If exporting PDF in RGB format without password, return the blob directly
     if (pdfFormatOption === PdfFormatOption.RGB && !password) {
       return new Blob([new Uint8Array(await blob.arrayBuffer())], { type: 'application/pdf' });

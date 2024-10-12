@@ -24,12 +24,16 @@ export const handleExportRequest = async (data: ExportRequestData) => {
       continue;
     }
 
+    console.log("data")
+    console.log(data)
+
+
     if (node) {
       for (const scale of scales) {
         let exportSettings: ExportSettings;
         switch (formatOption) {
           case 'PDF':
-            exportSettings = { format: 'PDF' } as ExportSettingsPDF;
+            exportSettings = { format: 'PDF', colorProfile: 'DOCUMENT' } as ExportSettingsPDF;
             break;
           case 'SVG':
             exportSettings = { format: 'SVG' } as ExportSettingsSVG;
@@ -51,6 +55,9 @@ export const handleExportRequest = async (data: ExportRequestData) => {
             console.error('Unsupported format option:', formatOption);
             continue;
         }
+
+        console.log("exportSettings", exportSettings)
+
 
         try {
           const imageData = await node.exportAsync(exportSettings);
