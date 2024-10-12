@@ -14,11 +14,16 @@ export const uploadPdfFile = (
   file: Express.Multer.File,
   cb: FileFilterCallback,
 ): void => {
+  console.log(`File received for upload: ${file.originalname}, mimetype: ${file.mimetype}`);
+
   if (file.mimetype !== "application/pdf") {
+    console.error("Upload Error: Only PDF files are allowed.");
     return cb(new Error("Only PDF files are allowed."));
   }
+
   cb(null, true);
 };
+
 
 /**
  * Remove file from the file system

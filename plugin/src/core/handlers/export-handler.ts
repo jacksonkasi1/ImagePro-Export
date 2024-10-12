@@ -29,7 +29,7 @@ export const handleExportRequest = async (data: ExportRequestData) => {
         let exportSettings: ExportSettings;
         switch (formatOption) {
           case 'PDF':
-            exportSettings = { format: 'PDF' } as ExportSettingsPDF;
+            exportSettings = { format: 'PDF', colorProfile: 'DOCUMENT' } as ExportSettingsPDF;
             break;
           case 'SVG':
             exportSettings = { format: 'SVG' } as ExportSettingsSVG;
