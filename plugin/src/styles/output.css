@@ -1923,6 +1923,10 @@ video {
   text-decoration-line: underline;
 }
 
+.underline-offset-1 {
+  text-underline-offset: 1px;
+}
+
 .opacity-0 {
   opacity: 0;
 }
@@ -2373,6 +2377,10 @@ video {
 
 .hover\:text-primary-text:hover {
   color: var(--figma-color-text);
+}
+
+.hover\:underline:hover {
+  text-decoration-line: underline;
 }
 
 .hover\:opacity-90:hover {

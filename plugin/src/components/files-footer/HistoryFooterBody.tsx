@@ -6,9 +6,9 @@ import {
   Container,
   Text,
   IconChevronUp32,
-  IconChevronDown32,
   Divider,
   VerticalSpace,
+  Link,
 } from '@create-figma-plugin/ui';
 import HistoryPage from '@/pages/HistoryPage';
 
@@ -40,8 +40,15 @@ const HistoryFooterBody = ({
           <Text>
             <Bold>History</Bold>
           </Text>
+
           <button className="rounded-sm text-primary-text">
-            {isExpanded ? <IconChevronDown32 /> : <IconChevronUp32 />}
+            {isExpanded ? (
+              <Text>
+                <Bold className="cursor-pointer text-danger hover:danger-hover">Close</Bold>
+              </Text>
+            ) : (
+              <IconChevronUp32 />
+            )}
           </button>
         </div>
       </Container>
