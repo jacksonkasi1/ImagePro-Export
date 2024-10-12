@@ -33,7 +33,6 @@ export const processFiles = async ({
   pdfFormatOption = PdfFormatOption.RGB, // Default to RGB
   password,
 }: ProcessFilesParams): Promise<Blob> => {
-  console.log({ formatOption });
 
   // Create a blob from the imageData
   const blob = new Blob([new Uint8Array(imageData)], {

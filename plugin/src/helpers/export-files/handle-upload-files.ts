@@ -63,13 +63,12 @@ export const handleUploadFiles = async ({ data, exportSettings }: UploadFilesPar
 
       // Determine file type based on formatOption
       const fileType: 'image' | 'pdf' = ['JPG', 'PNG', 'WEBP'].includes(file.formatOption) ? 'image' : 'pdf';
-
       return {
         ...result, // Spread result to include cid, thumbnail_cid, file_id, and thumbnail_id
         nodeName: file.nodeName,
         dimensions: file.dimensions,
         type: file.type,
-        file_type: fileType, 
+        file_type: fileType,
       };
     });
 

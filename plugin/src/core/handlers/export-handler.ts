@@ -24,10 +24,6 @@ export const handleExportRequest = async (data: ExportRequestData) => {
       continue;
     }
 
-    console.log("data")
-    console.log(data)
-
-
     if (node) {
       for (const scale of scales) {
         let exportSettings: ExportSettings;
@@ -55,9 +51,6 @@ export const handleExportRequest = async (data: ExportRequestData) => {
             console.error('Unsupported format option:', formatOption);
             continue;
         }
-
-        console.log("exportSettings", exportSettings)
-
 
         try {
           const imageData = await node.exportAsync(exportSettings);
