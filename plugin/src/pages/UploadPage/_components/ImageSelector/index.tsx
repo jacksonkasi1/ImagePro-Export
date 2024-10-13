@@ -1,9 +1,6 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
-// ** import custom icons
-import DeleteIcon from '@/assets/Icons/DeleteIcon';
-
 // ** import figma ui components & icons
 import { Bold, Container, IconList32, Text, VerticalSpace } from '@create-figma-plugin/ui';
 
@@ -18,9 +15,6 @@ import { arrayBufferToBase64 } from '@/helpers/file-operation';
 
 // ** import store
 import { useImageNodesStore } from '@/store/use-image-nodes-store';
-
-// ** import utils
-import { cn } from '@/lib/utils';
 
 const ImageSelector = () => {
   const { allNodes, allNodesCount, selectedNodeIds, setSelectedNodeIds, setSelectedNodesCount, setSelectedNodesOrder } =
