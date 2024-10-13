@@ -49,7 +49,7 @@ const HistoryFooterBody = ({
             </Text>
             {isExpanded && (
               <Tooltip
-                id="example-tooltip"
+                id="history-tooltip"
                 content={
                   <span>
                     You can save a maximum of <strong>1000 files</strong> in history.

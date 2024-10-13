@@ -26,14 +26,10 @@ const Tooltip: FunctionalComponent<TooltipProps> = ({ id, content, place = 'top'
         content={typeof content === 'string' ? content : undefined} // Only pass string to content
         place={place}
         className={cn(className)}
-
-        // style={{
-        //   backgroundColor: 'var(--color-primary-bg)',
-        //   color: 'var(--color-primary-text)',
-        //   padding: '0.5rem',
-        //   borderRadius: '0.25rem',
-        //   boxShadow: '0 4px 6px var(--figma-color-border)',
-        // }}
+        style={{
+          opacity: 1, // Ensure full visibility of the tooltip
+          zIndex: 9999, // Bring the tooltip to the front
+        }}
       >
         {/* Render JSX content if provided */}
         {typeof content !== 'string' && content}
