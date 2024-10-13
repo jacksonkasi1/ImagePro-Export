@@ -59,12 +59,10 @@ const ImageSelector = () => {
   }, [selectedNodeIds, setSelectedNodesCount]);
 
   useEffect(() => {
-    if (!isSingleExport && selectedNodesOrder.length) {
+    if (isSingleExport) {
       setViewType('list');
-    } else {
-      setViewType(isSingleExport ? 'list' : 'grid');
     }
-  }, [assetsExportType, selectedNodesOrder]);
+  }, [assetsExportType, isSingleExport]);
 
   // Handle Select All Checkbox
   const handleSelectAll = (checked: boolean) => {
