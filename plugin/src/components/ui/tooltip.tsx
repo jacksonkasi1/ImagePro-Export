@@ -1,5 +1,5 @@
 import { h, FunctionalComponent, JSX } from 'preact';
-import Tooltip from 'rc-tooltip';
+import RcTooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap.css';
 
 // ** import utils
@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 type TriggerAction = 'hover' | 'click' | 'focus' | 'contextMenu';
 
 // ** Define Tooltip Props
-interface CustomTooltipProps {
+interface TooltipProps {
   placement?: 'top' | 'bottom' | 'left' | 'right'; // Tooltip placement
   trigger?: TriggerAction | TriggerAction[]; // Trigger events, e.g., hover, click
   overlay: JSX.Element | string; // Content inside the tooltip
@@ -19,7 +19,7 @@ interface CustomTooltipProps {
   overlayClassName?: string; // Additional classes for the overlay
 }
 
-const CustomTooltip: FunctionalComponent<CustomTooltipProps> = ({
+const Tooltip: FunctionalComponent<TooltipProps> = ({
   placement = 'top',
   trigger = ['hover'],
   overlay,
@@ -27,9 +27,9 @@ const CustomTooltip: FunctionalComponent<CustomTooltipProps> = ({
   arrow = true,
   visible,
   overlayClassName,
-}: CustomTooltipProps) => {
+}: TooltipProps) => {
   return (
-    <Tooltip
+    <RcTooltip
       placement={placement}
       trigger={trigger}
       overlay={overlay}
@@ -38,8 +38,8 @@ const CustomTooltip: FunctionalComponent<CustomTooltipProps> = ({
       overlayClassName={cn('bg-primary-bg text-primary-text p-2 rounded shadow-md', overlayClassName)}
     >
       {children}
-    </Tooltip>
+    </RcTooltip>
   );
 };
 
-export default CustomTooltip;
+export default Tooltip;

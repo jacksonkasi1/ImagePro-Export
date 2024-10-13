@@ -33,7 +33,9 @@ const HistoryFooterBody = ({
             <Text>
               <Bold>History</Bold>
             </Text>
+            <CustomTooltip overlay="This is a tooltip!" placement="bottom">
             <IconCircleInfo16 />
+            </CustomTooltip>
           </div>
 
           <button className="rounded-sm text-primary-text">
