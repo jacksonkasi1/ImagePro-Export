@@ -48,8 +48,16 @@ const HistoryFooterBody = ({
               <Bold>History</Bold>
             </Text>
             {isExpanded && (
-             <Tooltip id="example-tooltip" content={<span>This is a <strong>tooltip</strong> with JSX!</span>} place="bottom">
-           <IconCircleInfo16 />
+              <Tooltip
+                id="example-tooltip"
+                content={
+                  <span>
+                    You can save a maximum of <strong>1000 files</strong> in history.
+                  </span>
+                }
+                place="bottom"
+              >
+                <IconCircleInfo16 />
               </Tooltip>
             )}
           </div>
