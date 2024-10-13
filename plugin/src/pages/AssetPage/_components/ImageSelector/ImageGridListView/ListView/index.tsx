@@ -9,7 +9,7 @@ import { useImageExportStore } from '@/store/use-image-export-store';
 
 // ** import types
 import { NodeData } from '@/types/node';
-import { AssetsExportType } from '@/types/enums';
+import { AssetsExportType, FormatOption } from '@/types/enums';
 
 interface ImageListViewProps {
   allNodes: NodeData[];
@@ -19,9 +19,9 @@ interface ImageListViewProps {
 }
 
 const ImageListView = ({ allNodes, base64Images, selectedNodeIds, onToggleSelection }: ImageListViewProps) => {
-  const { assetsExportType } = useImageExportStore();
+  const { assetsExportType, formatOption } = useImageExportStore();
 
-  const isDragView = assetsExportType === AssetsExportType.SINGLE;
+  const isDragView = assetsExportType === AssetsExportType.SINGLE && formatOption === FormatOption.PDF;
 
   return (
     <Fragment>
