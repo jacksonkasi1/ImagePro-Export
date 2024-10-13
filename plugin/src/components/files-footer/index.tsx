@@ -113,6 +113,13 @@ const FilesFooter = () => {
     }
 
     try {
+
+      if(AssetsExportType.SINGLE && nodeIdsToExport.length < 2) {
+        console.warn(formatWarningMessage('Please select at least two images to export.'));
+        notify.warn('Please select at least two images to export.');
+        return;
+      }
+
       if (nodeIdsToExport.length === 0) {
         console.warn(formatWarningMessage('Please select at least one image to export.'));
         notify.warn('Please select at least one image to export.');
