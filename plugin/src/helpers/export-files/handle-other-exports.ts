@@ -1,12 +1,8 @@
-// ** import third-party libraries
-import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
-
 // ** import helpers
-import { arrayBufferToBase64, processFiles, renameFile, saveFile } from '@/helpers/file-operation';
+import { arrayBufferToBase64, processFiles, renameFile, saveFiles } from '@/helpers/file-operation';
 
 // ** import types
-import { ImageData } from '@/types/utils';
+import { FileData, ImageData } from '@/types/utils';
 import { ExportMode, PdfFormatOption, AssetsExportType } from '@/types/enums';
 
 interface OtherExportsParams {
@@ -23,17 +19,12 @@ interface OtherExportsParams {
 export const handleOtherExports = async ({ data, exportMode, exportSettings }: OtherExportsParams) => {
   const { quality, pdfFormatOption, password } = exportSettings;
 
-  let zip: JSZip | undefined;
-  if (exportMode === ExportMode.ZIP) {
-    zip = new JSZip();
-  }
-
-  const fileNames = new Set<string>();
+  const fileNames: FileData[] = [];
 
   // Process all files in parallel
   await Promise.all(
-    data.map(async (image) => {
-      const { nodeName, imageData, formatOption, caseOption } = image;
+    data.map(async (item) => {
+      const { nodeName, imageData, formatOption, caseOption } = item;
 
       // Process each file
       const processedBlob = await processFiles({
@@ -44,24 +35,17 @@ export const handleOtherExports = async ({ data, exportMode, exportSettings }: O
         password,
       });
 
-      // Convert processed image to base64
-      const base64Image = await arrayBufferToBase64(new Uint8Array(await processedBlob.arrayBuffer()), formatOption);
+      // Convert processed buffer to base64
+      const base64Data = await arrayBufferToBase64(new Uint8Array(await processedBlob.arrayBuffer()), formatOption);
 
       // Rename the file
       let fileName = renameFile({ name: nodeName, format: formatOption, caseOption });
-      while (fileNames.has(fileName)) {
-        fileName = renameFile({ name: nodeName, format: formatOption, caseOption, count: fileNames.size + 1 });
-      }
-      fileNames.add(fileName);
 
-      // Save the file (in ZIP or individually)
-      await saveFile(fileName, processedBlob, exportMode, zip, base64Image);
+      // Collect file data
+      fileNames.push({ fileName, fileBlob: processedBlob, base64Data });
     })
   );
 
-  // If export mode is ZIP, generate and download the ZIP file
-  if (exportMode === ExportMode.ZIP && zip) {
-    const content = await zip.generateAsync({ type: 'blob' });
-    saveAs(content, 'exported_files.zip');
-  }
+  // Use the utility function to handle file saving
+  await saveFiles(fileNames, exportMode);
 };

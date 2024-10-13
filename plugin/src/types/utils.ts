@@ -18,7 +18,6 @@ export interface UtilsState {
 
   toggleHistory: () => void;
   toggleExpansion: () => void;
-
 }
 
 export interface ImageData {
@@ -47,4 +46,10 @@ export interface HistoryItem {
     height: number;
   };
   file_type: 'pdf' | 'image';
+}
+
+export interface FileData {
+  fileName: string;
+  fileBlob: Blob;
+  base64Data?: string;
 }
