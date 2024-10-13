@@ -1,44 +1,44 @@
 import { h, FunctionalComponent, JSX } from 'preact';
-import RcTooltip from 'rc-tooltip';
-import 'rc-tooltip/assets/bootstrap.css';
+import { Tooltip as ReactTooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css';
 
 // ** import utils
 import { cn } from '@/lib/utils';
 
-// ** Define TriggerAction Type
-type TriggerAction = 'hover' | 'click' | 'focus' | 'contextMenu';
-
 // ** Define Tooltip Props
 interface TooltipProps {
-  placement?: 'top' | 'bottom' | 'left' | 'right'; // Tooltip placement
-  trigger?: TriggerAction | TriggerAction[]; // Trigger events, e.g., hover, click
-  overlay: JSX.Element | string; // Content inside the tooltip
+  id: string; // Unique ID for the tooltip
+  content: string | JSX.Element; // Tooltip content (text or JSX)
+  place?: 'top' | 'bottom' | 'left' | 'right'; // Tooltip placement
   children: JSX.Element; // The element that will trigger the tooltip
-  arrow?: boolean; // Option to display the arrow
-  visible?: boolean; // Control tooltip visibility programmatically
-  overlayClassName?: string; // Additional classes for the overlay
+  className?: string; // Additional custom classes
 }
 
-const Tooltip: FunctionalComponent<TooltipProps> = ({
-  placement = 'top',
-  trigger = ['hover'],
-  overlay,
-  children,
-  arrow = true,
-  visible,
-  overlayClassName,
-}: TooltipProps) => {
+const Tooltip: FunctionalComponent<TooltipProps> = ({ id, content, place = 'top', children, className }) => {
   return (
-    <RcTooltip
-      placement={placement}
-      trigger={trigger}
-      overlay={overlay}
-      arrowContent={arrow ? <div className="rc-tooltip-arrow-inner" /> : null}
-      visible={visible}
-      overlayClassName={cn('bg-primary-bg text-primary-text p-2 rounded shadow-md', overlayClassName)}
-    >
-      {children}
-    </RcTooltip>
+    <div>
+      {/* Child element that triggers the tooltip */}
+      <div data-tooltip-id={id}>{children}</div>
+
+      {/* Tooltip itself */}
+      <ReactTooltip
+        id={id}
+        content={typeof content === 'string' ? content : undefined} // Only pass string to content
+        place={place}
+        className={cn(className)}
+
+        // style={{
+        //   backgroundColor: 'var(--color-primary-bg)',
+        //   color: 'var(--color-primary-text)',
+        //   padding: '0.5rem',
+        //   borderRadius: '0.25rem',
+        //   boxShadow: '0 4px 6px var(--figma-color-border)',
+        // }}
+      >
+        {/* Render JSX content if provided */}
+        {typeof content !== 'string' && content}
+      </ReactTooltip>
+    </div>
   );
 };
 

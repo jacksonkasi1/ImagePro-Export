@@ -1,7 +1,21 @@
 import { h, Fragment } from 'preact';
 
 // ** import figma ui components & icons
-import { Bold, Container, Text, IconChevronUp32, Divider, VerticalSpace, IconInfo32, IconCircleInfo16 } from '@create-figma-plugin/ui';
+import {
+  Bold,
+  Container,
+  Text,
+  IconChevronUp32,
+  Divider,
+  VerticalSpace,
+  IconInfo32,
+  IconCircleInfo16,
+} from '@create-figma-plugin/ui';
+
+// ** import custom ui components
+import Tooltip from '@/components/ui/tooltip';
+
+// ** import sub-pages
 import HistoryPage from '@/pages/HistoryPage';
 
 // Props for HistoryFooterBody
@@ -33,9 +47,11 @@ const HistoryFooterBody = ({
             <Text>
               <Bold>History</Bold>
             </Text>
-            <CustomTooltip overlay="This is a tooltip!" placement="bottom">
-            <IconCircleInfo16 />
-            </CustomTooltip>
+            {isExpanded && (
+             <Tooltip id="example-tooltip" content={<span>This is a <strong>tooltip</strong> with JSX!</span>} place="bottom">
+           <IconCircleInfo16 />
+              </Tooltip>
+            )}
           </div>
 
           <button className="rounded-sm text-primary-text">
