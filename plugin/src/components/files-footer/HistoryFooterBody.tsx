@@ -44,7 +44,7 @@ const HistoryFooterBody = ({
           <button className="rounded-sm text-primary-text">
             {isExpanded ? (
               <Text>
-                <Bold className="cursor-pointer text-danger hover:danger-hover">Close</Bold>
+                <span className="cursor-pointer text-danger hover:danger-hover">Close</span>
               </Text>
             ) : (
               <IconChevronUp32 />
