@@ -1,8 +1,8 @@
 # Stage 1: Build
 FROM node:18 AS builder
 
-# Install Ghostscript, PDFtk, and pnpm
-RUN apt-get update && apt-get install -y ghostscript pdftk \
+# Install Ghostscript and pnpm
+RUN apt-get update && apt-get install -y ghostscript \
     && npm install -g pnpm
 
 # Set working directory
@@ -23,8 +23,8 @@ RUN pnpm run build
 # Stage 2: Run
 FROM node:18
 
-# Install Ghostscript, PDFtk, and pnpm
-RUN apt-get update && apt-get install -y ghostscript pdftk \
+# Install Ghostscript and pnpm
+RUN apt-get update && apt-get install -y ghostscript \
     && npm install -g pnpm
 
 # Set working directory
