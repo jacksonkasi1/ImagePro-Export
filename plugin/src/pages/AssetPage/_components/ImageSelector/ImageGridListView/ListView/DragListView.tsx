@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import { useEffect } from 'preact/hooks';
 
 // ** import third-party lib
 import { Flipper, Flipped } from 'react-flip-toolkit';
@@ -32,6 +33,32 @@ interface DragListViewProps {
 const DragListView = ({ allNodes, base64Images, selectedNodeIds, onToggleSelection }: DragListViewProps) => {
   const setSelectedNodesOrder = useImageNodesStore((state) => state.setSelectedNodesOrder);
   const selectedNodesOrder = useImageNodesStore((state) => state.selectedNodesOrder || []);
+
+  // Automatically select up to two items whenever allNodes changes
+  useEffect(() => {
+    if (allNodes.length > 0) {
+      const firstNodes = allNodes.slice(0, 2).map((node) => node.id);
+
+      // If there are already two selected nodes, don't auto-select any new ones
+      if (selectedNodeIds.length >= 2) {
+        return;
+      }
+
+      // Find how many new nodes need to be selected to have a total of 2
+      const nodesToSelect = firstNodes.filter((id) => !selectedNodeIds.includes(id));
+      const remainingToSelect = Math.max(0, 2 - selectedNodeIds.length);
+
+      // If there are nodes that need to be selected
+      if (nodesToSelect.length > 0 && remainingToSelect > 0) {
+        const updatedSelectedNodes = [...selectedNodeIds, ...nodesToSelect.slice(0, remainingToSelect)];
+
+        setSelectedNodesOrder(updatedSelectedNodes);
+
+        // Update the selection status using the provided toggle function
+        nodesToSelect.slice(0, remainingToSelect).forEach((id) => onToggleSelection(id, true));
+      }
+    }
+  }, [allNodes]);
 
   // Separate selected and unselected nodes
   const selectedNodes = allNodes
@@ -117,7 +144,9 @@ const DragListView = ({ allNodes, base64Images, selectedNodeIds, onToggleSelecti
                                 {/* Image Details */}
                                 <div className="flex flex-row items-center justify-between w-full gap-2">
                                   <div className="flex flex-col">
-                                    <Text className={cn('truncate w-full font-medium')}>{truncateText(image.name, 17)}</Text>
+                                    <Text className={cn('truncate w-full font-medium')}>
+                                      {truncateText(image.name, 17)}
+                                    </Text>
                                     <div className="flex flex-row items-center justify-between w-full gap-1">
                                       <Text className="text-secondary-text">{truncateText(image.type, 10)}</Text>
                                       <Text className="text-secondary-text">
@@ -154,10 +183,7 @@ const DragListView = ({ allNodes, base64Images, selectedNodeIds, onToggleSelecti
                 return (
                   <Flipped flipId={image.id} key={image.id}>
                     <div
-                      className={cn(
-                        'relative rounded-lg flex items-center cursor-pointer px-2',
-                        'bg-secondary-bg'
-                      )}
+                      className={cn('relative rounded-lg flex items-center cursor-pointer px-2', 'bg-secondary-bg')}
                       onClick={() => handleToggleSelection(image.id, false)}
                     >
                       <div className="flex items-center w-full gap-2 cursor-pointer">
