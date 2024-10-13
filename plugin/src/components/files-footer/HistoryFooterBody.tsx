@@ -1,15 +1,7 @@
 import { h, Fragment } from 'preact';
 
 // ** import figma ui components & icons
-import {
-  Bold,
-  Container,
-  Text,
-  IconChevronUp32,
-  Divider,
-  VerticalSpace,
-  Link,
-} from '@create-figma-plugin/ui';
+import { Bold, Container, Text, IconChevronUp32, Divider, VerticalSpace, IconInfo32, IconCircleInfo16 } from '@create-figma-plugin/ui';
 import HistoryPage from '@/pages/HistoryPage';
 
 // Props for HistoryFooterBody
@@ -37,9 +29,12 @@ const HistoryFooterBody = ({
           className="flex items-center justify-between h-10 cursor-pointer"
           onClick={() => handleFilesFooterToggle(!isExpanded)} // Toggle expansion state
         >
-          <Text>
-            <Bold>History</Bold>
-          </Text>
+          <div className="flex items-center justify-center gap-1">
+            <Text>
+              <Bold>History</Bold>
+            </Text>
+            <IconCircleInfo16 />
+          </div>
 
           <button className="rounded-sm text-primary-text">
             {isExpanded ? (
