@@ -12,7 +12,8 @@
     "skipLibCheck": true,
     "sourceMap": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "typings/**/*.d.ts"],
+
   "exclude": ["node_modules", "dist", "temp"]
 
 }
