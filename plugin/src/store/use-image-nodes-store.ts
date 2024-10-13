@@ -21,5 +21,8 @@ export const useImageNodesStore = create<ImageNodesState>((set) => ({
   setSelectedNodesCount: (count: number) => set({ selectedNodesCount: count }),
 
   selectedNodesOrder: [],
-  setSelectedNodesOrder: (order: string[]) => set({ selectedNodesOrder: order }),
+  setSelectedNodesOrder: (order: string[] | ((prev: string[]) => string[])) =>
+    set((state) => ({
+      selectedNodesOrder: typeof order === 'function' ? order(state.selectedNodesOrder) : order,
+    })),
 }));

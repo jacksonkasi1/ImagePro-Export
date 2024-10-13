@@ -23,6 +23,7 @@ export enum CaseOption {
 
 export enum ExportMode {
   ZIP = 'ZIP',
+  AUTO = 'AUTO',
   FOLDER = 'FOLDER',
   RAW = 'RAW',
 }

@@ -6,10 +6,16 @@ import {
   Container,
   Text,
   IconChevronUp32,
-  IconChevronDown32,
   Divider,
   VerticalSpace,
+  IconInfo32,
+  IconCircleInfo16,
 } from '@create-figma-plugin/ui';
+
+// ** import custom ui components
+import Tooltip from '@/components/ui/tooltip';
+
+// ** import sub-pages
 import HistoryPage from '@/pages/HistoryPage';
 
 // Props for HistoryFooterBody
@@ -37,11 +43,33 @@ const HistoryFooterBody = ({
           className="flex items-center justify-between h-10 cursor-pointer"
           onClick={() => handleFilesFooterToggle(!isExpanded)} // Toggle expansion state
         >
-          <Text>
-            <Bold>History</Bold>
-          </Text>
+          <div className="flex items-center justify-center gap-1">
+            <Text>
+              <Bold>History</Bold>
+            </Text>
+            {isExpanded && (
+              <Tooltip
+                id="history-tooltip"
+                content={
+                  <span>
+                    You can save a maximum of <strong>1000 files</strong> in history.
+                  </span>
+                }
+                place="bottom"
+              >
+                <IconCircleInfo16 />
+              </Tooltip>
+            )}
+          </div>
+
           <button className="rounded-sm text-primary-text">
-            {isExpanded ? <IconChevronDown32 /> : <IconChevronUp32 />}
+            {isExpanded ? (
+              <Text>
+                <span className="cursor-pointer text-danger hover:danger-hover">Close</span>
+              </Text>
+            ) : (
+              <IconChevronUp32 />
+            )}
           </button>
         </div>
       </Container>

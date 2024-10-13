@@ -21,6 +21,8 @@ import { useImageExportStore } from '@/store/use-image-export-store';
 import { handleExportComplete } from '@/helpers/export-files';
 
 // ** import types
+import { NodeData } from '@/types/node';
+import { ImageData } from '@/types/utils';
 import { AssetsExportType, PdfFormatOption } from '@/types/enums';
 import { ExportCompleteHandler, FetchImageNodesHandler } from '@/types/events';
 
@@ -69,14 +71,14 @@ function Plugin() {
   }, [currentPage]);
 
   useEffect(() => {
-    on<FetchImageNodesHandler>('FETCH_IMAGE_NODES', (image_nodes) => {
+    on<FetchImageNodesHandler>('FETCH_IMAGE_NODES', (image_nodes: NodeData[]) => {
       setAllNodes(image_nodes);
       setAllNodesCount(image_nodes.length);
       setSelectedNodeIds([]);
       setSelectedNodesCount(0);
     });
 
-    on<ExportCompleteHandler>('EXPORT_COMPLETE', (data) => {
+    on<ExportCompleteHandler>('EXPORT_COMPLETE', (data: ImageData[]) => {
       handleExportComplete({
         data,
         setIsLoading,

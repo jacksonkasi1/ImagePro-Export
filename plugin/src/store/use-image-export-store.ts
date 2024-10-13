@@ -24,7 +24,7 @@ export const useImageExportStore = create<ImageExportState>((set) => ({
   quality: 80, // default 80% quality
   setQuality: (quality: number) => set({ quality }),
 
-  exportMode: ExportMode.ZIP, // default export mode
+  exportMode: ExportMode.AUTO, // default export mode
   setExportMode: (mode: ExportMode) => set({ exportMode: mode }), // Setter for export mode
 
   pdfFormatOption: PdfFormatOption.RGB, // default to RGB

@@ -56,6 +56,9 @@ const PdfExportOption = ({ onHeightChange }: PdfExportOptionProps) => {
     if (currentPage === 'upload') {
       setAssetsExportType(AssetsExportType.MULTI);
     }
+    if(pdfPassword) {
+      setRequirePassword(true);
+    }
   }, [currentPage]);
 
   const handlePdfFormatChange = (event: JSX.TargetedEvent<HTMLInputElement>) => {
@@ -78,7 +81,7 @@ const PdfExportOption = ({ onHeightChange }: PdfExportOptionProps) => {
 
   const handleRequirePasswordChange = (newValue: boolean) => {
     setRequirePassword(newValue);
-    if (!newValue) {
+    if (!newValue && pdfPassword) {
       setPdfPassword('');
     }
     // Notify parent when password protection is toggled
