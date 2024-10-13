@@ -67,6 +67,14 @@ const ImageSelector = () => {
         return prev.filter((imageId) => imageId !== id);
       }
     });
+
+    setSelectedNodesOrder((prev: string[]) => {
+      if (checked) {
+        return [...prev, id];
+      } else {
+        return prev.filter((imageId) => imageId !== id);
+      }
+    });
   };
 
   return (
