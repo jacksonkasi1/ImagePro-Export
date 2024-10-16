@@ -14,7 +14,9 @@ export const uploadPdfFile = (
   file: Express.Multer.File,
   cb: FileFilterCallback,
 ): void => {
-  console.log(`File received for upload: ${file.originalname}, mimetype: ${file.mimetype}`);
+  console.log(
+    `File received for upload: ${file.originalname}, mimetype: ${file.mimetype}`,
+  );
 
   if (file.mimetype !== "application/pdf") {
     console.error("Upload Error: Only PDF files are allowed.");
@@ -23,7 +25,6 @@ export const uploadPdfFile = (
 
   cb(null, true);
 };
-
 
 /**
  * Remove file from the file system
@@ -34,6 +35,21 @@ export const removeFile = async (filePath: string): Promise<void> => {
     await fs.unlink(filePath);
   } catch (error) {
     console.error(`Error deleting the file: ${filePath}`, error);
+  }
+};
+
+/**
+ * Remove multiple files from the file system
+ * @param filePaths Array of file paths to be deleted
+ */
+export const removeFiles = async (filePaths: string[]): Promise<void> => {
+  for (const filePath of filePaths) {
+    try {
+      await fs.unlink(filePath);
+      console.log(`Successfully deleted file: ${filePath}`);
+    } catch (error) {
+      console.error(`Error deleting the file: ${filePath}`, error);
+    }
   }
 };
 
@@ -61,7 +77,6 @@ export const uploadMultiplePdfFiles = (
   }
   cb(null, true);
 };
-
 
 /**
  * Filters uploaded files to allow only PDFs and specific image types
