@@ -20,7 +20,7 @@ const upload = multer({
 });
 
 /**
- * POST /api/pdf-opt/merge-and-upload
+ * POST /api/upload-opt/merge-and-upload
  * Upload multiple PDFs, optionally apply password protection and grayscale/CMYK conversion,
  * merge them into one, and upload the result to Pinata.
  */
