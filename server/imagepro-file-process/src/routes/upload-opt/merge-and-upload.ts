@@ -3,6 +3,9 @@ import { Router, Request, Response } from "express";
 // ** import third-party lib
 import multer from "multer";
 
+// ** import config
+import { env } from "../../config/env";
+
 // ** import utils
 import { uploadMultiplePdfFiles, removeFiles } from "../../utils/file-utils";
 import { mergePdfFiles, convertToColorMode, applyPassword } from "../../utils/pdf-utils";
@@ -18,6 +21,9 @@ const upload = multer({
   limits: { fileSize: 20 * 1024 * 1024, files: 30 }, // 20 MB per file limit and max 30 files
   fileFilter: uploadMultiplePdfFiles,
 });
+
+
+const groupId = env.PINATA_PUBLIC_GROUP_ID; // Pinata public group id, to get file without signed URL
 
 /**
  * POST /api/upload-opt/merge-and-upload
@@ -62,7 +68,7 @@ router.post("/merge-and-upload", (req: Request, res: Response) => {
       }
 
       // Upload the merged PDF to Pinata
-      const response = await uploadFileToPinata(outputFile.outputPath, outputFile.outputFilename);
+      const response = await uploadFileToPinata(outputFile.outputPath, outputFile.outputFilename, groupId, 'application/pdf');
 
       // Clean up both original and merged files
       const filePathsToRemove = files.map((file: Express.Multer.File) => file.path).concat([outputFile.outputPath]);
