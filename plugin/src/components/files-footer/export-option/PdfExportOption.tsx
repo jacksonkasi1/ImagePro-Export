@@ -144,7 +144,7 @@ const PdfExportOption = ({ onHeightChange }: PdfExportOptionProps) => {
             onChange={handleAssetsExportChange}
             options={assetsExportTypes}
             value={assetsExportType}
-            disabled={currentPage !== 'asset'}
+            disabled={currentPage === 'ai'}
           />
         </div>
       </div>
