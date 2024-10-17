@@ -38,7 +38,7 @@ export const handleExportComplete = async ({
     if (enableUpload) {
       // If uploads are enabled, handle file uploads regardless of export type
       if (assetsExportType === AssetsExportType.SINGLE) {
-        await handleUploadSinglePdf({ data, exportMode, exportSettings });
+        await handleUploadSinglePdf({ data, exportSettings });
       } else {
         await handleUploadFiles({ data, exportSettings });
       }
