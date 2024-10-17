@@ -12,6 +12,7 @@ import uploadFileRouter from "./upload-opt/upload-file";
 import deleteFilesRouter from "./upload-opt/delete-files";
 import downloadFileRouter from "./upload-opt/download-file";
 import getFileUrlRouter from "./upload-opt/get-file-url";
+import pdfMergeUploadRouter from "./upload-opt/merge-and-upload";
 // import createGroupsRouter from "./upload-opt/create-groups";
 
 const router = Router();
@@ -24,10 +25,12 @@ router.use("/pdf-opt", mergeRouter);
 router.use("/pdf-opt", pdfProcessRouter);
 
 // Files upload routes
+
 router.use("/upload-opt", uploadFileRouter);
 router.use("/upload-opt", deleteFilesRouter);
 router.use("/upload-opt", downloadFileRouter);
 router.use("/upload-opt", getFileUrlRouter);
+router.use("/upload-opt", pdfMergeUploadRouter);
 // router.use("/upload-opt", createGroupsRouter);
 
 export default router;
