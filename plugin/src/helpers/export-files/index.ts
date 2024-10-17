@@ -6,6 +6,7 @@ import { ExportMode, PdfFormatOption, AssetsExportType } from '@/types/enums';
 import { handleSinglePdfExport } from './handle-single-pdf-export';
 import { handleOtherExports } from './handle-other-exports';
 import { handleUploadFiles } from './handle-upload-files';
+import { handleUploadSinglePdf } from './handle-upload-single-pdf';
 
 interface ExportCompleteParams {
   data: ImageData[];
@@ -35,10 +36,17 @@ export const handleExportComplete = async ({
 
   try {
     if (enableUpload) {
-      await handleUploadFiles({ data, exportSettings });
+      // If uploads are enabled, handle file uploads regardless of export type
+      if (assetsExportType === AssetsExportType.SINGLE) {
+        await handleUploadSinglePdf({ data, exportSettings });
+      } else {
+        await handleUploadFiles({ data, exportSettings });
+      }
     } else if (assetsExportType === AssetsExportType.SINGLE) {
+      // Handle single PDF export if upload is not enabled
       await handleSinglePdfExport({ data, exportMode, exportSettings });
     } else {
+      // Handle all other export cases
       await handleOtherExports({ data, exportMode, exportSettings });
     }
   } catch (error) {

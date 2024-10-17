@@ -14,7 +14,7 @@ import { useHistoryStore } from '@/store/use-history-store';
 
 interface SyncedStore {
   storageKey: string;
-  storeApi: StoreApi<any>;
+  storeApi: StoreApi<unknown>;
 }
 
 export const useStorageManager = () => {
