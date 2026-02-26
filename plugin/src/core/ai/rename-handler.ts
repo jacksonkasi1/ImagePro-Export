@@ -102,9 +102,9 @@ export async function handleAIRenameRequest(payload: {
 
   // Step 3: Export images for AI if readImage is enabled
   // Max 2 concurrent exports to avoid blocking the Figma sandbox
-  const groups: AIRenameGroup[] = [];
+  const groups: AIRenameGroup[] = new Array(rawGroups.length);
 
-  const exportTasks = rawGroups.map((group) => async () => {
+  const exportTasks = rawGroups.map((group, index) => async () => {
     let imageBase64: string | undefined;
 
     if (readImage && group.contextNodeId) {
@@ -128,7 +128,7 @@ export async function handleAIRenameRequest(payload: {
       ...(imageBase64 ? { imageBase64 } : {}),
     };
 
-    groups.push(finalGroup);
+    groups[index] = finalGroup;
   });
 
   await sequentialPool(exportTasks, 2);

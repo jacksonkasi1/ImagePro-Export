@@ -1,5 +1,5 @@
 // ** import types
-import { AIRenameGroup, AINodeContextChild } from '@/types/ai';
+import { AIRenameGroup } from '@/types/ai';
 
 /**
  * MAX_SIBLINGS_FOR_PARENT_CONTEXT

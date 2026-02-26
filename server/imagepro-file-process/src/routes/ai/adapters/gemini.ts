@@ -99,6 +99,11 @@ Respond with ONLY a JSON array, no markdown, no explanation:
   }
 
   private parseResponse(text: string, group: AIRenameGroup): AIRenameResult[] {
+    // Build a fallback map so every node always gets a result
+    const fallbackMap = new Map(
+      group.targetNodes.map((n) => [n.nodeId, n.currentName])
+    );
+
     // Strip markdown fences if model adds them despite instructions
     const cleaned = text
       .replace(/```json\s*/gi, '')
@@ -115,21 +120,25 @@ Respond with ONLY a JSON array, no markdown, no explanation:
     try {
       const parsed = JSON.parse(match[0]) as Array<{ nodeId: string; suggestedName: string }>;
 
-      // Validate and sanitize each result
+      // Merge valid AI results into fallback map
       const validNodeIds = new Set(group.targetNodes.map((n) => n.nodeId));
-      return parsed
-        .filter(
-          (r) =>
-            r.nodeId &&
-            r.suggestedName &&
-            typeof r.nodeId === 'string' &&
-            typeof r.suggestedName === 'string' &&
-            validNodeIds.has(r.nodeId)
-        )
-        .map((r) => ({
-          nodeId: r.nodeId,
-          suggestedName: sanitizeName(r.suggestedName),
-        }));
+      for (const r of parsed) {
+        if (
+          r.nodeId &&
+          r.suggestedName &&
+          typeof r.nodeId === 'string' &&
+          typeof r.suggestedName === 'string' &&
+          validNodeIds.has(r.nodeId)
+        ) {
+          fallbackMap.set(r.nodeId, sanitizeName(r.suggestedName));
+        }
+      }
+
+      // Return a result for every target node (fallback = original name)
+      return group.targetNodes.map((n) => ({
+        nodeId: n.nodeId,
+        suggestedName: fallbackMap.get(n.nodeId) ?? n.currentName,
+      }));
     } catch (err) {
       console.error(`[GeminiAdapter] Failed to parse JSON response for group ${group.groupId}:`, err);
       return group.targetNodes.map((n) => ({ nodeId: n.nodeId, suggestedName: n.currentName }));

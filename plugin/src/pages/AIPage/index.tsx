@@ -28,8 +28,10 @@ import AINodeList from './_components/AINodeList';
 import AISettingsPanel from './_components/AISettingsPanel';
 import AIRunButton from './_components/AIRunButton';
 
-// Server base URL — adjust via env if needed
-const SERVER_URL = 'http://localhost:3000';
+// Server base URL — configurable via build-time env variable (VITE_SERVER_URL)
+const SERVER_URL =
+  (typeof process !== 'undefined' && (process.env as Record<string, string>)['VITE_SERVER_URL']) ||
+  'http://localhost:3000';
 
 const AIPage = () => {
   const {
@@ -48,7 +50,13 @@ const AIPage = () => {
   // Track pending-rename count to detect when all are done on the UI side
   const pendingRef = useRef(0);
 
-  // ── Register plugin event listeners once ──────────────────────────────────
+  // ── finalize must be defined before useEffect so it is stable in scope ────
+  const finalize = useCallback(() => {
+    setIsRunning(false);
+    notify.success('AI rename complete');
+  }, [setIsRunning]);
+
+  // ── Register plugin event listeners ───────────────────────────────────────
   useEffect(() => {
     /**
      * Fired from main.ts after nodes are classified, grouped and (optionally)
@@ -70,8 +78,8 @@ const AIPage = () => {
         });
 
         if (!response.ok) {
-          const err = await response.json().catch(() => ({ message: response.statusText }));
-          throw new Error(err?.message ?? `HTTP ${response.status}`);
+          const errBody = await response.json().catch(() => ({}));
+          throw new Error((errBody as any)?.error ?? `HTTP ${response.status}`);
         }
 
         const data: { renames: AIRenameResult[] } = await response.json();
@@ -103,8 +111,8 @@ const AIPage = () => {
      */
     const unsubProgress = on<AIRenameProgressHandler>(
       'AI_RENAME_PROGRESS',
-      ({ nodeId, newName, status }) => {
-        setRenameStatus(nodeId, status === 'done' ? 'done' : 'error', newName);
+      ({ nodeId, newName }) => {
+        setRenameStatus(nodeId, 'done', newName);
 
         const { progress } = useAIStore.getState();
         setProgress({ done: progress.done + 1, total: progress.total });
@@ -131,19 +139,12 @@ const AIPage = () => {
     });
 
     return () => {
-      // @create-figma-plugin/utilities `on` returns an unsubscribe fn
       unsubBatchReady();
       unsubProgress();
       unsubError();
       unsubComplete();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings]);
-
-  const finalize = useCallback(() => {
-    setIsRunning(false);
-    notify.success('AI rename complete');
-  }, [setIsRunning]);
+  }, [settings, finalize, setIsRunning, setProgress, setRenameStatus]);
 
   // ── Run handler ────────────────────────────────────────────────────────────
   const handleRun = useCallback(() => {

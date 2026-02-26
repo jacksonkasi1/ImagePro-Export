@@ -7,7 +7,7 @@ import { searchNodes } from '@/core/handlers/search-nodes-handler';
 import { handleExportRequest } from '@/core/handlers/export-handler';
 
 // ** import ai handlers
-import { handleAIRenameRequest, applyRename, signalRenameComplete } from '@/core/ai/rename-handler';
+import { handleAIRenameRequest, applyRename } from '@/core/ai/rename-handler';
 
 // ** import types
 import { NodeData } from '@/types/node';

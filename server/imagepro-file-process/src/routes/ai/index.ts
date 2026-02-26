@@ -38,6 +38,16 @@ router.post('/rename-batch', async (req: Request, res: Response) => {
     return;
   }
 
+  if (!settings.model || !settings.model.trim()) {
+    res.status(400).json({ error: 'model is required' });
+    return;
+  }
+
+  if (!settings.systemPrompt || !settings.systemPrompt.trim()) {
+    res.status(400).json({ error: 'systemPrompt is required' });
+    return;
+  }
+
   if (!Array.isArray(groups) || groups.length === 0) {
     res.status(400).json({ error: 'groups must be a non-empty array' });
     return;
@@ -60,10 +70,7 @@ router.post('/rename-batch', async (req: Request, res: Response) => {
     res.json({ renames: results });
   } catch (error: any) {
     console.error('[AI rename-batch] Error:', error);
-    res.status(500).json({
-      error: 'AI rename failed',
-      message: error?.message ?? String(error),
-    });
+    res.status(500).json({ error: 'AI rename failed' });
   }
 });
 

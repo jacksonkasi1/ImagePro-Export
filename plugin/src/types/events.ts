@@ -72,7 +72,7 @@ export interface AIApplyRenameHandler extends EventHandler {
 
 export interface AIRenameProgressHandler extends EventHandler {
   name: 'AI_RENAME_PROGRESS';
-  handler: (update: { nodeId: string; newName: string; status: 'done' | 'error' }) => void;
+  handler: (update: { nodeId: string; newName: string; status: 'done' }) => void;
 }
 
 export interface AIRenameCompleteHandler extends EventHandler {
