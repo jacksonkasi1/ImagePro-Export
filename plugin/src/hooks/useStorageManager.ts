@@ -11,6 +11,7 @@ import { ReceiveDataHandler } from '@/types/events';
 
 // ** import stores that need synchronization
 import { useHistoryStore } from '@/store/use-history-store';
+import { useAIStore } from '@/store/use-ai-store';
 
 interface SyncedStore {
   storageKey: string;
@@ -21,8 +22,7 @@ export const useStorageManager = () => {
   useEffect(() => {
     const stores: SyncedStore[] = [
         { storageKey: 'historyStore', storeApi: useHistoryStore },
-      // Add other stores here with their corresponding storage keys
-      // { storageKey: 'anotherStore', storeApi: useAnotherStore },
+        { storageKey: 'aiSettings', storeApi: useAIStore },
     ];
 
     // Handle RECEIVE_DATA events from the plugin code

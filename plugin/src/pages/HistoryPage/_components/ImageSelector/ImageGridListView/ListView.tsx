@@ -127,7 +127,7 @@ const NormalListView = ({ history, selectedNodeIds, onToggleSelection }: NormalL
                 <IconButton
                   animate
                   onClick={() => handleDownload(item.id, item.cid, item.name)}
-                  loading={loadingStates[item.id]}
+                  isLoading={loadingStates[item.id]}
                 >
                   <DownloadIcon className="size-5" />
                 </IconButton>

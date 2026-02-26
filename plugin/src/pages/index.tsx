@@ -6,6 +6,7 @@ import TabSwitch from '@/components/tab-switch';
 // ** import pages
 import AssetPage from './AssetPage';
 import UploadPage from './UploadPage';
+import AIPage from './AIPage';
 
 // ** import store
 import { useUtilsStore } from '@/store/use-utils-store';
@@ -13,6 +14,7 @@ import { useUtilsStore } from '@/store/use-utils-store';
 const pages = {
   asset: <AssetPage />,
   upload: <UploadPage />,
+  ai: <AIPage />,
 };
 
 const Root = () => {

@@ -26,7 +26,7 @@ interface IconButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
   /**
    * If true, the button will show a loading spinner instead of its children, and be disabled.
    */
-  loading?: boolean;
+  isLoading?: boolean;
 }
 
 /**
@@ -40,7 +40,7 @@ export const IconButton: preact.FunctionComponent<IconButtonProps> = ({
   variant = 'blank',
   isActive,
   animate,
-  loading,
+  isLoading,
   children,
   ...props
 }) => {
@@ -50,17 +50,17 @@ export const IconButton: preact.FunctionComponent<IconButtonProps> = ({
   return (
     <button
       {...props} // ** Spread standard button attributes
-      disabled={loading || props.disabled} // ** Disable button when loading or explicitly disabled
+      disabled={isLoading || props.disabled} // ** Disable button when loading or explicitly disabled
       className={cn(
         'flex items-center justify-center p-1 rounded cursor-pointer',
         animationClasses, // ** Apply animation classes if animate is true
         variant === 'hover' ? 'hover:bg-gray-100 dark:hover:bg-btn-bg-dark' : '',
-        loading ? 'cursor-not-allowed opacity-70' : '', // ** Loading styles
+        isLoading ? 'cursor-not-allowed opacity-70' : '', // ** Loading styles
         props.className // ** Combine with any className passed in props
       )}
-      onClick={loading ? undefined : props.onClick} // ** Disable onClick when loading
+      onClick={isLoading ? undefined : props.onClick} // ** Disable onClick when loading
     >
-      {loading ? (
+      {isLoading ? (
         <div class="grid min-h-fit w-full place-items-center overflow-hidden rounded-lg">
           <Spinner className="size-5" />
         </div>

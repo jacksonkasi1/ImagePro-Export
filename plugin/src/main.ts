@@ -6,6 +6,9 @@ import { getImageNodes } from '@/core/handlers/fetch-images-handler';
 import { searchNodes } from '@/core/handlers/search-nodes-handler';
 import { handleExportRequest } from '@/core/handlers/export-handler';
 
+// ** import ai handlers
+import { handleAIRenameRequest, applyRename, signalRenameComplete } from '@/core/ai/rename-handler';
+
 // ** import types
 import { NodeData } from '@/types/node';
 import {
@@ -16,6 +19,8 @@ import {
   NotificationHandler,
   SearchNodesHandler,
   SetDataHandler,
+  AIRenameRequestHandler,
+  AIApplyRenameHandler,
 } from '@/types/events';
 
 export default function () {
@@ -103,4 +108,14 @@ on<SearchNodesHandler>('SEARCH_NODES', async (query) => {
 
 on<ExportAssetsHandler>('EXPORT_ASSETS', async (data) => {
   await handleExportRequest(data);
+});
+
+// ** AI Rename handlers **
+
+on<AIRenameRequestHandler>('AI_RENAME_REQUEST', async (payload) => {
+  await handleAIRenameRequest(payload);
+});
+
+on<AIApplyRenameHandler>('AI_APPLY_RENAME', async ({ nodeId, suggestedName }) => {
+  await applyRename(nodeId, suggestedName);
 });

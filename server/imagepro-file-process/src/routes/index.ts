@@ -15,6 +15,9 @@ import getFileUrlRouter from "./upload-opt/get-file-url";
 import pdfMergeUploadRouter from "./upload-opt/merge-and-upload";
 // import createGroupsRouter from "./upload-opt/create-groups";
 
+// ** import ai routes **
+import aiRouter from "./ai";
+
 const router = Router();
 
 // PDF routes
@@ -25,12 +28,14 @@ router.use("/pdf-opt", mergeRouter);
 router.use("/pdf-opt", pdfProcessRouter);
 
 // Files upload routes
-
 router.use("/upload-opt", uploadFileRouter);
 router.use("/upload-opt", deleteFilesRouter);
 router.use("/upload-opt", downloadFileRouter);
 router.use("/upload-opt", getFileUrlRouter);
 router.use("/upload-opt", pdfMergeUploadRouter);
 // router.use("/upload-opt", createGroupsRouter);
+
+// AI rename routes
+router.use("/ai", aiRouter);
 
 export default router;

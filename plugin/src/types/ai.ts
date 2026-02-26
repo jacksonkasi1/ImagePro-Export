@@ -1,0 +1,68 @@
+// ** import types
+import type { CaseOption } from './enums';
+
+export type AIModelProvider = 'gemini' | 'openai' | 'anthropic';
+
+export type AIRenameStatus = 'idle' | 'pending' | 'done' | 'error';
+
+export type AINodeClassification = 'svg_leaf' | 'raster_leaf' | 'section';
+
+export interface AISettings {
+  modelProvider: AIModelProvider;
+  model: string;
+  apiKey: string;
+  systemPrompt: string;
+  readImage: boolean;
+  caseOption: CaseOption;
+}
+
+export interface AINodeContextChild {
+  name: string;
+  type: string;
+  characters?: string;
+}
+
+export interface AINodeContext {
+  nodeId: string;
+  currentName: string;
+  nodeType: string;
+  isSvg: boolean;
+  dimensions: { width: number; height: number };
+  children?: AINodeContextChild[];
+}
+
+export interface AIRenameGroup {
+  groupId: string;
+  contextText: string;
+  imageBase64?: string;
+  targetNodes: Array<{
+    nodeId: string;
+    currentName: string;
+    nodeType: string;
+    isSvg: boolean;
+  }>;
+}
+
+export interface AIRenameResult {
+  nodeId: string;
+  suggestedName: string;
+}
+
+export interface AIState {
+  settings: AISettings;
+  setSettings: (settings: Partial<AISettings>) => void;
+
+  renameStatuses: Record<string, AIRenameStatus>;
+  renamedNames: Record<string, string>;
+  setRenameStatus: (nodeId: string, status: AIRenameStatus, newName?: string) => void;
+  resetStatuses: () => void;
+
+  isRunning: boolean;
+  setIsRunning: (running: boolean) => void;
+
+  isSettingsOpen: boolean;
+  setIsSettingsOpen: (open: boolean) => void;
+
+  progress: { done: number; total: number };
+  setProgress: (progress: { done: number; total: number }) => void;
+}
