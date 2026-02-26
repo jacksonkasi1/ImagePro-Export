@@ -1,8 +1,12 @@
 import { create } from 'zustand';
 
+// ** import figma-plugin utilities
+import { emit, on } from '@create-figma-plugin/utilities';
+
 // ** import types
-import { AIState, AISettings, AIRenameStatus } from '@/types/ai';
+import { AIState, AISettings, AIPersistedSettings, AIRenameStatus } from '@/types/ai';
 import { CaseOption } from '@/types/enums';
+import { GetDataHandler, ReceiveDataHandler, SetDataHandler } from '@/types/events';
 
 const DEFAULT_SYSTEM_PROMPT = `You are a professional UI asset naming assistant for Figma.
 Given a JSON description of a design node (and optionally a screenshot), suggest a concise, descriptive asset name in the specified naming convention.
@@ -25,26 +29,63 @@ const DEFAULT_SETTINGS: AISettings = {
   caseOption: CaseOption.KEBAB_CASE,
 };
 
-export const useAIStore = create<AIState>((set) => ({
-  settings: { ...DEFAULT_SETTINGS },
-  setSettings: (partial: Partial<AISettings>) =>
-    set((state) => ({ settings: { ...state.settings, ...partial } })),
+/** clientStorage key for non-sensitive settings (model, prompt, etc.) */
+const SETTINGS_KEY = 'aiSettings';
+/** clientStorage key for the API key — stored separately from other settings */
+const API_KEY_KEY = 'aiApiKey';
 
-  renameStatuses: {},
-  renamedNames: {},
-  setRenameStatus: (nodeId: string, status: AIRenameStatus, newName?: string) =>
-    set((state) => ({
-      renameStatuses: { ...state.renameStatuses, [nodeId]: status },
-      renamedNames: newName ? { ...state.renamedNames, [nodeId]: newName } : state.renamedNames,
-    })),
-  resetStatuses: () => set({ renameStatuses: {}, renamedNames: {}, progress: { done: 0, total: 0 } }),
+export const useAIStore = create<AIState>((set, _get) => {
+  // ── Persist non-sensitive settings on every change ────────────────────────
+  const persistSettings = (settings: AISettings) => {
+    const { apiKey, ...persisted }: { apiKey: string } & AIPersistedSettings = settings;
+    emit<SetDataHandler>('SET_DATA', { handle: SETTINGS_KEY, data: persisted });
+    emit<SetDataHandler>('SET_DATA', { handle: API_KEY_KEY, data: { apiKey } });
+  };
 
-  isRunning: false,
-  setIsRunning: (running: boolean) => set({ isRunning: running }),
+  // ── Load persisted settings from clientStorage on init ────────────────────
+  const handleReceiveData: ReceiveDataHandler['handler'] = ({ handle, data }: { handle: string; data: any }) => {
+    if (!data) return;
+    if (handle === SETTINGS_KEY) {
+      set((state) => ({
+        settings: { ...state.settings, ...(data as Partial<AIPersistedSettings>) },
+      }));
+    } else if (handle === API_KEY_KEY) {
+      set((state) => ({
+        settings: { ...state.settings, apiKey: (data as { apiKey: string }).apiKey ?? '' },
+      }));
+    }
+  };
 
-  isSettingsOpen: false,
-  setIsSettingsOpen: (open: boolean) => set({ isSettingsOpen: open }),
+  on<ReceiveDataHandler>('RECEIVE_DATA', handleReceiveData);
 
-  progress: { done: 0, total: 0 },
-  setProgress: (progress: { done: number; total: number }) => set({ progress }),
-}));
+  emit<GetDataHandler>('GET_DATA', { handle: SETTINGS_KEY });
+  emit<GetDataHandler>('GET_DATA', { handle: API_KEY_KEY });
+
+  return {
+    settings: { ...DEFAULT_SETTINGS },
+    setSettings: (partial: Partial<AISettings>) =>
+      set((state) => {
+        const next = { ...state.settings, ...partial };
+        persistSettings(next);
+        return { settings: next };
+      }),
+
+    renameStatuses: {},
+    renamedNames: {},
+    setRenameStatus: (nodeId: string, status: AIRenameStatus, newName?: string) =>
+      set((state) => ({
+        renameStatuses: { ...state.renameStatuses, [nodeId]: status },
+        renamedNames: newName ? { ...state.renamedNames, [nodeId]: newName } : state.renamedNames,
+      })),
+    resetStatuses: () => set({ renameStatuses: {}, renamedNames: {}, progress: { done: 0, total: 0 } }),
+
+    isRunning: false,
+    setIsRunning: (running: boolean) => set({ isRunning: running }),
+
+    isSettingsOpen: false,
+    setIsSettingsOpen: (open: boolean) => set({ isSettingsOpen: open }),
+
+    progress: { done: 0, total: 0 },
+    setProgress: (progress: { done: number; total: number }) => set({ progress }),
+  };
+});

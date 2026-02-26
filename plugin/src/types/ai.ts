@@ -7,13 +7,22 @@ export type AIRenameStatus = 'idle' | 'pending' | 'done' | 'error';
 
 export type AINodeClassification = 'svg_leaf' | 'raster_leaf' | 'section';
 
-export interface AISettings {
+/**
+ * Settings that are safe to persist in Figma clientStorage alongside other
+ * non-sensitive configuration.  API key is intentionally excluded — it is
+ * stored under a separate clientStorage key (`aiApiKey`).
+ */
+export interface AIPersistedSettings {
   modelProvider: AIModelProvider;
   model: string;
-  apiKey: string;
   systemPrompt: string;
   readImage: boolean;
   caseOption: CaseOption;
+}
+
+/** Full runtime settings including the API key (never serialised as a whole). */
+export interface AISettings extends AIPersistedSettings {
+  apiKey: string;
 }
 
 export interface AINodeContextChild {

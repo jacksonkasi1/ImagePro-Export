@@ -62,7 +62,7 @@ on<SetDataHandler>('SET_DATA', async ({ handle, data }) => {
 // Retrieve the data from Figma's clientStorage
 on<GetDataHandler>('GET_DATA', async ({ handle }) => {
   const data = await figma.clientStorage.getAsync(handle);
-  emit('RECEIVE_DATA', { data });
+  emit('RECEIVE_DATA', { handle, data });
 });
 
 // Delete the data from Figma's clientStorage
