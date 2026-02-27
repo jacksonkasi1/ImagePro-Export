@@ -2,20 +2,25 @@
 import { AIRenameGroup } from '@/types/ai';
 
 /**
- * MAX_SIBLINGS_FOR_PARENT_CONTEXT
- *
- * If ≤ this many siblings are selected from the same parent, export the
- * PARENT as context image (preserves layout signal). If more, export each
- * node individually — the parent image would be too noisy.
+ * Grouping siblings into one AI request can blur node-specific context
+ * (e.g. avatar + banner getting the same nearby text). Keep this disabled
+ * so each selected node gets its own semantic context and image crop.
  */
-const MAX_SIBLINGS_FOR_PARENT_CONTEXT = 4;
+const ENABLE_SIBLING_BUNDLING = false;
 
-/**
- * MAX_CONTEXT_DEPTH
- *
- * How many levels deep to serialize the node's own children.
- */
+/** How many levels deep to serialize the node's own children. */
 const MAX_CONTEXT_DEPTH = 2;
+
+/** Max levels to inspect while walking ancestors. */
+const MAX_ANCESTOR_WALK = 12;
+
+/** Max text snippets sent to AI for nearby semantic context. */
+const MAX_NEARBY_TEXT_ITEMS = 8;
+
+interface ScoredTextItem {
+  text: string;
+  score: number;
+}
 
 /**
  * isGenericName
@@ -25,37 +30,232 @@ const MAX_CONTEXT_DEPTH = 2;
  * Used to decide whether to walk further up the tree for better context.
  */
 function isGenericName(name: string): boolean {
-  return /^(frame|group|rectangle|ellipse|polygon|vector|component|instance|section|layer|image|img)\s*\d*$/i.test(
-    name.trim()
+  const trimmed = name.trim();
+  return (
+    /^(frame|group|rectangle|ellipse|polygon|vector|component|instance|section|layer|image|img)\s*\d*$/i.test(trimmed) ||
+    /^auto\s*layout(?:\s*(horizontal|vertical))?$/i.test(trimmed)
   );
 }
 
-/**
- * Extracts all TEXT node characters from a subtree, deduplicated, capped.
- * Returns an array of unique non-empty strings.
- */
-function extractTextContent(node: SceneNode, maxCharsEach = 80, maxItems = 6): string[] {
-  const texts: string[] = [];
+function toSceneNode(node: BaseNode | null): SceneNode | null {
+  if (!node) return null;
+  if (node.type === 'DOCUMENT' || node.type === 'PAGE') return null;
+  return node as SceneNode;
+}
+
+function hasChildren(node: BaseNode | SceneNode): node is SceneNode & ChildrenMixin {
+  return 'children' in node;
+}
+
+function isSemanticWrapper(node: SceneNode): boolean {
+  if (!hasChildren(node)) return false;
+  if (node.type === 'SECTION' || node.type === 'COMPONENT_SET') return false;
+
+  const trimmedName = node.name.trim();
+  const genericOrEmpty = trimmedName.length === 0 || isGenericName(trimmedName);
+  if (!genericOrEmpty) return false;
+
+  return node.children.length === 1;
+}
+
+
+
+function collectTextCandidates(
+  node: SceneNode,
+  maxCharsEach = 100,
+  maxItems = 20
+): Array<{ text: string; fontSize: number; directText: boolean }> {
+  const results: Array<{ text: string; fontSize: number; directText: boolean }> = [];
   const seen = new Set<string>();
 
-  function walk(n: SceneNode) {
-    if (texts.length >= maxItems) return;
+  function walk(n: SceneNode, depth: number) {
+    if (results.length >= maxItems) return;
+
     if (n.type === 'TEXT' && 'characters' in n) {
-      const chars = (n as TextNode).characters.trim().slice(0, maxCharsEach);
-      if (chars && !seen.has(chars)) {
-        seen.add(chars);
-        texts.push(chars);
+      const chars = (n as TextNode).characters
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, maxCharsEach);
+      const normalized = chars.toLowerCase();
+      if (chars && !seen.has(normalized)) {
+        seen.add(normalized);
+        results.push({
+          text: chars,
+          fontSize: typeof (n as TextNode).fontSize === "number" ? (n as TextNode).fontSize as number : 14,
+          directText: depth === 0,
+        });
       }
     }
-    if ('children' in n) {
-      for (const child of (n as ChildrenMixin).children) {
-        walk(child as SceneNode);
+
+    if (hasChildren(n)) {
+      for (const child of n.children) {
+        walk(child as SceneNode, depth + 1);
       }
     }
   }
 
-  walk(node);
-  return texts;
+  walk(node, 0);
+  return results;
+}
+
+function normalizeTextToken(text: string): string {
+  return text.toLowerCase().replace(/\s+/g, ' ').trim();
+}
+
+function scoreNearbyText(
+  sourceLevel: number,
+  text: string,
+  fontSize: number,
+  directText: boolean,
+  duplicateCount: number
+): number {
+  let score = 40;
+
+  score -= sourceLevel * 7;
+  if (sourceLevel === 0) score += 8;
+  if (fontSize > 14) {
+    score += Math.min(40, Math.round((fontSize - 14) * 1.5));
+  }
+  if (directText) score += 10;
+
+  const len = text.length;
+  if (len >= 4 && len <= 64) score += 5;
+  else score -= 3;
+
+  if (duplicateCount > 1) {
+    score -= (duplicateCount - 1) * 8;
+  }
+
+  return Math.max(1, score);
+}
+
+function compressSemanticAncestors(node: SceneNode): SceneNode[] {
+  const ancestors: SceneNode[] = [];
+
+  let cursor = toSceneNode(node.parent as BaseNode | null);
+  let walked = 0;
+
+  while (cursor && walked < MAX_ANCESTOR_WALK) {
+    walked += 1;
+    if (!isSemanticWrapper(cursor)) {
+      ancestors.push(cursor);
+    }
+    cursor = toSceneNode(cursor.parent as BaseNode | null);
+  }
+
+  return ancestors;
+}
+
+function getSiblingNodes(node: SceneNode): SceneNode[] {
+  const parent = toSceneNode(node.parent as BaseNode | null);
+  if (!parent || !hasChildren(parent)) return [];
+  return parent.children
+    .filter((child) => (child as SceneNode).id !== node.id)
+    .map((child) => child as SceneNode);
+}
+
+function gatherScoredNearbyText(node: SceneNode, ancestors: SceneNode[]): ScoredTextItem[] {
+  const rawCandidates: Array<{
+    text: string;
+    fontSize: number;
+    directText: boolean;
+    sourceLevel: number;
+  }> = [];
+
+  const levelNodes: SceneNode[] = [node, ...ancestors];
+
+  levelNodes.forEach((levelNode, levelIndex) => {
+    const siblings = getSiblingNodes(levelNode);
+    siblings.forEach((sibling) => {
+      const candidates = collectTextCandidates(sibling);
+      candidates.forEach((candidate) => {
+        rawCandidates.push({
+          text: candidate.text,
+          fontSize: candidate.fontSize,
+          directText: candidate.directText,
+          sourceLevel: levelIndex,
+        });
+      });
+    });
+  });
+
+  const frequency = new Map<string, number>();
+  rawCandidates.forEach((candidate) => {
+    const key = normalizeTextToken(candidate.text);
+    frequency.set(key, (frequency.get(key) ?? 0) + 1);
+  });
+
+  const bestByText = new Map<string, ScoredTextItem>();
+  rawCandidates.forEach((candidate) => {
+    const key = normalizeTextToken(candidate.text);
+    const duplicateCount = frequency.get(key) ?? 1;
+    const score = scoreNearbyText(
+      candidate.sourceLevel,
+      candidate.text,
+      candidate.fontSize,
+      candidate.directText,
+      duplicateCount
+    );
+
+    const existing = bestByText.get(key);
+    if (!existing || score > existing.score) {
+      bestByText.set(key, { text: candidate.text, score });
+    }
+  });
+
+  return Array.from(bestByText.values())
+    .sort((a, b) => b.score - a.score)
+    .slice(0, MAX_NEARBY_TEXT_ITEMS);
+}
+
+function inferClusterRole(node: SceneNode): 'card' | 'list-item' | 'grid-item' | undefined {
+  const parent = toSceneNode(node.parent as BaseNode | null);
+  if (!parent || !hasChildren(parent)) return undefined;
+
+  const sameTypeCount = parent.children.filter((child) => (child as SceneNode).type === node.type).length;
+  if (sameTypeCount < 3) return undefined;
+
+  if ('layoutMode' in parent) {
+    if (parent.layoutMode === 'VERTICAL') return 'list-item';
+    if (parent.layoutMode === 'HORIZONTAL') return 'card';
+  }
+
+  return 'grid-item';
+}
+
+function inferRoleHint(node: SceneNode, clusterRole?: string): string {
+  const width = Math.max(0, Math.round((node as unknown as { width?: number }).width ?? 0));
+  const height = Math.max(0, Math.round((node as unknown as { height?: number }).height ?? 0));
+  const aspectRatio = width > 0 && height > 0 ? width / height : 1;
+
+  const parent = toSceneNode(node.parent as BaseNode | null);
+  const parentWidth = Math.max(0, Math.round((parent as unknown as { width?: number })?.width ?? 0));
+  const parentHeight = Math.max(0, Math.round((parent as unknown as { height?: number })?.height ?? 0));
+
+  const widthRatio = parentWidth > 0 ? width / parentWidth : 0;
+  const heightRatio = parentHeight > 0 ? height / parentHeight : 0;
+
+  if (clusterRole === 'card' && aspectRatio >= 1.2) return 'card-cover';
+  if (aspectRatio >= 2.6) return 'banner';
+  if (aspectRatio >= 1.45) return 'cover';
+  const isAbsoluteHero = width >= 400 && height >= 150;
+  const isRelativeHero = widthRatio >= 0.85 && heightRatio >= 0.3;
+  if (isAbsoluteHero || isRelativeHero) return 'hero';
+
+  const isSquareIsh = aspectRatio >= 0.8 && aspectRatio <= 1.25;
+  const isSmall = Math.max(width, height) <= 160;
+  if (isSquareIsh && isSmall) return 'avatar';
+  if (clusterRole === 'list-item' || clusterRole === 'grid-item') return 'thumbnail';
+
+  return 'image';
+}
+
+function buildSectionHierarchy(ancestors: SceneNode[]): string[] {
+  const meaningful = ancestors
+    .filter((ancestor) => ancestor.name && !isGenericName(ancestor.name))
+    .map((ancestor) => ancestor.name.trim());
+
+  return meaningful.reverse().slice(0, 4);
 }
 
 /**
@@ -91,64 +291,43 @@ export function serializeNodeContext(node: SceneNode, depth = 0): object {
   return base;
 }
 
-/**
- * Builds rich context for a single isolated node (not bundled with siblings).
- *
- * Strategy — walk UP the tree to find meaningful context:
- *   1. Collect all TEXT characters from the parent's subtree (siblings + their children)
- *   2. Include the parent name (if not generic, else grandparent name)
- *   3. Include grandparent name for card/section category
- *   4. Serialize the node itself (its own children / fills)
- *
- * This ensures that an avatar image sitting next to a "Harish Goswami" TEXT node
- * will have that name available to the AI.
- */
-function buildSingleNodeContext(node: SceneNode): object {
-  const parent = node.parent as BaseNode | null;
-  const grandparent = parent?.parent as BaseNode | null;
+function resolveContextNodeForExport(node: SceneNode, ancestors: SceneNode[]): SceneNode {
+  return ancestors[0] ?? node;
+}
 
-  // --- Collect sibling TEXT content from parent ---
-  const siblingTexts: string[] = [];
-  if (parent && 'children' in parent) {
-    for (const sibling of (parent as ChildrenMixin).children) {
-      if ((sibling as SceneNode).id === node.id) continue;
-      const texts = extractTextContent(sibling as SceneNode);
-      siblingTexts.push(...texts);
-      if (siblingTexts.length >= 6) break;
-    }
-  }
+function buildRichContext(
+  node: SceneNode,
+  ancestors: SceneNode[],
+  scoredNearbyText: ScoredTextItem[]
+): object {
+  const sectionHierarchy = buildSectionHierarchy(ancestors);
+  const clusterRole = inferClusterRole(node);
+  const roleHint = inferRoleHint(node, clusterRole);
 
-  // --- Determine the best ancestor name ---
-  // Walk up until we find a non-generic name (max 3 levels)
-  let ancestorName: string | undefined;
-  let cursor: BaseNode | null = parent;
-  for (let i = 0; i < 3 && cursor; i++) {
-    if (cursor.type === 'PAGE' || cursor.type === 'DOCUMENT') break;
-    const sceneNode = cursor as SceneNode;
-    if (sceneNode.name && !isGenericName(sceneNode.name)) {
-      ancestorName = sceneNode.name;
-      break;
-    }
-    cursor = cursor.parent as BaseNode | null;
-  }
+  const width = Math.max(0, Math.round((node as unknown as { width?: number }).width ?? 0));
+  const height = Math.max(0, Math.round((node as unknown as { height?: number }).height ?? 0));
+  const aspectRatio = width > 0 && height > 0 ? Number((width / height).toFixed(2)) : 1;
 
-  // --- Build the context object ---
   const ctx: Record<string, unknown> = {
     targetNode: serializeNodeContext(node),
+    roleHint,
+    aspectRatio,
   };
 
-  if (ancestorName) {
-    ctx.parentContext = ancestorName;
+  if (sectionHierarchy.length > 0) {
+    ctx.sectionHierarchy = sectionHierarchy;
+    ctx.parentContext = sectionHierarchy[sectionHierarchy.length - 1];
+    ctx.sectionContext = sectionHierarchy[0];
   }
 
-  // Grandparent name for extra category signal (e.g. "article-card", "author-section")
-  if (grandparent && grandparent.type !== 'PAGE' && (grandparent as BaseNode).type !== 'DOCUMENT' && grandparent.name && !isGenericName(grandparent.name)) {
-    ctx.sectionContext = grandparent.name;
+  if (clusterRole) {
+    ctx.clusterRole = clusterRole;
   }
 
-  if (siblingTexts.length > 0) {
-    // These are the MOST IMPORTANT signals — nearby text content
-    ctx.nearbyTextContent = siblingTexts;
+  if (scoredNearbyText.length > 0) {
+    ctx.scoredNearbyText = scoredNearbyText;
+    // Backward compatibility for existing prompts/parser.
+    ctx.nearbyTextContent = scoredNearbyText.map((item) => item.text);
   }
 
   return ctx;
@@ -171,10 +350,8 @@ function groupByParent(nodes: SceneNode[]): Map<string, SceneNode[]> {
  * Builds AIRenameGroups from a flat list of selected nodes.
  *
  * Strategy:
- *   - Nodes sharing a parent (≤ MAX_SIBLINGS_FOR_PARENT_CONTEXT):
- *     bundle into one group, use parent as context image, serialize full parent.
- *   - Single nodes: use buildSingleNodeContext() which walks up the tree
- *     to collect sibling TEXT content and ancestor names.
+ *   - Prefer one node per group for consistent node-level naming quality.
+ *   - Optional sibling bundling is disabled by default.
  */
 export function buildRenameGroupsFromNodes(
   nodes: Array<{
@@ -190,18 +367,32 @@ export function buildRenameGroupsFromNodes(
   let groupIdx = 0;
   for (const [parentId, siblings] of Array.from(byParent.entries())) {
     const useParentAsContext =
+      ENABLE_SIBLING_BUNDLING &&
       siblings.length > 1 &&
-      siblings.length <= MAX_SIBLINGS_FOR_PARENT_CONTEXT &&
+      siblings.length <= 4 &&
       parentId !== 'root';
 
     if (useParentAsContext) {
-      // Bundle siblings — serialize the parent node (includes all sibling children)
-      const parentNode = siblings[0].parent as SceneNode | null;
-      const contextObj = parentNode ? serializeNodeContext(parentNode) : {};
+      const referenceNode = siblings[0];
+      const ancestors = compressSemanticAncestors(referenceNode);
+      const scoredNearbyText = gatherScoredNearbyText(referenceNode, ancestors);
+      const exportContextNode = resolveContextNodeForExport(referenceNode, ancestors);
+
+      const parentSceneNode = toSceneNode(referenceNode.parent as BaseNode | null);
+      const contextObj: Record<string, unknown> = {
+        targetGroup: serializeNodeContext(parentSceneNode ?? referenceNode),
+      };
+
+      const sectionHierarchy = buildSectionHierarchy(ancestors);
+      if (sectionHierarchy.length > 0) contextObj.sectionHierarchy = sectionHierarchy;
+      if (scoredNearbyText.length > 0) {
+        contextObj.scoredNearbyText = scoredNearbyText;
+        contextObj.nearbyTextContent = scoredNearbyText.map((item) => item.text);
+      }
 
       groups.push({
         groupId: `group_${groupIdx++}`,
-        contextNodeId: parentId,
+        contextNodeId: exportContextNode.id,
         contextText: JSON.stringify(contextObj),
         targetNodes: siblings.map((node: SceneNode) => ({
           nodeId: node.id,
@@ -211,12 +402,16 @@ export function buildRenameGroupsFromNodes(
         })),
       });
     } else {
-      // Each node is alone — use enriched context that includes sibling TEXT + ancestors
+      // Each node is alone — use enriched, depth-agnostic semantic context
       for (const node of siblings) {
-        const contextObj = buildSingleNodeContext(node);
+        const ancestors = compressSemanticAncestors(node);
+        const scoredNearbyText = gatherScoredNearbyText(node, ancestors);
+        const contextObj = buildRichContext(node, ancestors, scoredNearbyText);
+        const exportContextNode = resolveContextNodeForExport(node, ancestors);
+
         groups.push({
           groupId: `group_${groupIdx++}`,
-          contextNodeId: node.id,
+          contextNodeId: exportContextNode.id,
           contextText: JSON.stringify(contextObj),
           targetNodes: [
             {

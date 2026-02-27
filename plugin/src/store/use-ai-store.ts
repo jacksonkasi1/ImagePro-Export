@@ -12,17 +12,23 @@ const DEFAULT_SYSTEM_PROMPT = `You are a professional UI asset naming assistant 
 Given a JSON description of a design node and its surrounding context, suggest a concise, specific, descriptive asset name.
 
 Rules:
-- PRIORITY 1: If "nearbyTextContent" is present, use it to make the name specific.
+- PRIORITY 0: If "sectionHierarchy" is present, use the OUTERMOST meaningful level as the section/category token.
+  Example: sectionHierarchy ["Explore Our Blog", "blog-card"] + roleHint "cover" → "blog-card-cover"
+  Example: sectionHierarchy ["Hero Section"] + roleHint "banner" → "hero-banner"
+- PRIORITY 1: Use "scoredNearbyText" (or "nearbyTextContent" fallback) to extract subject-specific words.
   Example: nearbyTextContent ["Harish Goswami", "Sep 11, 2025"] + image node → "harish-goswami-avatar"
   Example: nearbyTextContent ["5 Common Paperwork Mistakes"] + image node → "paperwork-mistakes-banner"
   Example: nearbyTextContent ["VIEW MORE"] + button → "view-more-button"
-- PRIORITY 2: Use "parentContext" and "sectionContext" for category/section signal.
+- PRIORITY 2: Use "roleHint" and "clusterRole" for structure signal.
+  Example: roleHint "card-cover" + clusterRole "card" + subject "paperwork" → "blog-card-paperwork-cover"
+- PRIORITY 3: Use "parentContext" and "sectionContext" for extra category/section signal.
   Example: parentContext "article-card" + image → "article-card-thumbnail"
-- PRIORITY 3: Use the node's own type and visual purpose.
+- PRIORITY 4: Use the node's own type and visual purpose.
   Example: RECTANGLE with image fill, no context → "image-placeholder"
 - NEVER use generic names: "frame-1", "rectangle", "group-3", "image", "layer"
 - NEVER include "img" or "image" in the suggested name — the prefix is handled separately
 - Extract only the most meaningful 2-4 words from text content (skip dates, reading times)
+- Prefer 1 section token + 1 role token + 1 subject token; avoid duplicate tokens
 - Apply the naming convention specified
 - Maximum 4 words in the final name
 - Respond ONLY with a valid JSON array: [{"nodeId":"...","suggestedName":"..."}]
@@ -32,14 +38,19 @@ const DEFAULT_LAYER_SYSTEM_PROMPT = `You are a professional UI layer naming assi
 Given a JSON description of a design node and its surrounding context, suggest a concise, specific, descriptive layer name.
 
 Rules:
-- PRIORITY 1: If "nearbyTextContent" is present, use it to make the name specific.
+- PRIORITY 0: If "sectionHierarchy" is present, use the OUTERMOST meaningful level as the section/category token.
+  Example: sectionHierarchy ["Pricing", "cards"] + frame → "pricing-card"
+  Example: sectionHierarchy ["Hero Section"] + frame → "hero-section"
+- PRIORITY 1: Use "scoredNearbyText" (or "nearbyTextContent" fallback) to make the name specific.
   Example: nearbyTextContent ["Sign Up", "Create your account"] + frame → "sign-up-section"
   Example: nearbyTextContent ["Pricing"] + frame → "pricing-section"
-- PRIORITY 2: Use "parentContext" and "sectionContext" for category/section signal.
+- PRIORITY 2: Use "roleHint" and "clusterRole" for structural signal.
+- PRIORITY 3: Use "parentContext" and "sectionContext" for category/section signal.
   Example: parentContext "landing-page" + frame → "hero-section"
-- PRIORITY 3: Use the node's own type and visual structure.
+- PRIORITY 4: Use the node's own type and visual structure.
   Example: FRAME containing a nav → "navbar"
 - NEVER use generic names: "frame-1", "group-3", "layer", "rectangle"
+- Prefer names that include section + role when available, avoid duplicate words
 - Apply the naming convention specified
 - Maximum 4 words in the final name
 - Respond ONLY with a valid JSON array: [{"nodeId":"...","suggestedName":"..."}]
@@ -74,6 +85,44 @@ const LAYER_SETTINGS_KEY = 'aiLayerSettings';
 /** clientStorage key for the API key — stored separately, shared by both modes */
 const API_KEY_KEY = 'aiApiKey';
 
+const LEGACY_IMAGES_PROMPT_MARKER = 'Given a JSON description of a design node (and optionally a screenshot)';
+const LEGACY_LAYERS_PROMPT_MARKER = 'Given a JSON description of a design node and its surrounding context';
+
+function isLegacyImagePrompt(prompt: string): boolean {
+  const normalized = prompt.trim();
+  return (
+    normalized.includes(LEGACY_IMAGES_PROMPT_MARKER) ||
+    (normalized.includes('Name should reflect the visual PURPOSE of the element') &&
+      !normalized.includes('sectionHierarchy'))
+  );
+}
+
+function isLegacyLayerPrompt(prompt: string): boolean {
+  const normalized = prompt.trim();
+  return (
+    normalized.includes(LEGACY_LAYERS_PROMPT_MARKER) &&
+    !normalized.includes('PRIORITY 0')
+  );
+}
+
+function normalizeLoadedImageSettings(data: Partial<AIPersistedSettings>): Partial<AIPersistedSettings> {
+  if (typeof data.systemPrompt !== 'string') return data;
+  if (!isLegacyImagePrompt(data.systemPrompt)) return data;
+  return {
+    ...data,
+    systemPrompt: DEFAULT_SYSTEM_PROMPT,
+  };
+}
+
+function normalizeLoadedLayerSettings(data: Partial<AIPersistedSettings>): Partial<AIPersistedSettings> {
+  if (typeof data.systemPrompt !== 'string') return data;
+  if (!isLegacyLayerPrompt(data.systemPrompt)) return data;
+  return {
+    ...data,
+    systemPrompt: DEFAULT_LAYER_SYSTEM_PROMPT,
+  };
+}
+
 export const useAIStore = create<AIState>((set, get) => {
   // ── Persist non-sensitive settings on every change ────────────────────────
   const persistSettings = (settings: AISettings) => {
@@ -93,13 +142,23 @@ export const useAIStore = create<AIState>((set, get) => {
   const handleReceiveData: ReceiveDataHandler['handler'] = ({ handle, data }: { handle: string; data: any }) => {
     if (!data) return;
     if (handle === SETTINGS_KEY) {
+      const normalized = normalizeLoadedImageSettings(data as Partial<AIPersistedSettings>);
       set((state) => ({
-        settings: { ...state.settings, ...(data as Partial<AIPersistedSettings>) },
+        settings: { ...state.settings, ...normalized },
       }));
+
+      if (normalized.systemPrompt === DEFAULT_SYSTEM_PROMPT) {
+        emit<SetDataHandler>('SET_DATA', { handle: SETTINGS_KEY, data: normalized });
+      }
     } else if (handle === LAYER_SETTINGS_KEY) {
+      const normalized = normalizeLoadedLayerSettings(data as Partial<AIPersistedSettings>);
       set((state) => ({
-        layerSettings: { ...state.layerSettings, ...(data as Partial<AIPersistedSettings>) },
+        layerSettings: { ...state.layerSettings, ...normalized },
       }));
+
+      if (normalized.systemPrompt === DEFAULT_LAYER_SYSTEM_PROMPT) {
+        emit<SetDataHandler>('SET_DATA', { handle: LAYER_SETTINGS_KEY, data: normalized });
+      }
     } else if (handle === API_KEY_KEY) {
       const apiKey = (data as { apiKey: string }).apiKey ?? '';
       set((state) => ({
