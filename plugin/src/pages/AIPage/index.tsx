@@ -1,4 +1,4 @@
-import { h, Fragment } from 'preact';
+import { h } from 'preact';
 import { useCallback, useEffect, useRef } from 'preact/hooks';
 
 // ** import figma utils
@@ -36,6 +36,7 @@ const SERVER_URL =
 const AIPage = () => {
   const {
     settings,
+    setSettings,
     isRunning,
     isSettingsOpen,
     setIsSettingsOpen,
@@ -85,15 +86,24 @@ const AIPage = () => {
         const data: { renames: AIRenameResult[] } = await response.json();
         const renames = data.renames ?? [];
 
+        // Apply prefix / suffix from settings (use current store state to avoid stale closure)
+        const { settings: s } = useAIStore.getState();
+        const prefix = s.prefix ?? 'img_';
+        const suffix = s.suffix ?? '';
+        const prefixedRenames: AIRenameResult[] = renames.map((r) => ({
+          nodeId: r.nodeId,
+          suggestedName: `${prefix}${r.suggestedName}${suffix}`,
+        }));
+
         // Track how many apply-renames we're sending so we know when done
-        pendingRef.current = renames.length;
+        pendingRef.current = prefixedRenames.length;
         if (pendingRef.current === 0) {
           finalize();
           return;
         }
 
         // Dispatch each rename to main.ts (which writes to Figma)
-        renames.forEach((r) => {
+        prefixedRenames.forEach((r) => {
           emit<AIApplyRenameHandler>('AI_APPLY_RENAME', r);
         });
       } catch (err: any) {
@@ -166,9 +176,9 @@ const AIPage = () => {
   }, [isRunning, selectedNodeIds, settings, resetStatuses, setIsRunning]);
 
   return (
-    <Fragment>
+    <div class="flex flex-col h-full">
       {/* Header bar */}
-      <div class="flex items-center justify-between px-3 py-2 border-b border-f-border">
+      <div class="shrink-0 flex items-center justify-between px-3 py-2 border-b border-f-border">
         <span class="text-xs font-semibold text-primary-text">AI Rename</span>
         <IconButton
           variant="hover"
@@ -176,7 +186,6 @@ const AIPage = () => {
           onClick={() => setIsSettingsOpen(!isSettingsOpen)}
           title="Settings"
         >
-          {/* Gear icon */}
           <svg
             width="14"
             height="14"
@@ -195,16 +204,43 @@ const AIPage = () => {
       </div>
 
       {/* Settings panel (collapsible) */}
-      {isSettingsOpen && <AISettingsPanel />}
+      {isSettingsOpen && <div class="shrink-0"><AISettingsPanel /></div>}
 
-      {/* Node list */}
-      <AINodeList />
+      {/* Node list — scrollable middle */}
+      <div class="flex-1 overflow-y-auto">
+        <AINodeList />
+      </div>
 
-      {/* Run button footer */}
-      <div class="px-3 py-2 border-t border-f-border">
+      {/* Footer: prefix/suffix + run button — always visible */}
+      <div class="shrink-0 border-t border-f-border px-3 pt-2 pb-2 flex flex-col gap-2">
+        {/* Prefix / Suffix row */}
+        <div class="flex gap-2">
+          <div class="flex-1 flex flex-col gap-0.5">
+            <label class="text-[10px] text-secondary-text">Prefix <span class="opacity-50">(optional)</span></label>
+            <input
+              type="text"
+              value={settings.prefix}
+              onInput={(e) => setSettings({ prefix: (e.target as HTMLInputElement).value })}
+              placeholder="img_"
+              class="w-full text-xs bg-primary-bg border border-f-border rounded px-2 py-1 text-primary-text focus:outline-none focus:border-brand-bg placeholder-secondary-text"
+            />
+          </div>
+          <div class="flex-1 flex flex-col gap-0.5">
+            <label class="text-[10px] text-secondary-text">Suffix <span class="opacity-50">(optional)</span></label>
+            <input
+              type="text"
+              value={settings.suffix}
+              onInput={(e) => setSettings({ suffix: (e.target as HTMLInputElement).value })}
+              placeholder="e.g. _v2"
+              class="w-full text-xs bg-primary-bg border border-f-border rounded px-2 py-1 text-primary-text focus:outline-none focus:border-brand-bg placeholder-secondary-text"
+            />
+          </div>
+        </div>
+
+        {/* Run button */}
         <AIRunButton onRun={handleRun} />
       </div>
-    </Fragment>
+    </div>
   );
 };
 

@@ -18,6 +18,8 @@ export interface AIPersistedSettings {
   systemPrompt: string;
   readImage: boolean;
   caseOption: CaseOption;
+  prefix: string;
+  suffix: string;
 }
 
 /** Full runtime settings including the API key (never serialised as a whole). */

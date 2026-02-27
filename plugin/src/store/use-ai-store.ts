@@ -27,6 +27,8 @@ const DEFAULT_SETTINGS: AISettings = {
   systemPrompt: DEFAULT_SYSTEM_PROMPT,
   readImage: false,
   caseOption: CaseOption.KEBAB_CASE,
+  prefix: 'img_',
+  suffix: '',
 };
 
 /** clientStorage key for non-sensitive settings (model, prompt, etc.) */

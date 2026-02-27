@@ -17,39 +17,54 @@ import AIStatusBadge from './AIStatusBadge';
 
 /**
  * Creates and manages blob URLs for node thumbnails.
- * Revokes previous URLs when the node list changes or on unmount.
+ * Tracks which node IDs are still being decoded so we can show skeletons.
+ * Revokes all URLs on unmount / when the node list changes.
  */
-function useThumbnailUrls(nodes: NodeData[]): Map<string, string> {
+function useThumbnailUrls(nodes: NodeData[]): {
+  urlMap: Map<string, string>;
+  loadingIds: Set<string>;
+} {
   const [urlMap, setUrlMap] = useState<Map<string, string>>(new Map());
+  const [loadingIds, setLoadingIds] = useState<Set<string>>(new Set());
   const prevUrlsRef = useRef<Map<string, string>>(new Map());
 
   useEffect(() => {
+    // Nodes that have imageData need a blob URL
+    const withImage = nodes.filter((n) => n.imageData);
+
+    // Show skeleton for all nodes that have data but no URL yet
+    setLoadingIds(new Set(withImage.map((n) => n.id)));
+
     const newMap = new Map<string, string>();
-    for (const node of nodes) {
-      if (node.imageData) {
-        const url = URL.createObjectURL(new Blob([node.imageData as unknown as Uint8Array<ArrayBuffer>], { type: 'image/png' }));
-        newMap.set(node.id, url);
-      }
+
+    for (const node of withImage) {
+      const url = URL.createObjectURL(
+        new Blob([node.imageData as unknown as Uint8Array<ArrayBuffer>], { type: 'image/png' })
+      );
+      newMap.set(node.id, url);
     }
 
-    // Revoke all previous URLs
+    // Revoke previous URLs
     prevUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
     prevUrlsRef.current = newMap;
+
     setUrlMap(newMap);
+    // All blob URLs are synchronously created — clear skeletons immediately after
+    setLoadingIds(new Set());
 
     return () => {
       newMap.forEach((url) => URL.revokeObjectURL(url));
     };
   }, [nodes]);
 
-  return urlMap;
+  return { urlMap, loadingIds };
 }
 
 const AINodeList = () => {
   const { allNodes, selectedNodeIds, setSelectedNodeIds } = useImageNodesStore();
   const { renameStatuses, renamedNames } = useAIStore();
 
-  const thumbnailUrls = useThumbnailUrls(allNodes);
+  const { urlMap: thumbnailUrls, loadingIds } = useThumbnailUrls(allNodes);
 
   const handleToggle = (id: string, checked: boolean) => {
     setSelectedNodeIds((prev) =>
@@ -86,12 +101,13 @@ const AINodeList = () => {
       </div>
 
       {/* Node rows */}
-      <div class="flex flex-col overflow-y-auto max-h-[280px]">
+      <div class="flex flex-col">
         {allNodes.map((node) => {
           const isSelected = selectedNodeIds.includes(node.id);
           const status = renameStatuses[node.id] ?? 'idle';
           const newName = renamedNames[node.id];
           const thumbnail = thumbnailUrls.get(node.id);
+          const isLoadingThumb = loadingIds.has(node.id);
 
           return (
             <div
@@ -103,14 +119,17 @@ const AINodeList = () => {
             >
               <Checkbox value={isSelected} onValueChange={(v) => handleToggle(node.id, v)} />
 
-              {/* Thumbnail */}
-              {thumbnail ? (
+              {/* Thumbnail or skeleton */}
+              {isLoadingThumb ? (
+                <div class="w-6 h-6 rounded shrink-0 bg-secondary-bg animate-pulse" />
+              ) : thumbnail ? (
                 <img
                   src={thumbnail}
                   alt={node.name}
                   class="w-6 h-6 rounded object-cover shrink-0 border border-f-border"
                 />
               ) : (
+                /* Node has no imageData — static placeholder */
                 <div class="w-6 h-6 rounded shrink-0 bg-secondary-bg border border-f-border" />
               )}
 

@@ -21,10 +21,14 @@ const Root = () => {
   const { currentPage } = useUtilsStore();
 
   return (
-    <Fragment>
-      <TabSwitch />
-      {pages[currentPage as keyof typeof pages]}
-    </Fragment>
+    <div class="flex flex-col h-screen overflow-hidden">
+      <div class="shrink-0">
+        <TabSwitch />
+      </div>
+      <div class="flex-1 overflow-hidden">
+        {pages[currentPage as keyof typeof pages]}
+      </div>
+    </div>
   );
 };
 
