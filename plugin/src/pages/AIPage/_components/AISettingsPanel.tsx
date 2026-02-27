@@ -4,11 +4,8 @@ import { useCallback } from 'preact/hooks';
 // ** import utils
 import { cn } from '@/lib/utils';
 
-// ** import store
-import { useAIStore } from '@/store/use-ai-store';
-
 // ** import types
-import { AIModelProvider } from '@/types/ai';
+import { AIModelProvider, AISettings } from '@/types/ai';
 import { CaseOption } from '@/types/enums';
 
 // ** import components
@@ -48,9 +45,12 @@ const inputClass =
 const selectClass =
   'w-full text-xs bg-primary-bg border border-f-border rounded px-2 py-1.5 text-primary-text focus:outline-none focus:border-brand-bg';
 
-const AISettingsPanel = () => {
-  const { settings, setSettings } = useAIStore();
+interface AISettingsPanelProps {
+  settings: AISettings;
+  setSettings: (partial: Partial<AISettings>) => void;
+}
 
+const AISettingsPanel = ({ settings, setSettings }: AISettingsPanelProps) => {
   const handleProviderChange = useCallback(
     (e: Event) => {
       const provider = (e.target as HTMLSelectElement).value as AIModelProvider;

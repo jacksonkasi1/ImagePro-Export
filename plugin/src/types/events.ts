@@ -5,7 +5,7 @@ import { EventHandler } from '@create-figma-plugin/utilities';
 import { NodeData } from '@/types/node';
 import { ImageData } from '@/types/utils';
 import { ExportRequestData } from '@/types/export-settings';
-import { AIRenameGroup, AIRenameResult, AISettings } from '@/types/ai';
+import { AINodeData, AIRenameGroup, AIRenameResult, AISettings } from '@/types/ai';
 
 export interface FetchImageNodesHandler extends EventHandler {
   name: 'FETCH_IMAGE_NODES';
@@ -55,6 +55,23 @@ export interface ReceiveDataHandler extends EventHandler {
 
 // AI Rename events
 
+export interface FetchAINodesHandler extends EventHandler {
+  name: 'FETCH_AI_NODES';
+  handler: (nodes: AINodeData[]) => void;
+}
+
+export interface FetchAIImageNodesHandler extends EventHandler {
+  name: 'FETCH_AI_IMAGE_NODES';
+  /** Recursed IMAGE-fill nodes for the Images sub-tab */
+  handler: (nodes: AINodeData[]) => void;
+}
+
+export interface FetchAILayerNodesHandler extends EventHandler {
+  name: 'FETCH_AI_LAYER_NODES';
+  /** Top-level selected nodes (non-image-fill) for the Layers sub-tab */
+  handler: (nodes: AINodeData[]) => void;
+}
+
 export interface AIRenameRequestHandler extends EventHandler {
   name: 'AI_RENAME_REQUEST';
   handler: (payload: { nodeIds: string[]; readImage: boolean; settings: AISettings }) => void;
@@ -83,4 +100,9 @@ export interface AIRenameCompleteHandler extends EventHandler {
 export interface AIRenameErrorHandler extends EventHandler {
   name: 'AI_RENAME_ERROR';
   handler: (payload: { nodeId: string; error: string }) => void;
+}
+
+export interface AIFocusNodeHandler extends EventHandler {
+  name: 'AI_FOCUS_NODE';
+  handler: (nodeId: string) => void;
 }

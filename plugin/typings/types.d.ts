@@ -5,7 +5,6 @@ declare module '*.svg' {
 
 declare namespace NodeJS {
   interface ProcessEnv {
-    readonly VITE_SERVER_URL?: string;
     [key: string]: string | undefined;
   }
 }

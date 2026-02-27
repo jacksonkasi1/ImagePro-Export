@@ -7,6 +7,9 @@ export type AIRenameStatus = 'idle' | 'pending' | 'done' | 'error';
 
 export type AINodeClassification = 'svg_leaf' | 'raster_leaf' | 'section';
 
+/** Which sub-tab is active inside the AI page */
+export type AIMode = 'images' | 'layers';
+
 /**
  * Settings that are safe to persist in Figma clientStorage alongside other
  * non-sensitive configuration.  API key is intentionally excluded — it is
@@ -59,9 +62,43 @@ export interface AIRenameResult {
   suggestedName: string;
 }
 
+/**
+ * A lightweight node descriptor used by the AI tab node list.
+ * Covers all renameable node types — not just image-fill nodes.
+ */
+export interface AINodeData {
+  id: string;
+  name: string;
+  /** Figma node type string, e.g. 'FRAME', 'TEXT', 'RECTANGLE', 'COMPONENT' */
+  nodeType: string;
+  /** Optional thumbnail for image-fill or raster nodes */
+  thumbnail?: Uint8Array;
+}
+
 export interface AIState {
+  /** Active sub-tab inside the AI page */
+  aiMode: AIMode;
+  setAIMode: (mode: AIMode) => void;
+
+  /** Nodes for the Images sub-tab (recursed IMAGE-fill nodes) */
+  aiImageNodes: AINodeData[];
+  setAIImageNodes: (nodes: AINodeData[]) => void;
+  selectedAIImageNodeIds: string[];
+  setSelectedAIImageNodeIds: (ids: string[] | ((prev: string[]) => string[])) => void;
+
+  /** Nodes for the Layers sub-tab (top-level selected, non-image) */
+  aiLayerNodes: AINodeData[];
+  setAILayerNodes: (nodes: AINodeData[]) => void;
+  selectedAILayerNodeIds: string[];
+  setSelectedAILayerNodeIds: (ids: string[] | ((prev: string[]) => string[])) => void;
+
+  /** Settings for Images sub-tab */
   settings: AISettings;
   setSettings: (settings: Partial<AISettings>) => void;
+
+  /** Settings for Layers sub-tab (separate prefix/suffix/readImage) */
+  layerSettings: AISettings;
+  setLayerSettings: (settings: Partial<AISettings>) => void;
 
   renameStatuses: Record<string, AIRenameStatus>;
   renamedNames: Record<string, string>;
@@ -76,4 +113,14 @@ export interface AIState {
 
   progress: { done: number; total: number };
   setProgress: (progress: { done: number; total: number }) => void;
+
+  // ── legacy shims used by AINodeList / AIPage (always points to the active mode's data) ──
+  /** @deprecated use aiImageNodes / aiLayerNodes directly */
+  aiNodes: AINodeData[];
+  /** @deprecated use selectedAIImageNodeIds / selectedAILayerNodeIds directly */
+  selectedAINodeIds: string[];
+  /** @deprecated use setSelectedAIImageNodeIds / setSelectedAILayerNodeIds directly */
+  setSelectedAINodeIds: (ids: string[] | ((prev: string[]) => string[])) => void;
+  /** @deprecated use setAIImageNodes / setAILayerNodes directly */
+  setAINodes: (nodes: AINodeData[]) => void;
 }

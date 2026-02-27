@@ -5,23 +5,22 @@ import { cn } from '@/lib/utils';
 
 // ** import store
 import { useAIStore } from '@/store/use-ai-store';
-import { useImageNodesStore } from '@/store/use-image-nodes-store';
 
 interface AIRunButtonProps {
   onRun: () => void;
 }
 
 const AIRunButton = ({ onRun }: AIRunButtonProps) => {
-  const { isRunning, progress } = useAIStore();
-  const { selectedNodeIds } = useImageNodesStore();
+  const { isRunning, progress, aiMode, selectedAIImageNodeIds, selectedAILayerNodeIds } = useAIStore();
 
-  const hasSelection = selectedNodeIds.length > 0;
-  const disabled = isRunning || !hasSelection;
+  const selectedIds = aiMode === 'images' ? selectedAIImageNodeIds : selectedAILayerNodeIds;
+  const count = selectedIds.length;
+  const disabled = isRunning || count === 0;
 
   const label = isRunning
     ? `Renaming ${progress.done}/${progress.total}…`
-    : hasSelection
-    ? `Rename ${selectedNodeIds.length} node${selectedNodeIds.length !== 1 ? 's' : ''}`
+    : count > 0
+    ? `Rename ${count} node${count !== 1 ? 's' : ''}`
     : 'Select nodes to rename';
 
   return (
