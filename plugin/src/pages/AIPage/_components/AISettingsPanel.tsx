@@ -17,7 +17,13 @@ import { Checkbox } from '@/components/ui/checkbox';
 const MODEL_OPTIONS: Record<AIModelProvider, { label: string; models: string[] }> = {
   gemini: {
     label: 'Gemini',
-    models: ['gemini-2.5-flash-preview-04-17', 'gemini-2.5-pro-preview-03-25'],
+    models: [
+      'gemini-2.5-flash',
+      'gemini-2.5-pro',
+      'gemini-3-flash',
+      'gemini-2.5-flash-lite',
+      'gemini-3.1-pro',
+    ],
   },
   openai: {
     label: 'OpenAI (coming soon)',

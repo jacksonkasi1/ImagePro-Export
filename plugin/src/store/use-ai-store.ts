@@ -22,7 +22,7 @@ Rules:
 
 const DEFAULT_SETTINGS: AISettings = {
   modelProvider: 'gemini',
-  model: 'gemini-2.5-flash-preview-04-17',
+  model: 'gemini-2.5-flash',
   apiKey: '',
   systemPrompt: DEFAULT_SYSTEM_PROMPT,
   readImage: false,
