@@ -27,7 +27,7 @@ function useThumbnailUrls(nodes: NodeData[]): Map<string, string> {
     const newMap = new Map<string, string>();
     for (const node of nodes) {
       if (node.imageData) {
-        const url = URL.createObjectURL(new Blob([node.imageData], { type: 'image/png' }));
+        const url = URL.createObjectURL(new Blob([node.imageData as unknown as Uint8Array<ArrayBuffer>], { type: 'image/png' }));
         newMap.set(node.id, url);
       }
     }

@@ -113,7 +113,6 @@ const ImageSelector = () => {
       <SearchTextbox
         {...useInitialFocus()}
         clearOnEscapeKeyDown
-        name="searchQuery"
         onInput={handleSearch}
         placeholder="Search"
         value={searchQuery}

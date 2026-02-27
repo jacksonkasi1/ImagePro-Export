@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import Spinner from './spinner';
 
 // ** Define the props interface
-interface IconButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
+interface IconButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
   /**
    * Optional variant for hover effect. Defaults to 'blank' (no hover effect).
    */
