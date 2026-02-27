@@ -113,7 +113,6 @@ const ImageSelector = () => {
       <SearchTextbox
         {...useInitialFocus()}
         clearOnEscapeKeyDown
-        name="searchQuery"
         onInput={handleSearch}
         placeholder="Search"
         value={searchQuery}
@@ -142,7 +141,7 @@ const ImageSelector = () => {
               'cursor-not-allowed opacity-50': selectedItems.length === 0 || isDeleting,
               'text-danger hover:text-danger-hover': selectedItems.length > 0 && !isDeleting,
             })}
-            loading={isDeleting} // Show loading state on button
+            isLoading={isDeleting} // Show loading state on button
           >
             <DeleteIcon
               color={

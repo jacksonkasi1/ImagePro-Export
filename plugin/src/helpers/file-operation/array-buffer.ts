@@ -3,7 +3,7 @@ import { getMimeType } from './mime-type';
 
 export const arrayBufferToBase64 = (buffer: Uint8Array, format?: string): Promise<string> => {
   const mimeType = getMimeType(format);
-  const blob = new Blob([buffer], { type: mimeType });
+  const blob = new Blob([buffer as unknown as Uint8Array<ArrayBuffer>], { type: mimeType });
   const reader = new FileReader();
 
   return new Promise<string>((resolve, reject) => {

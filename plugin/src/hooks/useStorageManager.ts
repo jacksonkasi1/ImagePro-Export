@@ -21,8 +21,6 @@ export const useStorageManager = () => {
   useEffect(() => {
     const stores: SyncedStore[] = [
         { storageKey: 'historyStore', storeApi: useHistoryStore },
-      // Add other stores here with their corresponding storage keys
-      // { storageKey: 'anotherStore', storeApi: useAnotherStore },
     ];
 
     // Handle RECEIVE_DATA events from the plugin code

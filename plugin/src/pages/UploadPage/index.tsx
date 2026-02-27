@@ -17,16 +17,22 @@ const UploadPage = () => {
   const { isHistoryVisible } = useUtilsStore();
 
   return (
-    <Fragment>
+    <div class="flex flex-col h-full">
       <div
-        className={`transition-all duration-300 ease-in-out overflow-hidden ${isHistoryVisible ? 'opacity-0 -z-10' : 'opacity-100'}`}
+        class={`flex-1 flex flex-col transition-all duration-300 ease-in-out overflow-hidden ${isHistoryVisible ? 'opacity-0 -z-10' : 'opacity-100'}`}
       >
-        <SearchBox />
-        <Divider />
-        <ImageSelector />
+        <div class="shrink-0">
+          <SearchBox />
+          <Divider />
+        </div>
+        <div class="flex-1 overflow-hidden">
+          <ImageSelector />
+        </div>
       </div>
-      <FilesFooter />
-    </Fragment>
+      <div class="shrink-0">
+        <FilesFooter />
+      </div>
+    </div>
   );
 };
 

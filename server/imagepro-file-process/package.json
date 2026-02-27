@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google/genai": "^1.43.0",
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^6.1.1",
     "@types/node-cron": "^3.0.11",

@@ -12,12 +12,18 @@ import ImageSelector from './_components/ImageSelector';
 
 const AssetPage = () => {
   return (
-    <Fragment>
-      <SearchBox />
-      <Divider />
-      <ImageSelector />
-      <FilesFooter />
-    </Fragment>
+    <div class="flex flex-col h-full">
+      <div class="shrink-0">
+        <SearchBox />
+        <Divider />
+      </div>
+      <div class="flex-1 overflow-hidden">
+        <ImageSelector />
+      </div>
+      <div class="shrink-0">
+        <FilesFooter />
+      </div>
+    </div>
   );
 };
 

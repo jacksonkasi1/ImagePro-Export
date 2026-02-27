@@ -16,15 +16,22 @@ import { useStorageManager } from '@/hooks/useStorageManager';
 import { useUtilsStore } from '@/store/use-utils-store';
 import { useImageNodesStore } from '@/store/use-image-nodes-store';
 import { useImageExportStore } from '@/store/use-image-export-store';
+import { useAIStore } from '@/store/use-ai-store';
 
 // ** import helpers
 import { handleExportComplete } from '@/helpers/export-files';
 
 // ** import types
 import { NodeData } from '@/types/node';
+import { AINodeData } from '@/types/ai';
 import { ImageData } from '@/types/utils';
 import { AssetsExportType, PdfFormatOption } from '@/types/enums';
-import { ExportCompleteHandler, FetchImageNodesHandler } from '@/types/events';
+import {
+  ExportCompleteHandler,
+  FetchAIImageNodesHandler,
+  FetchAILayerNodesHandler,
+  FetchImageNodesHandler,
+} from '@/types/events';
 
 function Plugin() {
   useStorageManager(); // Initialize storage synchronization
@@ -33,6 +40,7 @@ function Plugin() {
   const { quality, exportMode, pdfFormatOption, pdfPassword, assetsExportType } = useImageExportStore();
 
   const { setAllNodes, setAllNodesCount, setSelectedNodeIds, setSelectedNodesCount } = useImageNodesStore();
+  const { setAIImageNodes, setSelectedAIImageNodeIds, setAILayerNodes, setSelectedAILayerNodeIds } = useAIStore();
 
   // Create a single ref object for all export settings
   const exportSettingsRef = useRef<{
@@ -74,8 +82,23 @@ function Plugin() {
     on<FetchImageNodesHandler>('FETCH_IMAGE_NODES', (image_nodes: NodeData[]) => {
       setAllNodes(image_nodes);
       setAllNodesCount(image_nodes.length);
-      setSelectedNodeIds([]);
-      setSelectedNodesCount(0);
+      // Don't reset AI tab's independent selection when on the AI page
+      if (useUtilsStore.getState().currentPage !== 'ai') {
+        setSelectedNodeIds([]);
+        setSelectedNodesCount(0);
+      }
+    });
+
+    // AI Images sub-tab: recursed IMAGE-fill nodes
+    on<FetchAIImageNodesHandler>('FETCH_AI_IMAGE_NODES', (nodes: AINodeData[]) => {
+      setAIImageNodes(nodes);
+      setSelectedAIImageNodeIds([]);
+    });
+
+    // AI Layers sub-tab: top-level non-image nodes
+    on<FetchAILayerNodesHandler>('FETCH_AI_LAYER_NODES', (nodes: AINodeData[]) => {
+      setAILayerNodes(nodes);
+      setSelectedAILayerNodeIds([]);
     });
 
     on<ExportCompleteHandler>('EXPORT_COMPLETE', (data: ImageData[]) => {
@@ -83,10 +106,15 @@ function Plugin() {
         data,
         setIsLoading,
         exportMode,
-        exportSettings: exportSettingsRef.current, // Pass the common ref object
+        exportSettings: exportSettingsRef.current,
       });
     });
-  }, [setAllNodes, setAllNodesCount, setSelectedNodeIds, setSelectedNodesCount, setIsLoading, exportMode]);
+  }, [
+    setAllNodes, setAllNodesCount, setSelectedNodeIds, setSelectedNodesCount,
+    setIsLoading, exportMode,
+    setAIImageNodes, setSelectedAIImageNodeIds,
+    setAILayerNodes, setSelectedAILayerNodeIds,
+  ]);
 
   return <Root />;
 }
